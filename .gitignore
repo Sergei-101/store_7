@@ -1,0 +1,8 @@
+/.venv/
+/media/
+/static/
+/product_images/
+*.sqlite3
+*.log
+*.pyc
+
