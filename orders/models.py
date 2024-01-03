@@ -2,6 +2,14 @@ from django.db import models
 from django.db.models import Model
 from django.contrib.auth.models import User
 from products.models import Product
+from decimal import Decimal
+
+class OrderQuerySet(models.QuerySet):
+    def total_sum(self):
+        return sum(order.sum() for order in self)
+
+    def total_quantity(self):
+        return sum(order.quantity for order in self)
 
 
 class Order(models.Model):
@@ -10,11 +18,18 @@ class Order(models.Model):
     quantity = models.PositiveIntegerField(default=0)
     created_timestamp = models.DateTimeField(auto_now_add=True)
 
+    objects = OrderQuerySet.as_manager()
+
     def __str__(self):
         return f'Корзина для {self.user.email} | Продукт: {self.product.name}'
 
     def sum(self):
         return self.product.price * self.quantity
+
+
+
+
+
 
 
 

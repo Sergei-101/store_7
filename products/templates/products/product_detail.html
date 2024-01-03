@@ -73,7 +73,7 @@
                 <div class="qty-control__reduce">-</div>
                 <div class="qty-control__increase">+</div>
               </div><!-- .qty-control -->
-              <button type="submit" class="btn btn-primary btn-addtocart js-open-aside" data-aside="cartDrawer">Add to Cart</button>
+              <button type="submit" class="btn btn-primary btn-addtocart js-open-aside" onclick="location.href='{% url 'products:product_add' product.id %}';" data-aside="cartDrawer">Add to Cart</button>
             </div>
           </form>
           <div class="product-single__addtolinks">
