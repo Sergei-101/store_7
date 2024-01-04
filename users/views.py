@@ -1,3 +1,4 @@
+from django.contrib.auth.models import User
 from django.shortcuts import render, HttpResponseRedirect
 from django.contrib import auth, messages
 from django.urls import reverse
@@ -23,6 +24,11 @@ def login_register(request):
     context = {'form': form,
                'form_2': form_2}
     return render(request, 'users/login_register.html', context)
+
+def account(request):
+    users = request.user
+    context = {'users': users}
+    return render(request, 'users/account.html', context)
 
 
 

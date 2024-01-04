@@ -8,16 +8,12 @@ class ProductCategory(models.Model):
     slug = models.SlugField(max_length=255, unique=True)
     sub_prod_categories = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True)
 
-
-
-
     def __str__(self):
         return self.name
 
     class Meta:
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
-
 
 class Product(models.Model):
     category = models.ForeignKey(to=ProductCategory, on_delete=models.CASCADE, related_name='products')
@@ -26,8 +22,6 @@ class Product(models.Model):
     description = models.TextField()
     price = models.DecimalField(max_digits=6, decimal_places=2)
     quantity = models.PositiveIntegerField(default=0)
-
-
 
     class Meta:
         verbose_name = 'Продукт'
