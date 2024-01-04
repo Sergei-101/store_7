@@ -818,31 +818,31 @@
   <!---------------- Cart Drawer --------------->
   <div class="aside aside_right overflow-hidden cart-drawer" id="cartDrawer">
     <div class="aside-header d-flex align-items-center">
-      <h3 class="text-uppercase fs-6 mb-0">Корзина ( <span class="cart-amount js-cart-items-count">{{ orders.count }}</span> ) </h3>
+      <h3 class="text-uppercase fs-6 mb-0">Корзина ( <span class="cart-amount js-cart-items-count">{{ baskets.count }}</span> ) </h3>
       <button class="btn-close-lg js-close-aside btn-close-aside ms-auto"></button>
     </div><!-- /.aside-header -->
 
     <div class="aside-content cart-drawer-items-list">
-    {% if orders %}
-      {% for order in orders %}   
+    {% if baskets %}
+      {% for basket in baskets %}   
       <div class="cart-drawer-item d-flex position-relative">
         <div class="position-relative">
-          <img loading="lazy" class="cart-drawer-item__img" src="{{ order.product.images.all.0.image.url }}" />
+          <img loading="lazy" class="cart-drawer-item__img" src="{{ basket.product.images.all.0.image.url }}" />
         </div>
         <div class="cart-drawer-item__info flex-grow-1">
-          <h6 class="cart-drawer-item__title fw-normal">{{ order.product }}</h6>
+          <h6 class="cart-drawer-item__title fw-normal">{{ basket.product }}</h6>
           <p class="cart-drawer-item__option text-secondary">Доп текст</p>          
           <div class="d-flex align-items-center justify-content-between mt-1">
             <div class="qty-control position-relative">
-              <input type="number" name="quantity" value="{{ order.quantity }}" min="1" class="qty-control__number border-0 text-center">
+              <input type="number" name="quantity" value="{{ basket.quantity }}" min="1" class="qty-control__number border-0 text-center">
               <div class="qty-control__reduce text-start">-</div>
               <div class="qty-control__increase text-end">+</div>
             </div><!-- .qty-control -->
-            <span class="cart-drawer-item__price money price">${{ order.product.price }}</span>
+            <span class="cart-drawer-item__price money price">${{ basket.product.price }}</span>
           </div>
         </div>
         
-        <button class="btn-close-xs position-absolute top-0 end-0 js-cart-item-remove" onclick="location.href='{% url 'products:product_remove' order.id  %}';"></button>
+        <button class="btn-close-xs position-absolute top-0 end-0 js-cart-item-remove" onclick="location.href='{% url 'products:product_remove' basket  %}';"></button>
       </div><!-- /.cart-drawer-item d-flex -->
 
       <hr class="cart-drawer-divider"/>
@@ -857,9 +857,9 @@
       <hr class="cart-drawer-divider"/>
       <div class="d-flex justify-content-between">
         <h6 class="fs-base fw-medium">SUBTOTAL:</h6>
-        <span class="cart-subtotal fw-medium">${{ orders.total_sum }}</span>
+        <span class="cart-subtotal fw-medium">${{ baskets.total_sum }}</span>
       </div><!-- /.d-flex justify-content-between -->
-      <a href="{% url 'orders:order_view' %}" class="btn btn-light mt-3 d-block">View Cart</a>
+      <a href="{% url 'baskets:basket_view' %}" class="btn btn-light mt-3 d-block">View Cart</a>
       <a href="./shop_checkout.html" class="btn btn-primary mt-3 d-block">Checkout</a>
     </div><!-- /.aside-content -->
   </div><!-- /.aside -->

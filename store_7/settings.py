@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'products',
     'users',
-    'orders',
+    'baskets'
+
 ]
 
 MIDDLEWARE = [
@@ -67,7 +68,8 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
                 'users.context_processors.log_reg_form',
-                'orders.context_processors.order_view_cont_proc',
+                'baskets.context_processors.basket_view_cont_proc'
+
 
             ],
         },

@@ -1,7 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
 
-from orders.models import Order
+from baskets.models import Basket
 from products.models import Product, ProductCategory, ProductImage
 
 def index(request):
@@ -26,17 +26,17 @@ def product_detail(request, product_id):
 
 def product_add(request, product_id):
     product = Product.objects.get(id=product_id)
-    orders = Order.objects.filter(user=request.user, product=product)
-    if not orders.exists():
-        Order.objects.create(user=request.user, product=product, quantity=1)
+    baskets = Basket.objects.filter(user=request.user, product=product)
+    if not baskets.exists():
+        Basket.objects.create(user=request.user, product=product, quantity=1)
     else:
-        orders = orders.first()
-        orders.quantity += 1
-        orders.save()
+        baskets = baskets.first()
+        baskets.quantity += 1
+        baskets.save()
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
 
-def product_remove(request, order_id): # удаление товаров из корзины
-    order = Order.objects.get(id=order_id)
-    order.delete()
+def product_remove(request, basket_id): # удаление товаров из корзины
+    basket = Basket.objects.get(id=basket_id)
+    basket.delete()
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))

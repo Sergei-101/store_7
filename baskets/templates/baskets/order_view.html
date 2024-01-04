@@ -45,36 +45,36 @@
               </tr>
             </thead>
             <tbody>
-              {% for order in orders %}  
+              {% for basket in baskets %}
               <tr>
                 <td>
                   <div class="shopping-cart__product-item">
-                    <img loading="lazy" src="{{ order.product.images.all.0.image.url }}" width="120" height="120" alt="" />
+                    <img loading="lazy" src="{{ basket.product.images.all.0.image.url }}" width="120" height="120" alt="" />
                   </div>
                 </td>
                 <td>
                   <div class="shopping-cart__product-item__detail">
-                    <h4>{{ order.product }}</h4>
+                    <h4>{{ basket.product }}</h4>
                     <ul class="shopping-cart__product-item__options">
                       <li>доп текст</li>                      
                     </ul>
                   </div>
                 </td>
                 <td>
-                  <span class="shopping-cart__product-price">${{ order.product.price }}</span>
+                  <span class="shopping-cart__product-price">${{ basket.product.price }}</span>
                 </td>
                 <td>
                   <div class="qty-control position-relative">
-                    <input type="number" name="quantity" value="{{ order.quantity }}" min="1" class="qty-control__number text-center">
+                    <input type="number" name="quantity" value="{{ basket.quantity }}" min="1" class="qty-control__number text-center">
                     <div class="qty-control__reduce">-</div>
                     <div class="qty-control__increase">+</div>
                   </div><!-- .qty-control -->
                 </td>
                 <td>
-                  <span class="shopping-cart__subtotal">${{ order.sum }}</span>
+                  <span class="shopping-cart__subtotal">${{ basket.sum }}</span>
                 </td>
                 <td>
-                  <a href="{% url 'products:product_remove' order.id %}" class="remove-cart">
+                  <a href="{% url 'products:product_remove' basket %}" class="remove-cart">
                     <svg width="10" height="10" viewBox="0 0 10 10" fill="#767676" xmlns="http://www.w3.org/2000/svg">
                       <path d="M0.259435 8.85506L9.11449 0L10 0.885506L1.14494 9.74056L0.259435 8.85506Z"/>
                       <path d="M0.885506 0.0889838L9.74057 8.94404L8.85506 9.82955L0 0.97449L0.885506 0.0889838Z"/>
@@ -101,7 +101,7 @@
                 <tbody>
                   <tr>
                     <th>Subtotal</th>
-                    <td>${{ orders.total_sum }}</td>
+                    <td>${{ baskets.total_sum }}</td>
                   </tr>
                   <tr>
                     <th>Shipping</th>
