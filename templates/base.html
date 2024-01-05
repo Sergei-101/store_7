@@ -431,11 +431,17 @@
             </button>
           </form><!-- /.header-search -->
 
-          <div class="header-tools d-flex align-items-center">
+          <div class="header-tools d-flex align-items-center"> 
             <div class="header-tools__item hover-container">
+              {% if request.user.is_authenticated %}   
+              <a class="header-tools__item"  href="{% url 'users:profile' %}">
+                <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_user" /></svg>
+              </a>
+              {% else %}    
               <a class="header-tools__item js-open-aside" href="#" data-aside="customerForms">
                 <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_user" /></svg>
               </a>
+              {% endif %}   
             </div>
     
             <a class="header-tools__item" href="#">
@@ -763,7 +769,7 @@
   </footer><!-- /.footer-mobile container position-fixed d-md-none bottom-0 -->
 
 
-  <!----------- Customer Login Form ----------->  
+  <!----------- Customer Login Form -----------> 
   <div class="aside aside_right overflow-hidden customer-forms" id="customerForms">
     <div class="customer-forms__wrapper d-flex position-relative">
       <div class="customer__login">
@@ -813,8 +819,8 @@
       </div><!-- /.customer__register -->
     </div><!-- /.customer-forms__wrapper -->
   </div><!-- /.aside aside_right -->
-
-
+  
+  
   <!---------------- Cart Drawer --------------->
   <div class="aside aside_right overflow-hidden cart-drawer" id="cartDrawer">
     <div class="aside-header d-flex align-items-center">
@@ -842,7 +848,7 @@
           </div>
         </div>
         
-        <button class="btn-close-xs position-absolute top-0 end-0 js-cart-item-remove" onclick="location.href='{% url 'products:product_remove' basket  %}';"></button>
+        <button class="btn-close-xs position-absolute top-0 end-0 js-cart-item-remove" onclick="location.href='{% url 'products:product_remove' basket.id  %}';"></button>
       </div><!-- /.cart-drawer-item d-flex -->
 
       <hr class="cart-drawer-divider"/>

@@ -35,3 +35,16 @@ class UserRegisterForm(UserCreationForm):
         fields = ('username', 'email', 'password1', 'password2',)
 
 
+class UserProfileForm(UserChangeForm):
+    username = forms.CharField(widget=forms.TextInput(attrs={
+        'class': 'form-control form-control_gray',
+        'placeholder': 'Введите имя пользователя '}))
+    email = forms.CharField(widget=forms.EmailInput(attrs={
+        'class': 'form-control form-control_gray',
+        'placeholder': 'Введите адрес эл. почты '}))
+
+    class Meta:
+        model = User
+        fields = ('username', 'email')
+
+

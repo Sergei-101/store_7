@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+  <main>
+    <div class="mb-4 pb-4"></div>
+    <section class="my-account container">
+      <h2 class="page-title">Мой аккаунт</h2>
+      <div class="row">
+        {% include 'users/profile_menu.html' %}
+        <div class="col-lg-9">
+          <div class="page-content my-account__edit">
+            <div class="my-account__edit-form">
+              <form name="account_edit_form" class="needs-validation" novalidate>
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-floating my-3">
+                      {{ form.username }}
+                      <label for="{{ form.username.id_for_label }}">Username</label>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-floating my-3">
+                      {{ form.email }}
+                      <label for="{{ form.email.id_for_label }}">email</label>
+                    </div>
+                  </div>
+                  
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="mb-5 pb-xl-5"></div>	
+    
+    
+{% endblock %}
+
