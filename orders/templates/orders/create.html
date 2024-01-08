@@ -29,20 +29,12 @@
           </span>
         </a>
       </div>
-      <form name="checkout-form">
+      <form action="{% url 'orders:order_create' %}" name="checkout-form">
+      {% csrf_token %} 
         <div class="checkout-form">
-          <div class="billing-info__wrapper">
-              <form action="{% url 'orders:order_create' %}" method="post">
-                  {% csrf_token %} 
-                  {{ form.as_p }}
-                  <input class="btn btn-primary w-100 text-uppercase" type="submit" value="Авторизоваться">
-              </form>  
+          <div class="billing-info__wrapper">             
             <h4>BILLING DETAILS</h4>
-            <div class="row">
-               <form action="{% url 'orders:order_create' %}" method="post">
-                   {% csrf_token %}                  
-                
-              
+            <div class="row">                  
               <div class="col-md-6">
                 <div class="form-floating my-3">
                   {{ form.first_name }}
@@ -66,17 +58,16 @@
                   {{ form.address }}
                   <label for="{{ form.address.id_for_label }}">Адрес доставки</label>
                 </div>
-              </div>
-                   
-                   <input class="btn btn-primary w-100 text-uppercase" type="submit" value="Авторизоваться"> 
-               </form> 
+              </div>                 
+                    
+               
             </div>
             <div class="col-md-12">
               <div class="mt-3">
                 <textarea class="form-control form-control_gray" placeholder="Order Notes (optional)" cols="30" rows="8"></textarea>
               </div>
             </div>
-          </div>
+          </div>            
           <div class="checkout__totals-wrapper">
             <div class="sticky-content">
               <div class="checkout__totals">
@@ -89,13 +80,13 @@
                     </tr>
                   </thead>
                   <tbody>
-                    {% for basket in baskets %}
+                    {% for item in cart %}
                     <tr>
                       <td>
-                        {{ basket.product }} x {{ basket.quantity }}
+                        {{ item.product }} x {{ item.quantity }}
                       </td>
                       <td align="right">
-                        ${{ basket.sum }}
+                        ${{ item.total_price }}
                       </td>
                     </tr>
                     {% endfor %}
@@ -105,7 +96,7 @@
                   <tbody>
                     <tr>
                       <th>SUBTOTAL</th>
-                      <td align="right">${{ baskets.total_sum }}</td>
+                      <td align="right">${{ cart.get_total_price }}</td>
                     </tr>
                     <tr>
                       <th>SHIPPING</th>

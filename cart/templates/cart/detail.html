@@ -31,7 +31,6 @@
           </span>
         </a>
       </div>
-      {% for item in cart %}
       <div class="shopping-cart">
         <div class="cart-table__wrapper">
           <table class="cart-table">
@@ -47,7 +46,7 @@
             </thead>
             <tbody>
 
-              
+              {% for item in cart %}
               {% with product=item.product %}
               <tr>
                 <td>
@@ -76,7 +75,7 @@
                     <div class="qty-control__reduce">-</div>
                     <div class="qty-control__increase">+</div>
                   </div><!-- .qty-control -->
-                  
+                  <input type="submit" value="Update">
                   </form>
                 </td>
                 <td>
@@ -92,11 +91,13 @@
                 </td>
               </tr>
               {% endwith %}
-              
+              {% endfor %}
+
             </tbody>
           </table>
           <div class="cart-table-footer">
             <form action="" class="position-relative bg-body">
+                {% csrf_token %}
               <input class="form-control" type="text" name="coupon_code" placeholder="Coupon Code">
               <input class="btn-link fw-medium position-absolute top-0 end-0 h-100 px-4" type="submit" value="APPLY COUPON">
             </form>            
@@ -147,14 +148,12 @@
             </div>
             <div class="mobile_fixed-btn_wrapper">
               <div class="button-wrapper container">
-                  <a class="btn btn-primary btn-checkout" href="#">PROCEED TO CHECKOUT</a>
-                <button class="btn btn-primary btn-checkout" >PROCEED TO CHECKOUT</button>#}
+                <button class="btn btn-primary btn-checkout" >PROCEED TO CHECKOUT</button>
               </div>
             </div>
           </div>
         </div>
       </div>
-      {% endfor %}
     </section>
   </main>
     
