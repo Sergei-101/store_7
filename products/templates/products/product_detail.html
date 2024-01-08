@@ -65,16 +65,20 @@
           </div>
           <div class="product-single__short-desc">
             <p>{{ product.description }}</p>
-          </div>
-          <form name="addtocart-form" method="post">
+          </div>                   
+          <form action="{% url "cart:cart_add" product.id %}" name="addtocart-form" method="post">
+            {% csrf_token %}
             <div class="product-single__addtocart">
-              <div class="qty-control position-relative">
-                <input type="number" name="quantity" value="1" min="1" class="qty-control__number text-center">
+              <div class="qty-control position-relative">              
+                
+                {{ cart_product_form.quantity }}
                 <div class="qty-control__reduce">-</div>
                 <div class="qty-control__increase">+</div>
-              </div><!-- .qty-control -->
-              <button type="submit" class="btn btn-primary btn-addtocart js-open-aside" onclick="location.href='{% url 'products:product_add' product.id %}';" data-aside="cartDrawer">Add to Cart</button>
-            </div>
+              </div><!-- .qty-control -->              
+              <button type="submit" class="btn btn-primary btn-addtocart"  data-aside="cartDrawer">Add to Cart</button>
+            </div>          
+            
+            
           </form>
           <div class="product-single__addtolinks">
             <a href="#" class="menu-link menu-link_us-s add-to-wishlist"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_heart" /></svg><span>Add to Wishlist</span></a>
