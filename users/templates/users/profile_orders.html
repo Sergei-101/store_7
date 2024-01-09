@@ -13,42 +13,27 @@
             <table class="orders-table">
               <thead>
                 <tr>
-                  <th>Order</th>
-                  <th>Date</th>
-                  <th>Status</th>
-                  <th>Total</th>
-                  <th>Actions</th>
+                  <th>Заказ</th>
+                  <th>Дата</th>
+                  <th>Статус</th>
+                  <th>Стоимость</th>
+                  <th>Посмотреть</th>
                 </tr>
               </thead>
               <tbody>
+                {% for order in orders %}
                 <tr>
-                  <td>#2416</td>
-                  <td>October 1, 2023</td>
-                  <td>On hold</td>
-                  <td>$1,200.65 for 3 items</td>
-                  <td><button class="btn btn-primary">VIEW</button></td>
+                  <td>#{{ order.id }}</td>
+                  <td>{{ order.created }}</td>
+                  <td>{{ order.status }}</td>
+                  <td>${{ order.total_cost }}</td>
+                  <td>
+                      <a href="{% url 'users:profile_order_detail' order.id %}">
+                        <button class="btn btn-primary">Подробнее</button>
+                      </a>    
+                  </td>
                 </tr>
-                <tr>
-                  <td>#2417</td>
-                  <td>October 2, 2023</td>
-                  <td>On hold</td>
-                  <td>$1,200.65 for 3 items</td>
-                  <td><button class="btn btn-primary">VIEW</button></td>
-                </tr>
-                <tr>
-                  <td>#2418</td>
-                  <td>October 3, 2023</td>
-                  <td>On hold</td>
-                  <td>$1,200.65 for 3 items</td>
-                  <td><button class="btn btn-primary">VIEW</button></td>
-                </tr>
-                <tr>
-                  <td>#2419</td>
-                  <td>October 4, 2023</td>
-                  <td>On hold</td>
-                  <td>$1,200.65 for 3 items</td>
-                  <td><button class="btn btn-primary">VIEW</button></td>
-                </tr>
+                {% endfor %}
               </tbody>
             </table>
           </div>

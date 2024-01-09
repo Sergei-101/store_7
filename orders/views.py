@@ -1,3 +1,4 @@
+import json
 from django.shortcuts import render
 from orders.models import OrderItem
 from orders.forms import OrderCreateForm
@@ -8,20 +9,30 @@ def order_create(request):
     if request.method == 'POST':
         form = OrderCreateForm(request.POST)
         if form.is_valid():
-            current_user = request.user
-            form.instance.initiator = current_user
+            if cart.coupon:
+                form.instance.total_cost = cart.get_total_price_after_discount()
+            else:
+                form.instance.total_cost = cart.get_total_price()
+            if request.user.is_authenticated:
+                current_user = request.user
+                form.instance.initiator = current_user
+
             order = form.save()
             for item in cart:
                 OrderItem.objects.create(order=order,
                                          product=item['product'],
                                          price=item['price'],
-                                         quantity=item['quantity'])
+                                         quantity=item['quantity'],
+                                         total=item['price'] * item['quantity'])
             # очистить корзину
+            basket_history = OrderItem.objects.filter(order=order)
             cart.clear()
-            return render(request,'orders/complete.html',{'order': order})
+            return render(request,'orders/complete.html',{'order': order,
+                                                          'basket_history': basket_history,
+                                                          })
     else:
         form = OrderCreateForm()
-    return render(request,'orders/test.html',{'cart': cart, 'form': form})
+    return render(request,'orders/create.html',{'cart': cart, 'form': form})
 
 
 

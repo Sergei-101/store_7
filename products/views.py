@@ -10,9 +10,11 @@ def products(request, category_id=None): #отоброжение категор�
     catrgory = ProductCategory.objects.all()
     products = Product.objects.filter(category=category_id) if category_id else Product.objects.all()
     images = ProductImage.objects.all()
+    cart_product_form = CartAddProductForm()
     context = {'products': products,
                'catrgories': catrgory,
-               'images': images}
+               'images': images,
+               'cart_product_form': cart_product_form}
     return render(request, 'products/products.html', context)
 
 def product_detail(request, product_id):

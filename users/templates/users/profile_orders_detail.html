@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <div class="order-complete">
+        {% for order in orders %} 
+        <div class="order-info">
+              <div class="order-info__item">
+                 
+                <label>Номер заказа</label>
+                <span>#{{ order.id }}</span>
+              </div>
+              <div class="order-info__item">
+                <label>Дата заказа</label>
+                <span>{{ order.created }}</span>
+              </div>
+              <div class="order-info__item">
+                <label>Итого</label>
+                <span>${{ order.total_cost }}</span>
+              </div>
+              <div class="order-info__item">
+                <label>Метод оплаты</label>
+                <span>Direct Bank Transfer</span>
+                 
+              </div>
+            </div>
+        {% endfor %} 
+        <div class="checkout__totals-wrapper">
+              <div class="checkout__totals">
+                <h3>ДЕТАЛИ ЗАКАЗА</h3>
+                <table class="checkout-cart-items">
+                  <thead>
+                    <tr>
+                      <th>НАИМЕНОВАНИЕ ТОВАРА</th>
+                      <th align="right">СТОИМОСТЬ</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for item in order_items %}
+                    <tr>
+                      <td>
+                        {{ item.product }} x {{ item.quantity }}
+                      </td>
+                      <td align="right">
+                        $ {{ item.total }}
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+                <table class="checkout-totals">
+                  <tbody>
+                    
+                    <tr>
+                      <th>ДОСТАВКА</th>
+                      <td align="right">Free shipping</td>
+                    </tr>                
+                    <tr>
+                      <th>ИТОГО К ОПЛАТЕ</th>
+                      {% for order in orders %}  
+                      <td align="right">${{ order.total_cost }}</td>
+                      {% endfor %}  
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+    </div>
+    
+    
+
+  <div class="mb-5 pb-xl-5"></div>
+    
+{% endblock %}
+
+
+  

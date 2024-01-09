@@ -2,6 +2,8 @@ from django.contrib.auth.models import User
 from django.shortcuts import render, HttpResponseRedirect
 from django.contrib import auth, messages
 from django.urls import reverse
+
+from orders.models import Order, OrderItem
 from users.forms import UserLoginForm, UserRegisterForm, UserProfileForm
 
 def login_register(request):
@@ -47,9 +49,14 @@ def profile(request):
 
 
 def profile_orders(request):
-    return render(request, 'users/profile_orders.html')
-def profile_address(request):
-    return render(request, 'users/profile_address.html')
+    orders = Order.objects.filter(initiator=request.user)
+    context = {'orders': orders}
+    return render(request, 'users/profile_orders.html',context)
+def profile_order_detail(request, order_id):
+    order = Order.objects.filter(id=order_id)
+    order_item = OrderItem.objects.filter(order=order_id)
+    context = {'orders':order, 'order_items': order_item}
+    return render(request, 'users/profile_orders_detail.html', context)
 
 def profile_wishlist(request):
     return render(request, 'users/profile_wishlist.html')

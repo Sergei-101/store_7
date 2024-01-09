@@ -7,27 +7,27 @@
     <main>
     <div class="mb-4 pb-4"></div>
     <section class="shop-checkout container">
-      <h2 class="page-title">Cart</h2>
+      <h2 class="page-title">КОРЗИНА</h2>
       <div class="checkout-steps">
-        <a href="./order_view.html" class="checkout-steps__item active">
+        <a href="#" class="checkout-steps__item active">
           <span class="checkout-steps__item-number">01</span>
           <span class="checkout-steps__item-title">
-            <span>Shopping Bag</span>
-            <em>Manage Your Items List</em>
+            <span>КАРЗИНА ТОВАРОВ</span>
+            <em>Список добавленных товаров</em>
           </span>
         </a>
-        <a href="./shop_checkout.html" class="checkout-steps__item">
+        <a href="#" class="checkout-steps__item">
           <span class="checkout-steps__item-number">02</span>
           <span class="checkout-steps__item-title">
-            <span>Shipping and Checkout</span>
-            <em>Checkout Your Items List</em>
+            <span>ОФОРМЛЕНИЕ ЗАКАЗА</span>
+            <em>Оформление адреса доставки</em>
           </span>
         </a>
         <a href="./shop_order_complete.html" class="checkout-steps__item">
           <span class="checkout-steps__item-number">03</span>
           <span class="checkout-steps__item-title">
-            <span>Confirmation</span>
-            <em>Review And Submit Your Order</em>
+            <span>ПОДТВЕРЖДЕНИЕ</span>
+            <em>Просмотрите и отправьте свой заказ</em>
           </span>
         </a>
       </div>
@@ -36,11 +36,11 @@
           <table class="cart-table">
             <thead>
               <tr>
-                <th>Product</th>
+                <th>Наименование</th>
                 <th></th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Subtotal</th>
+                <th>Цена</th>
+                <th>Количество</th>
+                <th>Итого</th>
                 <th></th>
               </tr>
             </thead>
@@ -75,7 +75,6 @@
                     <div class="qty-control__reduce">-</div>
                     <div class="qty-control__increase">+</div>
                   </div><!-- .qty-control -->
-                  <input type="submit" value="Update">
                   </form>
                 </td>
                 <td>
@@ -95,60 +94,69 @@
 
             </tbody>
           </table>
+
           <div class="cart-table-footer">
-            <form action="" class="position-relative bg-body">
+            <form action="{% url 'coupons:apply' %}" class="position-relative bg-body" method="post">
                 {% csrf_token %}
-              <input class="form-control" type="text" name="coupon_code" placeholder="Coupon Code">
-              <input class="btn-link fw-medium position-absolute top-0 end-0 h-100 px-4" type="submit" value="APPLY COUPON">
+                {{ coupon_apply_form.code }}
+              <input class="btn-link fw-medium position-absolute top-0 end-0 h-100 px-4" type="submit" value="ПРИМЕНИТЬ">
             </form>            
-            <button form="update" class="btn btn-light">UPDATE CART</button>
+            <button form="update" type="submit" class="btn btn-light">ОБНОВИТЬ КОРЗИНУ</button>
           </div>
         </div>
         <div class="shopping-cart__totals-wrapper">
           <div class="sticky-content">
             <div class="shopping-cart__totals">
-              <h3>Cart Totals</h3>
+              <h3>ИТОГОВАЯ СТОИМОСТЬ</h3>
               <table class="cart-totals">
                 <tbody>
                   <tr>
-                    <th>Subtotal</th>
+                    <th>Итого</th>
                     <td>${{ cart.get_total_price }}</td>
                   </tr>
                   <tr>
-                    <th>Shipping</th>
+                    <th>Доставка</th>
                     <td>
                       <div class="form-check">
-                        <input class="form-check-input form-check-input_fill" type="checkbox" value="" id="free_shipping">
-                        <label class="form-check-label" for="free_shipping">Free shipping</label>
+                        <input class="form-check-input form-check-input_fill" type="checkbox" value="" id="free_shipping" >
+                        <label class="form-check-label" for="free_shipping">Доставка по адресу</label>
                       </div>
                       <div class="form-check">
-                        <input class="form-check-input form-check-input_fill" type="checkbox" value="" id="flat_rate">
-                        <label class="form-check-label" for="flat_rate">Flat rate: $49</label>
+                        <input class="form-check-input form-check-input_fill" type="checkbox" value="" id="flat_rate" >
+                        <label class="form-check-label" for="flat_rate">Самовывоз</label>
                       </div>
-                      <div class="form-check">
-                        <input class="form-check-input form-check-input_fill" type="checkbox" value="" id="local_pickup">
-                        <label class="form-check-label" for="local_pickup">Local pickup: $8</label>
-                      </div>
-                      <div>Shipping to AL.</div>
+                      <div>Адрес доставки</div>
                       <div>
-                        <a href="#" class="menu-link menu-link_us-s">CHANGE ADDRESS</a>
+                        <a href="#" class="menu-link menu-link_us-s">Изменить</a>
                       </div>
                     </td>
                   </tr>
                   <tr>
-                    <th>VAT</th>
-                    <td>$19</td>
+                    {% if cart.coupon %}
+                        <th>Скидка</th>
+                        <td>– ${{ cart.get_discount|floatformat:2 }}</td>
                   </tr>
                   <tr>
-                    <th>Total</th>
-                    <td>$1319</td>
+                        <th>"{{ cart.coupon.code }}" Промокод</th>
+                        <td>– {{ cart.coupon.discount }}% </td>
+
                   </tr>
+                    <th>Итого к оплате</th>
+                    <td>${{ cart.get_total_price_after_discount|floatformat:2 }}</td>
+                  </tr>
+                    {% else %}
+                  <tr>
+                    <th>Итого к оплате</th>
+                    <td>${{ cart.get_total_price }}</td>
+                  </tr>
+                    {% endif %}
+
                 </tbody>
               </table>
             </div>
             <div class="mobile_fixed-btn_wrapper">
               <div class="button-wrapper container">
-                <button class="btn btn-primary btn-checkout" >PROCEED TO CHECKOUT</button>
+                <button class="btn btn-primary btn-checkout form-check " >ОФОРМИТЬ ЗАКАЗ</button>
               </div>
             </div>
           </div>
