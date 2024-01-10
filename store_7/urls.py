@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from products.views import index
+from pages.views import index
 from django.conf.urls.static import static
 from django.conf import settings
 
@@ -31,6 +31,7 @@ urlpatterns = [
     path('coupons/', include('coupons.urls', namespace='coupons')),
     path('posts/', include('posts.urls', namespace='posts')),
     path('reviews/', include('reviews.urls', namespace='reviews')),
+    path('pages/', include('pages.urls', namespace='pages')),
 
 
 ]

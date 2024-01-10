@@ -3,9 +3,8 @@ from django.shortcuts import render
 from products.models import Product, ProductCategory, ProductImage
 from cart.forms import CartAddProductForm
 from reviews.forms import ReviewForm
+from reviews.models import Review
 
-def index(request):
-    return render(request, 'products/index.html')
 
 def products(request, category_id=None): #отоброжение категорий выбор товаров по категориям
     catrgory = ProductCategory.objects.all()
@@ -23,10 +22,12 @@ def product_detail(request, product_id):
     images = ProductImage.objects.filter(product=product_id)
     cart_product_form = CartAddProductForm()
     review_form = ReviewForm()
+    reviews = Review.objects.filter(product=product_id)
     context = {'products': products,
                'images': images,
                'cart_product_form': cart_product_form,
-               'review_form': review_form}
+               'review_form': review_form,
+               'reviews': reviews}
     return render(request, 'products/product_detail.html', context)
 
 

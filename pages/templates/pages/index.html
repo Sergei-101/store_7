@@ -171,12 +171,12 @@
             <li class="nav-item" role="presentation">
               <a class="nav-link nav-link_underscore active" id="collections-tab-1-trigger" data-bs-toggle="tab" href="#collections-tab-1" role="tab" aria-controls="collections-tab-1" aria-selected="true">Бестселлеры</a>
             </li>
-            <li class="nav-item" role="presentation">
-              <a class="nav-link nav-link_underscore" id="collections-tab-2-trigger" data-bs-toggle="tab" href="#collections-tab-2" role="tab" aria-controls="collections-tab-2" aria-selected="true">Наиболее популярные</a>
-            </li>
-            <li class="nav-item" role="presentation">
-              <a class="nav-link nav-link_underscore" id="collections-tab-3-trigger" data-bs-toggle="tab" href="#collections-tab-3" role="tab" aria-controls="collections-tab-3" aria-selected="true">Топ 20</a>
-            </li>
+{#            <li class="nav-item" role="presentation">#}
+{#              <a class="nav-link nav-link_underscore" id="collections-tab-2-trigger" data-bs-toggle="tab" href="#collections-tab-2" role="tab" aria-controls="collections-tab-2" aria-selected="true">Наиболее популярные</a>#}
+{#            </li>#}
+{#            <li class="nav-item" role="presentation">#}
+{#              <a class="nav-link nav-link_underscore" id="collections-tab-3-trigger" data-bs-toggle="tab" href="#collections-tab-3" role="tab" aria-controls="collections-tab-3" aria-selected="true">Топ 20</a>#}
+{#            </li>#}
             <li class="nav-item" role="presentation">
               <a class="nav-link nav-link_underscore" id="collections-tab-4-trigger" data-bs-toggle="tab" href="#collections-tab-4" role="tab" aria-controls="collections-tab-4" aria-selected="true">Лутший рейтинг</a>
             </li>
@@ -186,30 +186,21 @@
         <div class="tab-content pt-2" id="collections-2-tab-content">
           <div class="tab-pane fade show active" id="collections-tab-1" role="tabpanel" aria-labelledby="collections-tab-1-trigger">
             <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xxl-5">
+              {% for product in products %}  
               <div class="product-card-wrapper mb-2">
                 <div class="product-card product-card_style9 border rounded-3 mb-3 mb-md-4 ">
                   <div class="position-relative pb-3">
                     <div class="pc__img-wrapper pc__img-wrapper_wide3">
-                      <a href="product_detail.html">
-                        <img loading="lazy" src="../images/home/demo12/product-1.jpg" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img">
+                      <a href="{% url 'products:product_detail' product.id %}">
+                        <img loading="lazy" src="{{ product.images.all.0.image.url }}" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img">
                       </a>
                     </div>
-                    <div class="anim_appear-bottom position-absolute w-100 text-center">
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-add-cart js-open-aside" data-aside="cartDrawer" title="Add To Cart">
-                        <svg class="d-inline-block" width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_cart" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-quick-view" data-bs-toggle="modal" data-bs-target="#quickView" title="Quick view">
-                        <svg class="d-inline-block" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><use href="#icon_view" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase js-add-wishlist" title="Add To Wishlist">
-                        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_heart" /></svg>
-                      </button>
-                    </div>
+                    
                   </div>
     
                   <div class="pc__info position-relative">
-                    <p class="pc__category">Fruits</p>
-                    <h6 class="pc__title"><a href="product_detail.html">Organic Bartlett Pear</a></h6>
+                    <p class="pc__category">{{ product.category }}</p>
+                    <h6 class="pc__title"><a href="{% url 'products:product_detail' product.id %}">{{ product.name }}</a></h6>
                     <div class="product-card__review d-sm-flex align-items-center">
                       <div class="reviews-group d-flex">
                         <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
@@ -218,374 +209,15 @@
                         <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
                         <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
                       </div>
-                      <span class="reviews-note text-lowercase text-secondary ms-sm-1">321,975</span>
+                      <span class="reviews-note text-lowercase text-secondary ms-sm-1"></span>
                     </div>
                     <div class="product-card__price d-flex">
-                      <span class="money price fs-5">$35.90</span>
+                      <span class="money price fs-5">${{ product.price }}</span>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="product-card-wrapper mb-2">
-                <div class="product-card product-card_style9 border rounded-3 mb-3 mb-md-4 ">
-                  <div class="position-relative pb-3">
-                    <div class="pc__img-wrapper pc__img-wrapper_wide3">
-                      <a href="product_detail.html">
-                        <img loading="lazy" src="../images/home/demo12/product-2.jpg" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img">
-                      </a>
-                    </div>
-                    <div class="anim_appear-bottom position-absolute w-100 text-center">
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-add-cart js-open-aside" data-aside="cartDrawer" title="Add To Cart">
-                        <svg class="d-inline-block" width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_cart" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-quick-view" data-bs-toggle="modal" data-bs-target="#quickView" title="Quick view">
-                        <svg class="d-inline-block" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><use href="#icon_view" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase js-add-wishlist" title="Add To Wishlist">
-                        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_heart" /></svg>
-                      </button>
-                    </div>
-                  </div>
-    
-                  <div class="pc__info position-relative">
-                    <p class="pc__category">Fruits</p>
-                    <h6 class="pc__title"><a href="product_detail.html">Organic Strawberries, 1 lb</a></h6>
-                    <div class="product-card__review d-sm-flex align-items-center">
-                      <div class="reviews-group d-flex">
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                      </div>
-                      <span class="reviews-note text-lowercase text-secondary ms-sm-1">321,975</span>
-                    </div>
-                    <div class="product-card__price d-flex">
-                      <span class="money price fs-5">$79.99</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="product-card-wrapper mb-2">
-                <div class="product-card product-card_style9 border rounded-3 mb-3 mb-md-4 ">
-                  <div class="position-relative pb-3">
-                    <div class="pc__img-wrapper pc__img-wrapper_wide3">
-                      <a href="product_detail.html">
-                        <img loading="lazy" src="../images/home/demo12/product-3.jpg" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img">
-                      </a>
-                    </div>
-                    <div class="anim_appear-bottom position-absolute w-100 text-center">
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-add-cart js-open-aside" data-aside="cartDrawer" title="Add To Cart">
-                        <svg class="d-inline-block" width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_cart" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-quick-view" data-bs-toggle="modal" data-bs-target="#quickView" title="Quick view">
-                        <svg class="d-inline-block" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><use href="#icon_view" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase js-add-wishlist" title="Add To Wishlist">
-                        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_heart" /></svg>
-                      </button>
-                    </div>
-                  </div>
-    
-                  <div class="pc__info position-relative">
-                    <p class="pc__category">Fruits</p>
-                    <h6 class="pc__title"><a href="product_detail.html">Blueberry Organic, 6 Ounce</a></h6>
-                    <div class="product-card__review d-sm-flex align-items-center">
-                      <div class="reviews-group d-flex">
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                      </div>
-                      <span class="reviews-note text-lowercase text-secondary ms-sm-1">321,975</span>
-                    </div>
-                    <div class="product-card__price d-flex">
-                      <span class="money price fs-5">$929.00</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="product-card-wrapper mb-2">
-                <div class="product-card product-card_style9 border rounded-3 mb-3 mb-md-4 ">
-                  <div class="position-relative pb-3">
-                    <div class="pc__img-wrapper pc__img-wrapper_wide3">
-                      <a href="product_detail.html">
-                        <img loading="lazy" src="../images/home/demo12/product-4.jpg" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img">
-                      </a>
-                    </div>
-                    <div class="anim_appear-bottom position-absolute w-100 text-center">
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-add-cart js-open-aside" data-aside="cartDrawer" title="Add To Cart">
-                        <svg class="d-inline-block" width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_cart" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-quick-view" data-bs-toggle="modal" data-bs-target="#quickView" title="Quick view">
-                        <svg class="d-inline-block" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><use href="#icon_view" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase js-add-wishlist" title="Add To Wishlist">
-                        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_heart" /></svg>
-                      </button>
-                    </div>
-                  </div>
-    
-                  <div class="pc__info position-relative">
-                    <p class="pc__category">Fruits</p>
-                    <h6 class="pc__title"><a href="product_detail.html">Kiwi Organic, 1 Each</a></h6>
-                    <div class="product-card__review d-sm-flex align-items-center">
-                      <div class="reviews-group d-flex">
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                      </div>
-                      <span class="reviews-note text-lowercase text-secondary ms-sm-1">321,975</span>
-                    </div>
-                    <div class="product-card__price d-flex">
-                      <span class="money price fs-5">$729.00</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="product-card-wrapper mb-2">
-                <div class="product-card product-card_style9 border rounded-3 mb-3 mb-md-4 ">
-                  <div class="position-relative pb-3">
-                    <div class="pc__img-wrapper pc__img-wrapper_wide3">
-                      <a href="product_detail.html">
-                        <img loading="lazy" src="../images/home/demo12/product-5.jpg" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img">
-                      </a>
-                    </div>
-                    <div class="anim_appear-bottom position-absolute w-100 text-center">
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-add-cart js-open-aside" data-aside="cartDrawer" title="Add To Cart">
-                        <svg class="d-inline-block" width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_cart" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-quick-view" data-bs-toggle="modal" data-bs-target="#quickView" title="Quick view">
-                        <svg class="d-inline-block" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><use href="#icon_view" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase js-add-wishlist" title="Add To Wishlist">
-                        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_heart" /></svg>
-                      </button>
-                    </div>
-                  </div>
-    
-                  <div class="pc__info position-relative">
-                    <p class="pc__category">Fruits</p>
-                    <h6 class="pc__title"><a href="product_detail.html">Organic Banana</a></h6>
-                    <div class="product-card__review d-sm-flex align-items-center">
-                      <div class="reviews-group d-flex">
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                      </div>
-                      <span class="reviews-note text-lowercase text-secondary ms-sm-1">321,975</span>
-                    </div>
-                    <div class="product-card__price d-flex">
-                      <span class="money price fs-5">$399.00</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="product-card-wrapper mb-2">
-                <div class="product-card product-card_style9 border rounded-3 mb-3 mb-md-4 ">
-                  <div class="position-relative pb-3">
-                    <div class="pc__img-wrapper pc__img-wrapper_wide3">
-                      <a href="product_detail.html">
-                        <img loading="lazy" src="../images/home/demo12/product-6.jpg" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img">
-                      </a>
-                    </div>
-                    <div class="anim_appear-bottom position-absolute w-100 text-center">
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-add-cart js-open-aside" data-aside="cartDrawer" title="Add To Cart">
-                        <svg class="d-inline-block" width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_cart" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-quick-view" data-bs-toggle="modal" data-bs-target="#quickView" title="Quick view">
-                        <svg class="d-inline-block" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><use href="#icon_view" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase js-add-wishlist" title="Add To Wishlist">
-                        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_heart" /></svg>
-                      </button>
-                    </div>
-                  </div>
-    
-                  <div class="pc__info position-relative">
-                    <p class="pc__category">Fruits</p>
-                    <h6 class="pc__title"><a href="product_detail.html">McCormick Gourmet Orange</a></h6>
-                    <div class="product-card__review d-sm-flex align-items-center">
-                      <div class="reviews-group d-flex">
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                      </div>
-                      <span class="reviews-note text-lowercase text-secondary ms-sm-1">321,975</span>
-                    </div>
-                    <div class="product-card__price d-flex">
-                      <span class="money price fs-5">$35.90</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="product-card-wrapper mb-2">
-                <div class="product-card product-card_style9 border rounded-3 mb-3 mb-md-4 ">
-                  <div class="position-relative pb-3">
-                    <div class="pc__img-wrapper pc__img-wrapper_wide3">
-                      <a href="product_detail.html">
-                        <img loading="lazy" src="../images/home/demo12/product-7.jpg" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img">
-                      </a>
-                    </div>
-                    <div class="anim_appear-bottom position-absolute w-100 text-center">
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-add-cart js-open-aside" data-aside="cartDrawer" title="Add To Cart">
-                        <svg class="d-inline-block" width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_cart" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-quick-view" data-bs-toggle="modal" data-bs-target="#quickView" title="Quick view">
-                        <svg class="d-inline-block" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><use href="#icon_view" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase js-add-wishlist" title="Add To Wishlist">
-                        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_heart" /></svg>
-                      </button>
-                    </div>
-                  </div>
-    
-                  <div class="pc__info position-relative">
-                    <p class="pc__category">Fruits</p>
-                    <h6 class="pc__title"><a href="product_detail.html">Organic Strawberries, 1 lb</a></h6>
-                    <div class="product-card__review d-sm-flex align-items-center">
-                      <div class="reviews-group d-flex">
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                      </div>
-                      <span class="reviews-note text-lowercase text-secondary ms-sm-1">321,975</span>
-                    </div>
-                    <div class="product-card__price d-flex">
-                      <span class="money price fs-5">$79.99</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="product-card-wrapper mb-2">
-                <div class="product-card product-card_style9 border rounded-3 mb-3 mb-md-4 ">
-                  <div class="position-relative pb-3">
-                    <div class="pc__img-wrapper pc__img-wrapper_wide3">
-                      <a href="product_detail.html">
-                        <img loading="lazy" src="../images/home/demo12/product-8.jpg" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img">
-                      </a>
-                    </div>
-                    <div class="anim_appear-bottom position-absolute w-100 text-center">
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-add-cart js-open-aside" data-aside="cartDrawer" title="Add To Cart">
-                        <svg class="d-inline-block" width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_cart" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-quick-view" data-bs-toggle="modal" data-bs-target="#quickView" title="Quick view">
-                        <svg class="d-inline-block" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><use href="#icon_view" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase js-add-wishlist" title="Add To Wishlist">
-                        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_heart" /></svg>
-                      </button>
-                    </div>
-                  </div>
-    
-                  <div class="pc__info position-relative">
-                    <p class="pc__category">Fruits</p>
-                    <h6 class="pc__title"><a href="product_detail.html">Blueberry Organic, 6 Ounce</a></h6>
-                    <div class="product-card__review d-sm-flex align-items-center">
-                      <div class="reviews-group d-flex">
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                      </div>
-                      <span class="reviews-note text-lowercase text-secondary ms-sm-1">321,975</span>
-                    </div>
-                    <div class="product-card__price d-flex">
-                      <span class="money price fs-5">$929.00</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="product-card-wrapper mb-2">
-                <div class="product-card product-card_style9 border rounded-3 mb-3 mb-md-4 ">
-                  <div class="position-relative pb-3">
-                    <div class="pc__img-wrapper pc__img-wrapper_wide3">
-                      <a href="product_detail.html">
-                        <img loading="lazy" src="../images/home/demo12/product-9.jpg" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img">
-                      </a>
-                    </div>
-                    <div class="anim_appear-bottom position-absolute w-100 text-center">
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-add-cart js-open-aside" data-aside="cartDrawer" title="Add To Cart">
-                        <svg class="d-inline-block" width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_cart" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-quick-view" data-bs-toggle="modal" data-bs-target="#quickView" title="Quick view">
-                        <svg class="d-inline-block" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><use href="#icon_view" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase js-add-wishlist" title="Add To Wishlist">
-                        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_heart" /></svg>
-                      </button>
-                    </div>
-                  </div>
-    
-                  <div class="pc__info position-relative">
-                    <p class="pc__category">Fruits</p>
-                    <h6 class="pc__title"><a href="product_detail.html">Dried Pineapple Fruit Bar</a></h6>
-                    <div class="product-card__review d-sm-flex align-items-center">
-                      <div class="reviews-group d-flex">
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                      </div>
-                      <span class="reviews-note text-lowercase text-secondary ms-sm-1">321,975</span>
-                    </div>
-                    <div class="product-card__price d-flex">
-                      <span class="money price fs-5">$729.00</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="product-card-wrapper mb-2">
-                <div class="product-card product-card_style9 border rounded-3 mb-3 mb-md-4 ">
-                  <div class="position-relative pb-3">
-                    <div class="pc__img-wrapper pc__img-wrapper_wide3">
-                      <a href="product_detail.html">
-                        <img loading="lazy" src="../images/home/demo12/product-10.jpg" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img">
-                      </a>
-                    </div>
-                    <div class="anim_appear-bottom position-absolute w-100 text-center">
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-add-cart js-open-aside" data-aside="cartDrawer" title="Add To Cart">
-                        <svg class="d-inline-block" width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_cart" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-quick-view" data-bs-toggle="modal" data-bs-target="#quickView" title="Quick view">
-                        <svg class="d-inline-block" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><use href="#icon_view" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase js-add-wishlist" title="Add To Wishlist">
-                        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_heart" /></svg>
-                      </button>
-                    </div>
-                  </div>
-    
-                  <div class="pc__info position-relative">
-                    <p class="pc__category">Fruits</p>
-                    <h6 class="pc__title"><a href="product_detail.html">Holiday Nuts Gift Basket</a></h6>
-                    <div class="product-card__review d-sm-flex align-items-center">
-                      <div class="reviews-group d-flex">
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                      </div>
-                      <span class="reviews-note text-lowercase text-secondary ms-sm-1">321,975</span>
-                    </div>
-                    <div class="product-card__price d-flex">
-                      <span class="money price fs-5">$399.00</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              {% endfor %}
             </div>
           </div>
           <div class="tab-pane fade show" id="collections-tab-2" role="tabpanel" aria-labelledby="collections-tab-2-trigger">
@@ -1398,30 +1030,21 @@
           </div>
           <div class="tab-pane fade show" id="collections-tab-4" role="tabpanel" aria-labelledby="collections-tab-4-trigger">
             <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xxl-5">
+              {% for top_rated in top_rated_products %}  
               <div class="product-card-wrapper mb-2">
                 <div class="product-card product-card_style9 border rounded-3 mb-3 mb-md-4 ">
                   <div class="position-relative pb-3">
                     <div class="pc__img-wrapper pc__img-wrapper_wide3">
-                      <a href="product_detail.html">
-                        <img loading="lazy" src="../images/home/demo12/product-4.jpg" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img">
+                      <a href="{% url 'products:product_detail' top_rated.id %}">
+                        <img loading="lazy" src="{{ top_rated.images.all.0.image.url }}" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img">
                       </a>
                     </div>
-                    <div class="anim_appear-bottom position-absolute w-100 text-center">
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-add-cart js-open-aside" data-aside="cartDrawer" title="Add To Cart">
-                        <svg class="d-inline-block" width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_cart" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-quick-view" data-bs-toggle="modal" data-bs-target="#quickView" title="Quick view">
-                        <svg class="d-inline-block" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><use href="#icon_view" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase js-add-wishlist" title="Add To Wishlist">
-                        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_heart" /></svg>
-                      </button>
-                    </div>
+                    
                   </div>
     
                   <div class="pc__info position-relative">
-                    <p class="pc__category">Fruits</p>
-                    <h6 class="pc__title"><a href="product_detail.html">Kiwi Organic, 1 Each</a></h6>
+                    <p class="pc__category">{{ top_rated.category }}</p>
+                    <h6 class="pc__title"><a href="{% url 'products:product_detail' top_rated.id %}">{{ top_rated.name }}</a></h6>
                     <div class="product-card__review d-sm-flex align-items-center">
                       <div class="reviews-group d-flex">
                         <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
@@ -1430,374 +1053,16 @@
                         <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
                         <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
                       </div>
-                      <span class="reviews-note text-lowercase text-secondary ms-sm-1">321,975</span>
+                      <span class="reviews-note text-lowercase text-secondary ms-sm-1"></span>
                     </div>
                     <div class="product-card__price d-flex">
-                      <span class="money price fs-5">$729.00</span>
+                      <span class="money price fs-5">${{ top_rated.price }}</span>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="product-card-wrapper mb-2">
-                <div class="product-card product-card_style9 border rounded-3 mb-3 mb-md-4 ">
-                  <div class="position-relative pb-3">
-                    <div class="pc__img-wrapper pc__img-wrapper_wide3">
-                      <a href="product_detail.html">
-                        <img loading="lazy" src="../images/home/demo12/product-5.jpg" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img">
-                      </a>
-                    </div>
-                    <div class="anim_appear-bottom position-absolute w-100 text-center">
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-add-cart js-open-aside" data-aside="cartDrawer" title="Add To Cart">
-                        <svg class="d-inline-block" width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_cart" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-quick-view" data-bs-toggle="modal" data-bs-target="#quickView" title="Quick view">
-                        <svg class="d-inline-block" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><use href="#icon_view" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase js-add-wishlist" title="Add To Wishlist">
-                        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_heart" /></svg>
-                      </button>
-                    </div>
-                  </div>
-    
-                  <div class="pc__info position-relative">
-                    <p class="pc__category">Fruits</p>
-                    <h6 class="pc__title"><a href="product_detail.html">Organic Banana</a></h6>
-                    <div class="product-card__review d-sm-flex align-items-center">
-                      <div class="reviews-group d-flex">
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                      </div>
-                      <span class="reviews-note text-lowercase text-secondary ms-sm-1">321,975</span>
-                    </div>
-                    <div class="product-card__price d-flex">
-                      <span class="money price fs-5">$399.00</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="product-card-wrapper mb-2">
-                <div class="product-card product-card_style9 border rounded-3 mb-3 mb-md-4 ">
-                  <div class="position-relative pb-3">
-                    <div class="pc__img-wrapper pc__img-wrapper_wide3">
-                      <a href="product_detail.html">
-                        <img loading="lazy" src="../images/home/demo12/product-6.jpg" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img">
-                      </a>
-                    </div>
-                    <div class="anim_appear-bottom position-absolute w-100 text-center">
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-add-cart js-open-aside" data-aside="cartDrawer" title="Add To Cart">
-                        <svg class="d-inline-block" width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_cart" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-quick-view" data-bs-toggle="modal" data-bs-target="#quickView" title="Quick view">
-                        <svg class="d-inline-block" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><use href="#icon_view" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase js-add-wishlist" title="Add To Wishlist">
-                        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_heart" /></svg>
-                      </button>
-                    </div>
-                  </div>
-    
-                  <div class="pc__info position-relative">
-                    <p class="pc__category">Fruits</p>
-                    <h6 class="pc__title"><a href="product_detail.html">McCormick Gourmet Orange</a></h6>
-                    <div class="product-card__review d-sm-flex align-items-center">
-                      <div class="reviews-group d-flex">
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                      </div>
-                      <span class="reviews-note text-lowercase text-secondary ms-sm-1">321,975</span>
-                    </div>
-                    <div class="product-card__price d-flex">
-                      <span class="money price fs-5">$35.90</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="product-card-wrapper mb-2">
-                <div class="product-card product-card_style9 border rounded-3 mb-3 mb-md-4 ">
-                  <div class="position-relative pb-3">
-                    <div class="pc__img-wrapper pc__img-wrapper_wide3">
-                      <a href="product_detail.html">
-                        <img loading="lazy" src="../images/home/demo12/product-7.jpg" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img">
-                      </a>
-                    </div>
-                    <div class="anim_appear-bottom position-absolute w-100 text-center">
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-add-cart js-open-aside" data-aside="cartDrawer" title="Add To Cart">
-                        <svg class="d-inline-block" width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_cart" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-quick-view" data-bs-toggle="modal" data-bs-target="#quickView" title="Quick view">
-                        <svg class="d-inline-block" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><use href="#icon_view" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase js-add-wishlist" title="Add To Wishlist">
-                        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_heart" /></svg>
-                      </button>
-                    </div>
-                  </div>
-    
-                  <div class="pc__info position-relative">
-                    <p class="pc__category">Fruits</p>
-                    <h6 class="pc__title"><a href="product_detail.html">Organic Strawberries, 1 lb</a></h6>
-                    <div class="product-card__review d-sm-flex align-items-center">
-                      <div class="reviews-group d-flex">
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                      </div>
-                      <span class="reviews-note text-lowercase text-secondary ms-sm-1">321,975</span>
-                    </div>
-                    <div class="product-card__price d-flex">
-                      <span class="money price fs-5">$79.99</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="product-card-wrapper mb-2">
-                <div class="product-card product-card_style9 border rounded-3 mb-3 mb-md-4 ">
-                  <div class="position-relative pb-3">
-                    <div class="pc__img-wrapper pc__img-wrapper_wide3">
-                      <a href="product_detail.html">
-                        <img loading="lazy" src="../images/home/demo12/product-8.jpg" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img">
-                      </a>
-                    </div>
-                    <div class="anim_appear-bottom position-absolute w-100 text-center">
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-add-cart js-open-aside" data-aside="cartDrawer" title="Add To Cart">
-                        <svg class="d-inline-block" width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_cart" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-quick-view" data-bs-toggle="modal" data-bs-target="#quickView" title="Quick view">
-                        <svg class="d-inline-block" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><use href="#icon_view" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase js-add-wishlist" title="Add To Wishlist">
-                        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_heart" /></svg>
-                      </button>
-                    </div>
-                  </div>
-    
-                  <div class="pc__info position-relative">
-                    <p class="pc__category">Fruits</p>
-                    <h6 class="pc__title"><a href="product_detail.html">Blueberry Organic, 6 Ounce</a></h6>
-                    <div class="product-card__review d-sm-flex align-items-center">
-                      <div class="reviews-group d-flex">
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                      </div>
-                      <span class="reviews-note text-lowercase text-secondary ms-sm-1">321,975</span>
-                    </div>
-                    <div class="product-card__price d-flex">
-                      <span class="money price fs-5">$929.00</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="product-card-wrapper mb-2">
-                <div class="product-card product-card_style9 border rounded-3 mb-3 mb-md-4 ">
-                  <div class="position-relative pb-3">
-                    <div class="pc__img-wrapper pc__img-wrapper_wide3">
-                      <a href="product_detail.html">
-                        <img loading="lazy" src="../images/home/demo12/product-9.jpg" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img">
-                      </a>
-                    </div>
-                    <div class="anim_appear-bottom position-absolute w-100 text-center">
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-add-cart js-open-aside" data-aside="cartDrawer" title="Add To Cart">
-                        <svg class="d-inline-block" width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_cart" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-quick-view" data-bs-toggle="modal" data-bs-target="#quickView" title="Quick view">
-                        <svg class="d-inline-block" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><use href="#icon_view" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase js-add-wishlist" title="Add To Wishlist">
-                        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_heart" /></svg>
-                      </button>
-                    </div>
-                  </div>
-    
-                  <div class="pc__info position-relative">
-                    <p class="pc__category">Fruits</p>
-                    <h6 class="pc__title"><a href="product_detail.html">Dried Pineapple Fruit Bar</a></h6>
-                    <div class="product-card__review d-sm-flex align-items-center">
-                      <div class="reviews-group d-flex">
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                      </div>
-                      <span class="reviews-note text-lowercase text-secondary ms-sm-1">321,975</span>
-                    </div>
-                    <div class="product-card__price d-flex">
-                      <span class="money price fs-5">$729.00</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="product-card-wrapper mb-2">
-                <div class="product-card product-card_style9 border rounded-3 mb-3 mb-md-4 ">
-                  <div class="position-relative pb-3">
-                    <div class="pc__img-wrapper pc__img-wrapper_wide3">
-                      <a href="product_detail.html">
-                        <img loading="lazy" src="../images/home/demo12/product-10.jpg" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img">
-                      </a>
-                    </div>
-                    <div class="anim_appear-bottom position-absolute w-100 text-center">
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-add-cart js-open-aside" data-aside="cartDrawer" title="Add To Cart">
-                        <svg class="d-inline-block" width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_cart" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-quick-view" data-bs-toggle="modal" data-bs-target="#quickView" title="Quick view">
-                        <svg class="d-inline-block" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><use href="#icon_view" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase js-add-wishlist" title="Add To Wishlist">
-                        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_heart" /></svg>
-                      </button>
-                    </div>
-                  </div>
-    
-                  <div class="pc__info position-relative">
-                    <p class="pc__category">Fruits</p>
-                    <h6 class="pc__title"><a href="product_detail.html">Holiday Nuts Gift Basket</a></h6>
-                    <div class="product-card__review d-sm-flex align-items-center">
-                      <div class="reviews-group d-flex">
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                      </div>
-                      <span class="reviews-note text-lowercase text-secondary ms-sm-1">321,975</span>
-                    </div>
-                    <div class="product-card__price d-flex">
-                      <span class="money price fs-5">$399.00</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="product-card-wrapper mb-2">
-                <div class="product-card product-card_style9 border rounded-3 mb-3 mb-md-4 ">
-                  <div class="position-relative pb-3">
-                    <div class="pc__img-wrapper pc__img-wrapper_wide3">
-                      <a href="product_detail.html">
-                        <img loading="lazy" src="../images/home/demo12/product-1.jpg" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img">
-                      </a>
-                    </div>
-                    <div class="anim_appear-bottom position-absolute w-100 text-center">
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-add-cart js-open-aside" data-aside="cartDrawer" title="Add To Cart">
-                        <svg class="d-inline-block" width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_cart" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-quick-view" data-bs-toggle="modal" data-bs-target="#quickView" title="Quick view">
-                        <svg class="d-inline-block" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><use href="#icon_view" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase js-add-wishlist" title="Add To Wishlist">
-                        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_heart" /></svg>
-                      </button>
-                    </div>
-                  </div>
-    
-                  <div class="pc__info position-relative">
-                    <p class="pc__category">Fruits</p>
-                    <h6 class="pc__title"><a href="product_detail.html">Organic Bartlett Pear</a></h6>
-                    <div class="product-card__review d-sm-flex align-items-center">
-                      <div class="reviews-group d-flex">
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                      </div>
-                      <span class="reviews-note text-lowercase text-secondary ms-sm-1">321,975</span>
-                    </div>
-                    <div class="product-card__price d-flex">
-                      <span class="money price fs-5">$35.90</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="product-card-wrapper mb-2">
-                <div class="product-card product-card_style9 border rounded-3 mb-3 mb-md-4 ">
-                  <div class="position-relative pb-3">
-                    <div class="pc__img-wrapper pc__img-wrapper_wide3">
-                      <a href="product_detail.html">
-                        <img loading="lazy" src="../images/home/demo12/product-2.jpg" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img">
-                      </a>
-                    </div>
-                    <div class="anim_appear-bottom position-absolute w-100 text-center">
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-add-cart js-open-aside" data-aside="cartDrawer" title="Add To Cart">
-                        <svg class="d-inline-block" width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_cart" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-quick-view" data-bs-toggle="modal" data-bs-target="#quickView" title="Quick view">
-                        <svg class="d-inline-block" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><use href="#icon_view" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase js-add-wishlist" title="Add To Wishlist">
-                        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_heart" /></svg>
-                      </button>
-                    </div>
-                  </div>
-    
-                  <div class="pc__info position-relative">
-                    <p class="pc__category">Fruits</p>
-                    <h6 class="pc__title"><a href="product_detail.html">Organic Strawberries, 1 lb</a></h6>
-                    <div class="product-card__review d-sm-flex align-items-center">
-                      <div class="reviews-group d-flex">
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                      </div>
-                      <span class="reviews-note text-lowercase text-secondary ms-sm-1">321,975</span>
-                    </div>
-                    <div class="product-card__price d-flex">
-                      <span class="money price fs-5">$79.99</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="product-card-wrapper mb-2">
-                <div class="product-card product-card_style9 border rounded-3 mb-3 mb-md-4 ">
-                  <div class="position-relative pb-3">
-                    <div class="pc__img-wrapper pc__img-wrapper_wide3">
-                      <a href="product_detail.html">
-                        <img loading="lazy" src="../images/home/demo12/product-3.jpg" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img">
-                      </a>
-                    </div>
-                    <div class="anim_appear-bottom position-absolute w-100 text-center">
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-add-cart js-open-aside" data-aside="cartDrawer" title="Add To Cart">
-                        <svg class="d-inline-block" width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_cart" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-quick-view" data-bs-toggle="modal" data-bs-target="#quickView" title="Quick view">
-                        <svg class="d-inline-block" width="18" height="18" viewBox="0 0 18 18" xmlns="http://www.w3.org/2000/svg"><use href="#icon_view" /></svg>
-                      </button>
-                      <button class="btn btn-round btn-hover-red border-0 text-uppercase js-add-wishlist" title="Add To Wishlist">
-                        <svg width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_heart" /></svg>
-                      </button>
-                    </div>
-                  </div>
-    
-                  <div class="pc__info position-relative">
-                    <p class="pc__category">Fruits</p>
-                    <h6 class="pc__title"><a href="product_detail.html">Blueberry Organic, 6 Ounce</a></h6>
-                    <div class="product-card__review d-sm-flex align-items-center">
-                      <div class="reviews-group d-flex">
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                        <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><path d="M4.0172 0.313075L2.91869 2.64013L0.460942 3.0145C0.0201949 3.08129 -0.15644 3.64899 0.163185 3.97415L1.94131 5.78447L1.52075 8.34177C1.44505 8.80402 1.91103 9.15026 2.30131 8.93408L4.5 7.72661L6.69869 8.93408C7.08897 9.14851 7.55495 8.80402 7.47925 8.34177L7.05869 5.78447L8.83682 3.97415C9.15644 3.64899 8.97981 3.08129 8.53906 3.0145L6.08131 2.64013L4.9828 0.313075C4.78598 -0.101718 4.2157 -0.10699 4.0172 0.313075Z"></path></svg>
-                      </div>
-                      <span class="reviews-note text-lowercase text-secondary ms-sm-1">321,975</span>
-                    </div>
-                    <div class="product-card__price d-flex">
-                      <span class="money price fs-5">$929.00</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
+              {% endfor %}  
+              
             </div>
           </div>
         </div>
@@ -1811,8 +1076,8 @@
         <div class="mb-3 mb-xl-5 pb-3 pt-1 pb-xl-5"></div>
 
         <div class="d-flex align-items-center justify-content-center justify-content-md-between flex-wrap mb-3 pb-xl-2 mb-xl-4 gap-4">
-          <h2 class="section-title fw-normal">Latest in Blog</h2>
-          <a class="btn-link btn-link_md default-underline text-uppercase fw-medium" href="#">See All Blog</a>
+          <h2 class="section-title fw-normal">Обзоры товаров</h2>
+          <a class="btn-link btn-link_md default-underline text-uppercase fw-medium" href="{% url 'posts:index' %}">Посмотреть все статьи</a>
         </div>
 
         <div class="position-relative">
@@ -1849,62 +1114,22 @@
               }
             }'>
             <div class="swiper-wrapper blog-grid row-cols-xl-3">
+              {% for post in posts %}  
               <div class="swiper-slide blog-grid__item mb-0 bg-white">
                 <div class="blog-grid__item-image mb-0">
-                  <img loading="lazy" class="h-auto" src="../images/home/demo12/post-1.jpg" width="330" height="220" alt="">
+                  <img loading="lazy" class="h-auto" src="{{ post.image.url }}" width="330" height="220" alt="">
                 </div>
                 <div class="blog-grid__item-detail px-4 py-4">
                   <div class="blog-grid__item-meta">
-                    <span class="blog-grid__item-meta__author">By Admin</span>
-                    <span class="blog-grid__item-meta__date">Aprial 05, 2023</span>
+                    <span class="blog-grid__item-meta__author">{{ post.author }}</span>
+                    <span class="blog-grid__item-meta__date">{{ post.created_at }}</span>
                   </div>
                   <div class="blog-grid__item-title mb-0 me-3 me-xxl-5">
-                    <a href="./blog_single.html">Woman with good shoes is never be ugly place</a>
+                    <a href="{% url 'posts:post_detail' post.id %}">{{ post.content|slice:":50" }}</a>
                   </div>
                 </div>
               </div>
-              <div class="swiper-slide blog-grid__item mb-0 bg-white">
-                <div class="blog-grid__item-image mb-0">
-                  <img loading="lazy" class="h-auto" src="../images/home/demo12/post-2.jpg" width="330" height="220" alt="">
-                </div>
-                <div class="blog-grid__item-detail px-4 py-4">
-                  <div class="blog-grid__item-meta">
-                    <span class="blog-grid__item-meta__author">By Admin</span>
-                    <span class="blog-grid__item-meta__date">Aprial 05, 2023</span>
-                  </div>
-                  <div class="blog-grid__item-title mb-0 me-3 me-xxl-5">
-                    <a href="./blog_single.html">What Freud Can Teach Us About Furniture</a>
-                  </div>
-                </div>
-              </div>
-              <div class="swiper-slide blog-grid__item mb-0 bg-white">
-                <div class="blog-grid__item-image mb-0">
-                  <img loading="lazy" class="h-auto" src="../images/home/demo12/post-3.jpg" width="330" height="220" alt="">
-                </div>
-                <div class="blog-grid__item-detail px-4 py-4">
-                  <div class="blog-grid__item-meta">
-                    <span class="blog-grid__item-meta__author">By Admin</span>
-                    <span class="blog-grid__item-meta__date">Aprial 05, 2023</span>
-                  </div>
-                  <div class="blog-grid__item-title mb-0 me-3 me-xxl-5">
-                    <a href="./blog_single.html">Habitant morbi tristique senectus</a>
-                  </div>
-                </div>
-              </div>
-              <div class="swiper-slide blog-grid__item mb-0 bg-white">
-                <div class="blog-grid__item-image mb-0">
-                  <img loading="lazy" class="h-auto" src="../images/home/demo12/post-4.jpg" width="330" height="220" alt="">
-                </div>
-                <div class="blog-grid__item-detail px-4 py-4">
-                  <div class="blog-grid__item-meta">
-                    <span class="blog-grid__item-meta__author">By Admin</span>
-                    <span class="blog-grid__item-meta__date">Aprial 05, 2023</span>
-                  </div>
-                  <div class="blog-grid__item-title mb-0 me-3 me-xxl-5">
-                    <a href="./blog_single.html">Woman with good shoes is never be ugly place</a>
-                  </div>
-                </div>
-              </div>
+              {% endfor %}
             </div><!-- /.swiper-wrapper -->
           </div><!-- /.swiper-container js-swiper-slider -->
         </div><!-- /.position-relative -->

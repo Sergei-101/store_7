@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'coupons',
     'posts',
     'reviews',
+    'pages',
 
 ]
 
