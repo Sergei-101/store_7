@@ -2,6 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from products.models import Product, ProductCategory, ProductImage
 from cart.forms import CartAddProductForm
+from reviews.forms import ReviewForm
 
 def index(request):
     return render(request, 'products/index.html')
@@ -20,10 +21,12 @@ def products(request, category_id=None): #отоброжение категор�
 def product_detail(request, product_id):
     products = Product.objects.filter(id=product_id)
     images = ProductImage.objects.filter(product=product_id)
-    cart_product_form = CartAddProductForm()   
+    cart_product_form = CartAddProductForm()
+    review_form = ReviewForm()
     context = {'products': products,
                'images': images,
-               'cart_product_form': cart_product_form}
+               'cart_product_form': cart_product_form,
+               'review_form': review_form}
     return render(request, 'products/product_detail.html', context)
 
 

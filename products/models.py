@@ -30,6 +30,11 @@ class Product(models.Model):
     def __str__(self):
         return f'{self.name}'
 
+    def average_rating(self):
+        total_rating = sum(review.rating for review in self.reviews.all())
+        average_rating = total_rating / self.reviews.count() if self.reviews.exists() else 0
+        return round(average_rating, 2)
+
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to='product_images')

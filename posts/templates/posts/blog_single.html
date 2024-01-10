@@ -1,0 +1,38 @@
+{% extends  'base.html' %}
+{% load static %}
+
+{% block content %}
+    
+  <main>
+    <div class="mb-4 pb-4"></div>
+    <section class="blog-page blog-single container">
+      <div class="mw-930">
+        <h2 class="page-title">{{ post.title}}</h2>
+        <div class="blog-single__item-meta">
+          <span class="blog-single__item-meta__author">{{ post.author }}</span>
+          <span class="blog-single__item-meta__date">{{ post.created_at }}</span>
+          <span class="blog-single__item-meta__category">{{ post.category }}</span>
+        </div>
+      </div>
+      <div class="blog-single__item-content">
+        <p>
+          <img loading="lazy" class="w-100 h-auto d-block" src="{{ post.image.url }}" width="1410" height="550" alt="" />
+        </p>
+        <div class="mw-930">
+          {{ post.content }}  
+        </div>
+        <div class="container mw-1170">
+          
+        <div class="mw-930">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Amet sapien dignissim a elementum. Sociis metus, hendrerit mauris id in. Quis sit sit ultrices tincidunt euismod luctus diam. Turpis sodales orci etiam phasellus lacus id leo. Amet turpis nunc, nulla massa est viverra interdum. Praesent auctor nulla morbi non posuere mattis. Arcu eu id maecenas cras. Eget fames tincidunt leo, sed vitae, pretium interdum. Non massa, imperdiet nunc sit sapien. Tempor lectus ornare quis mi vel. Nibh euismod donec elit posuere lobortis consequat faucibus aliquam metus. Ornare consequat, vulputate sit maecenas mauris urna sed fringilla. Urna fermentum iaculis pharetra, maecenas dui nullam nullam rhoncus. Facilisis quis vulputate sem gravida lacus, justo placerat.</p>
+          <p>She'd years darkness days. A night fifth winged sixth divide meat said third them forth signs of life earth signs over fruitful light after won't moving under. Thing yielding upon seed. Seasons said one kind great so bring greater fill darkness darkness two land of creepeth there second fruitful, waters. Make don't void years Gathering gathering divide fill.</p>
+        </div>
+      </div>
+      
+    </section>
+  </main>
+
+  <div class="mb-5 pb-xl-5"></div>	
+{% endblock %}
+
+  

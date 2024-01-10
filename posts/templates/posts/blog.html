@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+  <main>
+    <section class="blog-page-title mb-4 mb-xl-5">
+      <div class="title-bg">
+        <img loading="lazy" src="../images/blog_title_bg.jpg" width="1780" height="420" alt="" />
+      </div>
+      <div class="container">
+        <h2 class="page-title">Статьи</h2>
+        <div class="blog__filter">
+          {% for category in categories %}  
+          <a href="{% url 'posts:post_category' category.id %}" class="menu-link menu-link_us-s">{{ category.name }}</a>
+          {% endfor %}  
+          
+        </div>
+      </div>
+    </section>
+    <section class="blog-page container">
+      <div class="blog-grid row row-cols-1 row-cols-md-2 row-cols-xl-3">
+        {% for post in posts %}  
+        <div class="blog-grid__item">
+          <div class="blog-grid__item-image">
+            <img loading="lazy" class="h-auto" src="{{ post.image.url }}" width="450" height="400" alt="" />
+          </div>
+          <div class="blog-grid__item-detail">
+            <div class="blog-grid__item-meta">
+              <span class="blog-grid__item-meta__author">{{ post.author }}</span>
+              <span class="blog-grid__item-meta__date">{{ post.created_at }}</span>
+            </div>
+            <div class="blog-grid__item-title">
+              <a href="./blog_single.html">{{ post.title }}</a>
+            </div>
+            <div class="blog-grid__item-content">
+              <p>{{ post.content|slice:":50" }}</p>
+              <a href="{% url 'posts:post_detail' post.id %}" class="readmore-link">Continue Reading</a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <p class="mb-1 text-center fw-medium">SHOWING 36 of 497 items</p>
+      <div class="progress progress_uomo mb-3 ms-auto me-auto" style="width: 300px;">
+        <div class="progress-bar" role="progressbar" style="width: 39%;" aria-valuenow="" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+
+      <div class="text-center">
+        <a class="btn-link btn-link_lg text-uppercase fw-medium" href="#">Показать больше</a>
+      </div>
+        
+    </section>
+  </main>
+
+  <div class="mb-5 pb-xl-5"></div>	
+{% endblock %}
+
+
+  
