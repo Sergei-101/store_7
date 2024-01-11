@@ -6,7 +6,7 @@ from reviews.forms import ReviewForm
 from reviews.models import Review
 
 
-def products(request, category_id=None): #отоброжение категорий выбор товаров по категориям
+def products(request, category_id=None):
     catrgory = ProductCategory.objects.all()
     products = Product.objects.filter(category=category_id) if category_id else Product.objects.all()
     images = ProductImage.objects.all()
