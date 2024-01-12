@@ -4,14 +4,18 @@ from products.models import Product, ProductCategory, ProductImage
 from cart.forms import CartAddProductForm
 from reviews.forms import ReviewForm
 from reviews.models import Review
+from django.core.paginator import Paginator
 
 
-def products(request, category_id=None):
+def products(request, category_id=None, page=1):
     catrgory = ProductCategory.objects.all()
     products = Product.objects.filter(category=category_id) if category_id else Product.objects.all()
+    per_page = 3
+    paginator = Paginator(products, per_page)
+    products_paginator = paginator.page(page)
     images = ProductImage.objects.all()
     cart_product_form = CartAddProductForm()
-    context = {'products': products,
+    context = {'products': products_paginator,
                'catrgories': catrgory,
                'images': images,
                'cart_product_form': cart_product_form}
