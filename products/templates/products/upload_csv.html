@@ -1,0 +1,16 @@
+{% extends  'base.html' %}
+{% load static %}
+
+{% block content %}
+    {% if request.user.is_staff %}
+	<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form }}
+    <button type="submit">Upload CSV</button>
+</form>
+    {% else %}
+    <p>Ты кто такой</p>
+    {% endif %}
+    
+{% endblock %}
+

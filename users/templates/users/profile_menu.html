@@ -4,6 +4,7 @@
           <ul class="account-nav">
             {% if request.user.is_staff %}   
             <li><a href="{% url 'admin:index' %}" class="menu-link menu-link_us-s menu-link_us-s">Админ-панель</a></li>
+            <li><a href="{% url 'products:upload_csv' %}" class="menu-link menu-link_us-s menu-link_us-s">Загрузка товаров</a></li>    
             {% endif %}  
             <li><a href="{% url 'users:profile' %}" class="menu-link menu-link_us-s menu-link_us-s">Профиль</a></li>
             <li><a href="{% url 'users:profile_orders' %}" class="menu-link menu-link_us-s">Заказы</a></li>                       
