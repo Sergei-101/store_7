@@ -12,7 +12,7 @@ from django.utils.text import slugify
 def products(request, category_id=None, page=1):
     catrgory = ProductCategory.objects.all()
     products = Product.objects.filter(category=category_id) if category_id else Product.objects.all()
-    per_page = 3
+    per_page = 10
     paginator = Paginator(products, per_page)
     products_paginator = paginator.page(page)
     images = ProductImage.objects.all()
