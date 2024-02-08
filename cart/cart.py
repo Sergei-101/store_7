@@ -11,7 +11,7 @@ class Cart:
         self.session = request.session
         cart = self.session.get(settings.CART_SESSION_ID)
         if not cart:
-            #  сохранить пустую корзину в сеансе
+            # сохранить пустую корзину в сеансе
             cart = self.session[settings.CART_SESSION_ID] = {}
         self.cart = cart
         # сохранить текущий примененный купон
@@ -46,13 +46,16 @@ class Cart:
         """
         product_id = str(product.id)
         if product_id not in self.cart:
-            self.cart[product_id] = {'quantity': 0,
-                                     'price': str(product.price)}
+            price = product.price_with_markup_and_vat()  # Получаем начальную цену товара
+            if product.promotion and product.promotion.is_active():  # Проверяем, есть ли на товар скидка и активна ли она
+                price = round(price * (1 - product.promotion.discount_percentage / 100), 2)  # Применяем скидку к цене
+            self.cart[product_id] = {'quantity': 0, 'price': str(price)}
         if override_quantity:
             self.cart[product_id]['quantity'] = quantity
         else:
             self.cart[product_id]['quantity'] += quantity
         self.save()
+
 
     def save(self):
         # отметьте сеанс как «измененный», чтобы убедиться, что он сохранится
