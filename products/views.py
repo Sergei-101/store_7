@@ -7,12 +7,14 @@ from reviews.models import Review
 from django.core.paginator import Paginator
 from products.forms import CSVUploadForm
 import csv
-from django.utils.text import slugify
+from slugify import slugify
+
+
 
 def products(request, category_id=None, page=1):
     catrgory = ProductCategory.objects.all()
     products = Product.objects.filter(category=category_id) if category_id else Product.objects.all()
-    per_page = 3
+    per_page = 10
     paginator = Paginator(products, per_page)
     products_paginator = paginator.page(page)
     images = ProductImage.objects.all()
@@ -54,10 +56,11 @@ def upload_csv(request):
 def handle_uploaded_file(file):
     # Чтение CSV файла и сохранение данных в базу данных
     decoded_file = file.read().decode('utf-8').splitlines()
-    reader = csv.reader(decoded_file)
+    reader = csv.reader(decoded_file, delimiter=';') #Установка разделителя ";"
     for row in reader:
         category_name = row[3]
-        category, created = ProductCategory.objects.get_or_create(name=category_name)
+        category_name_slug = category_name
+        category, created = ProductCategory.objects.get_or_create(name=category_name, slug=category_name_slug)
         name = row[0]
         price = row[1]
         description = row[2]
@@ -72,7 +75,7 @@ def handle_uploaded_file(file):
             slug=slug,
             quantity=quantity
         )
-        images_paths = row[4].split(',') if row[4] else []
+        images_paths = row[5].split(',') if row[5] else []
         for image_path in images_paths:
             if image_path:
                 product_image = ProductImage(product=product, image=image_path.strip())  # Убираем пробелы

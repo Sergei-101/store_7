@@ -32,6 +32,7 @@ urlpatterns = [
     path('posts/', include('posts.urls', namespace='posts')),
     path('reviews/', include('reviews.urls', namespace='reviews')),
     path('pages/', include('pages.urls', namespace='pages')),
+    path('__debug__/', include("debug_toolbar.urls")),
 
 
 ]

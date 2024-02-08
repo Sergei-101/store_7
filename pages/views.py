@@ -14,4 +14,14 @@ def contact(request):
     return render(request, 'pages/contact.html')
 
 
+def product_line(requsest):
+    products = Product.objects.all()
+    posts = Post.objects.all()
+    context = {
+        'products': products,
+        'posts':posts
+    }
+    return render (request, 'pages/index.html', context)
+
+
 
