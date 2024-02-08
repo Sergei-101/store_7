@@ -5,7 +5,7 @@ from posts.models import Post
 
 def index(request):
     top_rated_products = Product.objects.annotate(avg_rating=Avg('reviews__rating')).order_by('-avg_rating')[:10]
-    products = Product.objects.all()
+    products = Product.objects.order_by('-id')[:15]
     posts =  Post.objects.all()
     context = {'products': products, 'top_rated_products':top_rated_products, 'posts':posts}
     return render(request, 'pages/index.html', context)
@@ -15,7 +15,7 @@ def contact(request):
 
 
 def product_line(requsest):
-    products = Product.objects.all()
+    products = Product.objects.order_by('-id')[:15]
     posts = Post.objects.all()
     context = {
         'products': products,

@@ -2,6 +2,9 @@ from django.db import models
 from django.utils.text import slugify
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
+from django.dispatch import receiver
+from django.db.models.signals import m2m_changed
+from datetime import date
 
 class ProductCategory(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -15,25 +18,60 @@ class ProductCategory(models.Model):
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
+class Promotion(models.Model):
+    name = models.CharField(max_length=100)
+    discount_percentage = models.DecimalField(max_digits=5, decimal_places=2)
+    start_date = models.DateField()
+    end_date = models.DateField()
+    categories = models.ManyToManyField(ProductCategory)
+
+    def is_active(self):
+        from datetime import date
+        today = date.today()
+        return self.start_date <= today <= self.end_date
+
+    def __str__(self):
+        return self.name        
+
 class Product(models.Model):
-    category = models.ForeignKey(to=ProductCategory, on_delete=models.CASCADE, related_name='products')
+    category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, related_name='products')
     name = models.CharField(max_length=255)
     slug = models.SlugField(max_length=255, unique=True)
-    description = models.TextField()
-    price = models.DecimalField(max_digits=6, decimal_places=2)
-    quantity = models.PositiveIntegerField(default=0)
-
+    description = models.TextField()    
+    base_price = models.DecimalField(max_digits=6, decimal_places=2) # Базовая цена товара без наценок и ндс
+    markup_percentage = models.DecimalField(max_digits=6, decimal_places=2, default=0) # Процент наценки на цену без ндс
+    vat_price = models.DecimalField(max_digits=6, decimal_places=2, default=20) # НДС на цену
+    supplier = models.CharField(max_length=255, blank=True, null=True) # Поставщик товара
+    is_active = models.BooleanField(default=True) # Активный товар
+    promotion = models.ForeignKey(Promotion, on_delete=models.SET_NULL, blank=True, null=True)
+    
     class Meta:
         verbose_name = 'Продукт'
         verbose_name_plural = 'Продукты'
 
     def __str__(self):
-        return f'{self.name}'
+        return self.name
+    
+    def price_with_markup_and_vat(self):
+        price_with_markup = self.base_price * (1 + self.markup_percentage / 100)
+        price_with_vat = price_with_markup * (1 + self.vat_price / 100)
+        return round(price_with_vat, 2)
 
-    def average_rating(self):
-        total_rating = sum(review.rating for review in self.reviews.all())
-        average_rating = total_rating / self.reviews.count() if self.reviews.exists() else 0
-        return round(average_rating, 2)
+    def apply_discount_to_category(self, category, discount_percentage):
+        products_in_category = Product.objects.filter(category=category)
+        products_in_category.update(promotion=Promotion.objects.create(discount_percentage=discount_percentage))
+    
+    def is_promotion_active(self):
+        if self.promotion:
+            today = date.today()
+            return self.promotion.start_date <= today <= self.promotion.end_date
+        return False
+
+@receiver(m2m_changed, sender=Promotion.categories.through)
+def apply_discount_to_category_on_promotion_save(sender, instance, action, **kwargs):
+    if action == 'post_add':
+        products = Product.objects.filter(category__in=instance.categories.all())
+        products.update(promotion=instance)
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')

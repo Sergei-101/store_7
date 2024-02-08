@@ -38,6 +38,7 @@ def product_detail(request, product_id):
                'reviews': reviews}
     return render(request, 'products/product_detail.html', context)
 
+# Загрузка товаров через CSV
 def upload_csv(request):
     if request.method == 'POST':
         form = CSVUploadForm(request.POST, request.FILES)
