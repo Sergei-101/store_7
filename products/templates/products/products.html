@@ -31,13 +31,22 @@
               </button>
             </h5>
             <div id="accordion-filter-1" class="accordion-collapse collapse show border-0" aria-labelledby="accordion-heading-1" data-bs-parent="#categories-list">
-              <div class="accordion-body px-0 pb-0 pt-3">
+              <div class="accordion-body px-0 pb-0 pt-3">                
                 <ul class="list list-inline mb-0">
-                  {% for category in catrgories %}  
-                  <li class="list-item">
-                    <a href="{% url 'products:category' category.id %}" class="menu-link py-1">{{ category.name }}</a>
-                  </li>
+                  {% for category in top_categories %}
+                      <li class="list-item"><a href="{% url 'products:category' category.id %}" class="menu-link py-1">{{ category.name }}</a></li>
+                      {% if category.children.all %}
+                          <ul >
+                              {% for child in category.children.all %}
+                                  <li> <a href="{% url 'products:category' category.id %}" class="menu-link py-1">{{ category.name }}</a></li>
+                                  <!-- Если у подкатегории есть еще подкатегории, используйте рекурсивный вызов -->                                  
+                              {% endfor %}
+                          </ul>
+                      {% endif %}
                   {% endfor %}
+              </ul>
+                <ul class="list list-inline mb-0">
+                  
                 </ul>
               </div>
             </div>

@@ -12,7 +12,7 @@ from slugify import slugify
 
 
 def products(request, category_id=None, page=1):
-    catrgory = ProductCategory.objects.all()
+    categories = ProductCategory.objects.filter(parent=None)  # Получение корневых категорий
     products = Product.objects.filter(category=category_id) if category_id else Product.objects.all()
     per_page = 10
     paginator = Paginator(products, per_page)
@@ -20,7 +20,7 @@ def products(request, category_id=None, page=1):
     images = ProductImage.objects.all()
     cart_product_form = CartAddProductForm()
     context = {'products': products_paginator,
-               'catrgories': catrgory,
+               'top_categories': categories,
                'images': images,
                'cart_product_form': cart_product_form}
     return render(request, 'products/products.html', context)
