@@ -64,7 +64,7 @@
             <span class="current-price">${{ product.price }}</span>
           </div>
           <div class="product-single__short-desc">
-            <p>{{ product.description }}</p>
+            <p> {{ product.description|safe|escape }} </p>
           </div>                   
           <form action="{% url "cart:cart_add" product.id %}" name="addtocart-form" method="post">
             {% csrf_token %}

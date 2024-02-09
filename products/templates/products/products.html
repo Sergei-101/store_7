@@ -81,12 +81,13 @@
                 </div>
               </td>
               <td>
-                <span class="shopping-cart__product-price">$ Цена без скидки: $${{ product.price_with_markup_and_vat }}
+                <span class="shopping-cart__product-price">
                   {% if product.is_promotion_active %}
-                      Цена со скидкой: ${{ product.promotion.discount_percentage }}
+                    Зачеркнутая - {{ product.price_with_markup_and_vat }}-  {{ product.promotion.discount_percentage }} BYN
                   {% else %}
-                      
-                  {% endif %}</span>
+                    {{ product.price_with_markup_and_vat }}
+                  {% endif %}
+                </span>
               </td>
               
             </tr>

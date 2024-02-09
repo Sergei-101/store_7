@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'reviews',
     'pages',
     'debug_toolbar',
+    'ckeditor',
 
 ]
 
@@ -151,3 +152,11 @@ MEDIA_ROOT = BASE_DIR / 'media/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CART_SESSION_ID = 'cart'
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        'toolbar': 'full',
+        'height': 300,
+        'width': 800,
+    },
+}
