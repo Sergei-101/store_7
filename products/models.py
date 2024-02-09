@@ -18,12 +18,16 @@ class ProductCategory(models.Model):
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
+class Supplier(models.Model):
+    supplier = models.CharField(max_length=255, blank=True, null=True) # Поставщик товара        
+
 class Promotion(models.Model):
     name = models.CharField(max_length=100)
     discount_percentage = models.DecimalField(max_digits=5, decimal_places=2)
     start_date = models.DateField()
     end_date = models.DateField()
     categories = models.ManyToManyField(ProductCategory)
+    supplier = models.ManyToManyField(Supplier)
 
     def is_active(self):
         from datetime import date
@@ -31,7 +35,15 @@ class Promotion(models.Model):
         return self.start_date <= today <= self.end_date
 
     def __str__(self):
-        return self.name        
+        return self.name
+
+class Characteristic(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name      
+      
+
 
 class Product(models.Model):
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, related_name='products')
@@ -41,9 +53,10 @@ class Product(models.Model):
     base_price = models.DecimalField(max_digits=6, decimal_places=2) # Базовая цена товара без наценок и ндс
     markup_percentage = models.DecimalField(max_digits=6, decimal_places=2, default=0) # Процент наценки на цену без ндс
     vat_price = models.DecimalField(max_digits=6, decimal_places=2, default=20) # НДС на цену
-    supplier = models.CharField(max_length=255, blank=True, null=True) # Поставщик товара
+    supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, blank=True, null=True) # Поставщик товара
     is_active = models.BooleanField(default=True) # Активный товар
     promotion = models.ForeignKey(Promotion, on_delete=models.SET_NULL, blank=True, null=True)
+    characteristics = models.ManyToManyField(Characteristic, through='ProductCharacteristic')
     
     class Meta:
         verbose_name = 'Продукт'
@@ -72,6 +85,15 @@ def apply_discount_to_category_on_promotion_save(sender, instance, action, **kwa
     if action == 'post_add':
         products = Product.objects.filter(category__in=instance.categories.all())
         products.update(promotion=instance)
+
+
+class ProductCharacteristic(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    characteristic = models.ForeignKey(Characteristic, on_delete=models.CASCADE)
+    value = models.CharField(max_length=100)
+
+    def __str__(self):
+        return f"{self.product} - {self.characteristic}: {self.value}"
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
