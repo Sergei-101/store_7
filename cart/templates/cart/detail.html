@@ -156,7 +156,9 @@
             </div>
             <div class="mobile_fixed-btn_wrapper">
               <div class="button-wrapper container">
-                <button class="btn btn-primary btn-checkout form-check " >ОФОРМИТЬ ЗАКАЗ</button>
+                <a href='{% url "orders:order_create" %}'>
+                  <button class="btn btn-primary btn-checkout form-check " >ОФОРМИТЬ ЗАКАЗ</button>
+                </a>  
               </div>
             </div>
           </div>

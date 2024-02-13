@@ -1,10 +1,12 @@
 from django.db import models
-from django.utils.text import slugify
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 from django.dispatch import receiver
 from django.db.models.signals import m2m_changed
 from datetime import date
+import random
+import string
+
 
 class ProductCategory(models.Model):
     name = models.CharField(max_length=255, unique=True)
@@ -18,24 +20,29 @@ class ProductCategory(models.Model):
         verbose_name = 'Категория'
         verbose_name_plural = 'Категории'
 
+
 class Supplier(models.Model):
     supplier = models.CharField(max_length=255, blank=True, null=True) # Поставщик товара        
+
+    def __str__(self):
+        return self.supplier
+
 
 class Promotion(models.Model):
     name = models.CharField(max_length=100)
     discount_percentage = models.DecimalField(max_digits=5, decimal_places=2)
     start_date = models.DateField()
     end_date = models.DateField()
-    categories = models.ManyToManyField(ProductCategory)
-    supplier = models.ManyToManyField(Supplier)
+    categories = models.ManyToManyField(ProductCategory, blank=True)
+    supplier = models.ManyToManyField(Supplier, blank=True)
 
     def is_active(self):
-        from datetime import date
         today = date.today()
         return self.start_date <= today <= self.end_date
 
     def __str__(self):
         return self.name
+
 
 class Characteristic(models.Model):
     name = models.CharField(max_length=100)
@@ -57,6 +64,7 @@ class Product(models.Model):
     is_active = models.BooleanField(default=True) # Активный товар
     promotion = models.ForeignKey(Promotion, on_delete=models.SET_NULL, blank=True, null=True)
     characteristics = models.ManyToManyField(Characteristic, through='ProductCharacteristic')
+    article = models.CharField(max_length=100, blank=True)  # Поле для артикула товара
     
     class Meta:
         verbose_name = 'Продукт'
@@ -64,6 +72,22 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+    
+    def generate_sku(self):
+        chars = string.ascii_letters + string.digits
+        sku = ''.join(random.choice(chars) for _ in range(7))  # Генерируем случайную комбинацию из 7 символов
+        return sku
+
+    def save(self, *args, **kwargs):
+        if not self.pk:  # Если объект еще не сохранен в базе данных
+            if not self.article:  # Если артикул не указан, генерируем его
+                unique_sku_generated = False
+                while not unique_sku_generated:  # Генерируем уникальный артикул
+                    sku = self.generate_sku()
+                    if not Product.objects.filter(article=sku).exists():  # Проверяем уникальность артикула в базе данных
+                        unique_sku_generated = True
+                self.article = sku  # Присваиваем сгенерированный артикул
+        super().save(*args, **kwargs)
     
     def price_with_markup_and_vat(self):
         price_with_markup = self.base_price * (1 + self.markup_percentage / 100)
@@ -73,17 +97,36 @@ class Product(models.Model):
     def apply_discount_to_category(self, category, discount_percentage):
         products_in_category = Product.objects.filter(category=category)
         products_in_category.update(promotion=Promotion.objects.create(discount_percentage=discount_percentage))
+
+    def apply_discount_to_supplier(self, supplier, discount_percentage):
+        products_from_supplier = Product.objects.filter(supplier=supplier)
+        products_from_supplier.update(promotion=Promotion.objects.create(discount_percentage=discount_percentage))
     
     def is_promotion_active(self):
         if self.promotion:
             today = date.today()
             return self.promotion.start_date <= today <= self.promotion.end_date
         return False
+    
+    def final_price(self):
+        if self.promotion and self.promotion.is_active():
+            price = self.price_with_markup_and_vat()  # вызываем метод для получения конечной цены
+            discounted_price = price - (price * self.promotion.discount_percentage / 100)
+            return round(discounted_price, 2)
+        else:
+            return self.price_with_markup_and_vat()
 
 @receiver(m2m_changed, sender=Promotion.categories.through)
 def apply_discount_to_category_on_promotion_save(sender, instance, action, **kwargs):
     if action == 'post_add':
         products = Product.objects.filter(category__in=instance.categories.all())
+        products.update(promotion=instance)
+
+
+@receiver(m2m_changed, sender=Promotion.supplier.through)
+def apply_discount_to_supplier_on_promotion_save(sender, instance, action, **kwargs):
+    if action == 'post_add':
+        products = Product.objects.filter(supplier__in=instance.supplier.all())
         products.update(promotion=instance)
 
 

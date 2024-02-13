@@ -92,10 +92,12 @@
               <td>
                 <span class="shopping-cart__product-price">
                   {% if product.is_promotion_active %}
-                    Зачеркнутая - {{ product.price_with_markup_and_vat }}-  {{ product.promotion.discount_percentage }} BYN
+                      <del>{{ product.price_with_markup_and_vat }}</del> - скидка {{product.promotion.discount_percentage}} {{ product.final_price }} BYN итоговая цена
                   {% else %}
-                    {{ product.price_with_markup_and_vat }}
+                      {{ product.price_with_markup_and_vat }}
                   {% endif %}
+
+                  
                 </span>
               </td>
               
