@@ -18,7 +18,7 @@ class ProductImageInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'base_price', 'is_active', 'category', 'id') # отоброжать поля
+    list_display = ('name', 'base_price', 'quantity', 'category', 'id') # отоброжать поля
     prepopulated_fields = {'slug': ('name',)}
     inlines = [ProductImageInline, ]
     actions = ['export_to_csv']

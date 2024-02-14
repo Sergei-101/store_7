@@ -9,9 +9,9 @@ import string
 
 
 class ProductCategory(models.Model):
-    name = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255, unique=True, verbose_name="Имя категории")
     slug = models.SlugField(max_length=255, unique=True)
-    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children')
+    parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children', verbose_name="Родительская категория")
 
     def __str__(self):
         return self.name
@@ -22,10 +22,14 @@ class ProductCategory(models.Model):
 
 
 class Supplier(models.Model):
-    supplier = models.CharField(max_length=255, blank=True, null=True) # Поставщик товара        
+    supplier = models.CharField(max_length=255, blank=True, null=True, verbose_name="Поставщик") # Поставщик товара        
 
     def __str__(self):
         return self.supplier
+    
+    class Meta:
+        verbose_name = 'Поставщик'
+        verbose_name_plural = 'Поставщики'
 
 
 class Promotion(models.Model):
@@ -35,6 +39,10 @@ class Promotion(models.Model):
     end_date = models.DateField()
     categories = models.ManyToManyField(ProductCategory, blank=True)
     supplier = models.ManyToManyField(Supplier, blank=True)
+
+    class Meta:
+        verbose_name = 'Акция'
+        verbose_name_plural = 'Акции'
 
     def is_active(self):
         today = date.today()
@@ -48,23 +56,27 @@ class Characteristic(models.Model):
     name = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.name      
+        return self.name
+
+    class Meta:
+        verbose_name = 'Характеристика'
+        verbose_name_plural = 'Характеристики'      
       
 
 
 class Product(models.Model):
-    category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, related_name='products')
-    name = models.CharField(max_length=255)
+    category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, related_name='products', verbose_name="Категория")
+    name = models.CharField(max_length=255, verbose_name="Наименование")
     slug = models.SlugField(max_length=255, unique=True)
-    description = models.TextField()    
-    base_price = models.DecimalField(max_digits=6, decimal_places=2) # Базовая цена товара без наценок и ндс
-    markup_percentage = models.DecimalField(max_digits=6, decimal_places=2, default=0) # Процент наценки на цену без ндс
-    vat_price = models.DecimalField(max_digits=6, decimal_places=2, default=20) # НДС на цену
-    supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, blank=True, null=True) # Поставщик товара
-    is_active = models.BooleanField(default=True) # Активный товар
-    promotion = models.ForeignKey(Promotion, on_delete=models.SET_NULL, blank=True, null=True)
-    characteristics = models.ManyToManyField(Characteristic, through='ProductCharacteristic')
-    article = models.CharField(max_length=100, blank=True)  # Поле для артикула товара
+    description = models.TextField(verbose_name="Описание")
+    quantity = models.IntegerField(default=0, verbose_name="Кол-во") # Активный товар    
+    base_price = models.DecimalField(max_digits=6, decimal_places=2, verbose_name="Базовая цена") # Базовая цена товара без наценок и ндс
+    markup_percentage = models.DecimalField(max_digits=6, decimal_places=2, default=0, verbose_name="Процент к товару") # Процент наценки на цену без ндс
+    vat_price = models.DecimalField(max_digits=6, decimal_places=2, default=20, verbose_name="НДС") # НДС на цену
+    supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Поставщик") # Поставщик товара    
+    promotion = models.ForeignKey(Promotion, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Акция")
+    characteristics = models.ManyToManyField(Characteristic, through='ProductCharacteristic', verbose_name="Характеристика")
+    article = models.CharField(max_length=100, blank=True, verbose_name="Артикул")  # Поле для артикула товара
     
     class Meta:
         verbose_name = 'Продукт'
@@ -156,3 +168,7 @@ class CSVFile(models.Model):
 
     def __str__(self):
         return self.file.name
+    
+    class Meta:
+        verbose_name = 'Загрузка CSV '
+        verbose_name_plural = 'Загрузки CSV'

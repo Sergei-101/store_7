@@ -5,6 +5,7 @@ from cart.forms import CartAddProductForm
 from reviews.forms import ReviewForm
 from reviews.models import Review
 from django.core.paginator import Paginator
+from django.http import JsonResponse
 from products.forms import CSVUploadForm
 import csv
 from slugify import slugify
@@ -37,4 +38,7 @@ def product_detail(request, product_id):
                'review_form': review_form,
                'reviews': reviews}
     return render(request, 'products/product_detail.html', context)
+
+
+
 

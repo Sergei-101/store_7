@@ -32,6 +32,10 @@ class Order(models.Model):
 
     class Meta:
         ordering = ['-created']
+        verbose_name = 'Ордер'
+        verbose_name_plural = 'Ордера'
+
+   
 
 
 class OrderItem(models.Model):
