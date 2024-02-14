@@ -5,9 +5,7 @@ from cart.forms import CartAddProductForm
 from reviews.forms import ReviewForm
 from reviews.models import Review
 from django.core.paginator import Paginator
-from products.forms import CSVUploadForm
-import csv
-from slugify import slugify
+
 
 
 
