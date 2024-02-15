@@ -94,7 +94,7 @@
                   <a href="{% url 'products:product_detail' product.id %}"><img loading="lazy" src="{{ product.images.all.0.image.url }}" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img"></a>
                 </div>
                 <div class="anim_appear-bottom position-absolute w-100 text-center">
-                  <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-add-cart js-open-aside" data-aside="cartDrawer" title="Add To Cart">
+                  <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-add-cart js-open-aside" data-aside="cartDrawer" title="Add To Cart" data-product-id="{{ product.id }}">
                     <svg class="d-inline-block" width="14" height="14" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_cart" /></svg>
                   </button>
                   <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-quick-view" data-bs-toggle="modal" data-bs-target="#quickView" title="Quick view" data-product-id="{{ product.id }}" >
