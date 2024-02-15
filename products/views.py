@@ -6,6 +6,7 @@ from reviews.forms import ReviewForm
 from reviews.models import Review
 from django.core.paginator import Paginator
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from products.forms import CSVUploadForm
 import csv
 from slugify import slugify
@@ -40,5 +41,17 @@ def product_detail(request, product_id):
     return render(request, 'products/product_detail.html', context)
 
 
+def quick_view(request, product_id):
+    # Получаем объект товара по его идентификатору
+    product = get_object_or_404(Product, id=product_id)
 
+    # Формируем данные о товаре
+    data = {
+        'name': product.name,
+        'price': product.final_price(),
+        'description': product.description,
+        # 'image_url': product.image.url  # Путь к изображению
+    }
 
+    # Возвращаем JsonResponse с данными о товаре
+    return JsonResponse(data)

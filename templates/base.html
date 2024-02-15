@@ -638,7 +638,16 @@
             </div>
           </div>
           <div class="product-single__detail">
-            <h1 class="product-single__name">{% for product in products  %} {{ product.name }}{{ productId }}{% endfor %}<p>Продукт с ID: {{ productId }}{{ product.id }}</p></h1>
+            <h1 class="product-single__name">
+              <div>
+                  <h2 id="product-name"></h2> <!-- Название товара -->
+                  <p id="product-price"></p> <!-- Цена товара -->
+                  <p id="product-description"></p> <!-- Описание товара -->
+<!--                  <img id="product-image" src="" alt="Изображение товара"> &lt;!&ndash; Изображение товара &ndash;&gt;-->
+
+              </div>
+
+              </p></h1>
             <div class="product-single__price">
               <span class="current-price">$449<p>Продукт с ID: {{ productId }}{{ product_id }}</p></span>
             </div>
@@ -771,6 +780,7 @@
   <script src="{% static 'js/plugins/swiper.min.js' %}"></script>
   <script src="{% static 'js/plugins/countdown.js' %}"></script>
   <script src="{% static 'js/plugins/jquery.fancybox.js' %}"></script>
+  <script src="{% static 'js/quick_view.js' %}"></script>
 
   <!-------------- Footer Scripts ------------->
   <script src="{% static 'js/theme.js' %}"></script>
