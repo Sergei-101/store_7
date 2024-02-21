@@ -26,7 +26,7 @@ $(document).ready(function() {
 
         $.ajax({
             type: 'POST',
-            url: '/cart/add/' + product_id + '/',
+            url: '/cart/adds/' + product_id + '/',
             data: {
                 'quantity': quantity,
                 'override': override
@@ -37,7 +37,7 @@ $(document).ready(function() {
             },
             success: function(data) {
                 if (data.success) {
-                    alert(data.message);
+                    passive;
                 } else {
                     alert(data.message);
                 }

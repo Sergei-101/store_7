@@ -568,7 +568,7 @@
           <h6 class="cart-drawer-item__title fw-normal">{{ product }}</h6>
           <div class="d-flex align-items-center justify-content-between mt-1">
             <div class="qty-control position-relative">
-              <input type="number" name="quantity" value="1" min="1" class="qty-control__number border-0 text-center">
+              <input type="number" name="quantity" value="{{ product.quantity }}" min="1" class="qty-control__number border-0 text-center">
               <div class="qty-control__reduce text-start">-</div>
               <div class="qty-control__increase text-end">+</div>
             </div><!-- .qty-control -->
@@ -664,7 +664,7 @@
                         <div class="qty-control__reduce">-</div>
                         <div class="qty-control__increase">+</div>
                     </div><!-- .qty-control -->
-                    <button type="submit" class="btn btn-primary btn-addtocart  js-open-aside js-addtocart" data-aside="cartDrawer">Add to Cart</button>
+                    <button type="submit" class="btn btn-primary btn-addtocart js-addtocart js-open-aside " data-aside="cartDrawer">Add to Cart</button>
                     
                 </div>
             </form>

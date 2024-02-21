@@ -6,7 +6,7 @@ from cart.cart import Cart
 from cart.forms import CartAddProductForm
 from django.http import JsonResponse
 
-def cart_add(request, product_id):
+def cart_add_quick(request, product_id):
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
     form = CartAddProductForm(request.POST)
@@ -18,6 +18,16 @@ def cart_add(request, product_id):
         errors = form.errors.as_json()  # Получаем ошибки формы в JSON-формате
         return JsonResponse({'success': False, 'message': f'Произошла ошибка. Пожалуйста, проверьте введенные данные: {errors}'})
 
+def cart_add(request, product_id):
+    cart = Cart(request)
+    product = get_object_or_404(Product, id=product_id)
+    form = CartAddProductForm(request.POST)
+    if form.is_valid():
+        cd = form.cleaned_data
+        cart.add(product=product,
+                 quantity=cd['quantity'],
+                 override_quantity=cd['override'])
+    return redirect('cart:cart_detail')
 
 def cart_remove(request, product_id):
     cart = Cart(request)

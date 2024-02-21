@@ -35,7 +35,7 @@ $(document).ready(function() {
 
         $.ajax({
             type: 'POST',
-            url: '/cart/add/' + productId + '/',
+            url: '/cart/adds/' + productId + '/',
             data: {
                 'quantity': quantity
             },
@@ -45,7 +45,8 @@ $(document).ready(function() {
             success: function(data) {
                 if (data.success) {
                     // Если товар успешно добавлен в корзину, выведите сообщение об этом
-                    alert('Товар успешно добавлен в корзину!');
+                    // alert('Товар успешно добавлен в корзину!');
+                    passive;
                     // Закрываем окно быстрого просмотра после успешного добавления в корзину
                     $('#quick-view-modal').modal('hide');
                 } else {
