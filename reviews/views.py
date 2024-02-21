@@ -17,7 +17,7 @@ def add_review(request, product_id):
             review.product = product
             review.user = request.user
             review.save()
-            return redirect('products:product_detail', id=product.id)
+            return redirect('products:products')
     else:
         form = ReviewForm()
     return render(request, 'products/product_detail.html', {'products': product, 'form': form})

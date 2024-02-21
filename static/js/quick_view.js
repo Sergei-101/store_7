@@ -12,10 +12,12 @@ $(document).ready(function() {
             type: 'GET', // Метод запроса
             success: function (response) {
                 // Обработка успешного ответа от сервера
+                $('#quick-view-product-id').val(productId); // Устанавливаем идентификатор товара в скрытое поле формы
+                // Вставляем остальные данные о товаре в окно быстрого просмотра
                 $('#product-name').text(response.name); // Вставляем название товара
                 $('#product-price').text('Цена: ' + response.price); // Вставляем цену товара
-                $('#product-description').text(response.description); // Вставляем описание товара
-//                $('#product-image').attr('src', response.image_url); // Вставляем изображение товара
+                $('#product-description').html(response.description);
+                // Показываем окно быстрого просмотра
             },
             error: function (xhr, status, error) {
                 // Обработка ошибки
@@ -23,4 +25,55 @@ $(document).ready(function() {
             }
         });
     });
+
+    // Обработчик клика на кнопку "Добавить в корзину"
+    $(document).on("click", ".js-addtocart", function (e) {
+        e.preventDefault(); // Предотвращаем стандартное действие кнопки
+        var productId = $('#quick-view-product-id').val(); // Получаем идентификатор товара из скрытого поля формы
+        var quantity = $('#quick-view-quantity').val(); // Получаем количество товара из поля формы
+        var csrfToken = getCookie('csrftoken'); // Получаем CSRF-токен
+
+        $.ajax({
+            type: 'POST',
+            url: '/cart/add/' + productId + '/',
+            data: {
+                'quantity': quantity
+            },
+            beforeSend: function(xhr, settings) {
+                xhr.setRequestHeader("X-CSRFToken", csrfToken);
+            },
+            success: function(data) {
+                if (data.success) {
+                    // Если товар успешно добавлен в корзину, выведите сообщение об этом
+                    alert('Товар успешно добавлен в корзину!');
+                    // Закрываем окно быстрого просмотра после успешного добавления в корзину
+                    $('#quick-view-modal').modal('hide');
+                } else {
+                    // Если возникла ошибка при добавлении товара в корзину, выведите сообщение об ошибке
+                    alert('Произошла ошибка: ' + data.message);
+                }
+            },
+            error: function(xhr, status, error) {
+                // Выводим сообщение об ошибке, если возникла проблема с AJAX-запросом
+                alert('Произошла ошибка при отправке запроса на сервер.');
+            }
+        });
+    });
 });
+
+// Функция для получения CSRF-токена из cookie
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i].trim();
+            // Находим CSRF-токен в cookie
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}

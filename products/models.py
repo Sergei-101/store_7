@@ -68,6 +68,7 @@ class Product(models.Model):
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, related_name='products', verbose_name="Категория")
     name = models.CharField(max_length=255, verbose_name="Наименование")
     slug = models.SlugField(max_length=255, unique=True)
+    # image = models.ImageField(upload_to='product_images')
     description = models.TextField(verbose_name="Описание")
     quantity = models.IntegerField(default=0, verbose_name="Кол-во") # Активный товар    
     base_price = models.DecimalField(max_digits=6, decimal_places=2, verbose_name="Базовая цена") # Базовая цена товара без наценок и ндс

@@ -4,8 +4,7 @@ from coupons.forms import CouponApplyForm
 from products.models import Product
 from cart.cart import Cart
 from cart.forms import CartAddProductForm
-
-
+from django.http import JsonResponse
 
 def cart_add(request, product_id):
     cart = Cart(request)
@@ -13,11 +12,11 @@ def cart_add(request, product_id):
     form = CartAddProductForm(request.POST)
     if form.is_valid():
         cd = form.cleaned_data
-        cart.add(product=product,
-                 quantity=cd['quantity'],
-                 override_quantity=cd['override'])
-    return redirect('cart:cart_detail')
-
+        cart.add(product=product, quantity=cd['quantity'], override_quantity=cd['override'])
+        return JsonResponse({'success': True, 'message': 'Товар успешно добавлен в корзину'})
+    else:
+        errors = form.errors.as_json()  # Получаем ошибки формы в JSON-формате
+        return JsonResponse({'success': False, 'message': f'Произошла ошибка. Пожалуйста, проверьте введенные данные: {errors}'})
 
 
 def cart_remove(request, product_id):

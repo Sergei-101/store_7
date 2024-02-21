@@ -2,53 +2,43 @@
 {% load static %}
 
 {% block content %}
+
 	  <main>
     <div class="mb-md-1 pb-md-3"></div>
+          
+    {% for product in products %}     
     <section class="product-single container">
       <div class="row">
         <div class="col-lg-7">
-          <div class="product-single__media" data-media-type="vertical-thumbnail">
+             
+          <div class="product-single__media" >
             <div class="product-single__image">
               <div class="swiper-container">
-                <div class="swiper-wrapper">
-                  {% for image in images %}  
+                <div class="swiper-wrapper">                   
                   <div class="swiper-slide product-single__image-item">
-                    <img loading="lazy" class="h-auto" src="{{ image.image.url }}" width="674" height="674" alt="" />
-                    <a data-fancybox="gallery" href="#" data-bs-toggle="tooltip" data-bs-placement="left" title="Zoom">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_zoom" /></svg>
-                    </a>
-                  </div>
-                  {% endfor %}
-                </div>
-                <div class="swiper-button-prev"><svg width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_prev_sm" /></svg></div>
-                <div class="swiper-button-next"><svg width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_next_sm" /></svg></div>
+                    <img loading="lazy" class="h-auto" src="{{ product.images.all.0.image.url }}" width="674" height="674" alt="" />                   
+                  </div>                  
+                </div>                
               </div>
             </div>
-            <div class="product-single__thumbnail">
-              <div class="swiper-container">
-                <div class="swiper-wrapper">
-                  {% for image in images %} 
-                  <div class="swiper-slide product-single__image-item"><img loading="lazy" class="h-auto" src="{{ image.image.url }}" width="104" height="104" alt="" /></div>
-                  {% endfor %}
-                </div>
-              </div>
-            </div>
+            
           </div>
         </div>
         <div class="col-lg-5">
           <div class="d-flex justify-content-between mb-4 pb-md-2">
-{#            <div class="breadcrumb mb-0 d-none d-md-block flex-grow-1">#}
-{#              <a href="#" class="menu-link menu-link_us-s text-uppercase fw-medium">Home</a>#}
-{#              <span class="breadcrumb-separator menu-link fw-medium ps-1 pe-1">/</span>#}
-{#              <a href="#" class="menu-link menu-link_us-s text-uppercase fw-medium">The Shop</a>#}
-{#            </div><!-- /.breadcrumb -->#}
-    
-{#            <div class="product-single__prev-next d-flex align-items-center justify-content-between justify-content-md-end flex-grow-1">#}
-{#              <a href="#" class="text-uppercase fw-medium"><svg width="25" height="25" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg"><use href="#icon_prev_md" /></svg><span class="menu-link menu-link_us-s">Prev</span></a>#}
-{#              <a href="#" class="text-uppercase fw-medium"><span class="menu-link menu-link_us-s">Next</span><svg width="25" height="25" viewBox="0 0 25 25" xmlns="http://www.w3.org/2000/svg"><use href="#icon_next_md" /></svg></a>#}
-{#            </div><!-- /.shop-acs -->#}
+            <div class="breadcrumb mb-0 d-none d-md-block flex-grow-1">
+              
+              <a href="#" class="menu-link menu-link_us-s text-uppercase fw-medium">{{ product.category.parent.name }}</a>
+              <span class="breadcrumb-separator menu-link fw-medium ps-1 pe-1">/</span>
+                 
+              <a href="#" class="menu-link menu-link_us-s text-uppercase fw-medium">{{ product.category.name }}</a>
+               
+                  
+            </div><!-- /.breadcrumb -->
+
+            
           </div>
-          {% for product in products %}  
+          
           <h1 class="product-single__name">{{ product.name }}</h1>
           <div class="product-single__rating">
             <div class="reviews-group d-flex">
@@ -61,7 +51,14 @@
             <span class="reviews-note text-lowercase text-secondary ms-1"></span>
           </div>
           <div class="product-single__price">
-            <span class="current-price">${{ product.price }}</span>
+            <span class="current-price">
+                {% if product.is_promotion_active %}
+                    <span class="money price price-old fs-5">{{ product.price_with_markup_and_vat }}</span>
+                    <span class="money price price-sale">{{ product.final_price }} BYN</span>
+                {% else %}
+                    <span class="money price fs-5">  {{ product.final_price }} BYN</span>
+                {% endif %}
+            </span>
           </div>
           <div class="product-single__short-desc">
             <p> {{ product.description|safe|escape }} </p>
@@ -69,34 +66,44 @@
           <form action="{% url "cart:cart_add" product.id %}" name="addtocart-form" method="post">
             {% csrf_token %}
             <div class="product-single__addtocart">
-              <div class="qty-control position-relative">              
-                
+              <div class="qty-control position-relative">
                 {{ cart_product_form.quantity }}
                 <div class="qty-control__reduce">-</div>
                 <div class="qty-control__increase">+</div>
               </div><!-- .qty-control -->              
               <button type="submit" class="btn btn-primary btn-addtocart"  data-aside="cartDrawer">Добавить в корзину</button>
             </div>          
-            
-            
+
+
           </form>
 
           <div class="product-single__meta-info">
-            
+
             <div class="meta-item">
               <label>Категория:</label>
               <span>{{ product.category }}</span>
             </div>
-            
+
           </div>
-           
+
         </div>
       </div>
+            
+    
       <div class="product-single__details-tab">
-        <ul class="nav nav-tabs" id="myTab" role="tablist">
+        <ul class="nav nav-tabs" id="myTab1" role="tablist">
           <li class="nav-item" role="presentation">
             <a class="nav-link nav-link_underscore active" id="tab-description-tab" data-bs-toggle="tab" href="#tab-description" role="tab" aria-controls="tab-description" aria-selected="true">Описание</a>
           </li>          
+          <li class="nav-item" role="presentation">
+            <a class="nav-link nav-link_underscore" id="tab-additional-info-tab" data-bs-toggle="tab" href="#tab-additional-info" role="tab" aria-controls="tab-additional-info" aria-selected="false">Как купить</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link nav-link_underscore" id="payment" data-bs-toggle="tab" href="#payment-info" role="tab" aria-controls="payment" aria-selected="false">Оплата</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link nav-link_underscore" id="delivery" data-bs-toggle="tab" href="#delivery-info" role="tab" aria-controls="delivery-info" aria-selected="false">Доставка</a>
+          </li>  
           <li class="nav-item" role="presentation">
             <a class="nav-link nav-link_underscore" id="tab-reviews-tab" data-bs-toggle="tab" href="#tab-reviews" role="tab" aria-controls="tab-reviews" aria-selected="false">Отзывы</a>
           </li>
@@ -104,17 +111,40 @@
         <div class="tab-content">
           <div class="tab-pane fade show active" id="tab-description" role="tabpanel" aria-labelledby="tab-description-tab">
             <div class="product-single__description">
-            {{ product.description }}  
+            {{ product.description|safe|escape }}  
             </div>
-          </div>        
-        {% endfor %} 
+              
+          </div>
+          {% for item in contents %}
+          {% if item.name == "Как купить" %}    
+          <div class="tab-pane fade" id="tab-additional-info" role="tabpanel" aria-labelledby="tab-additional-info-tab">
+            <div class="product-single__addtional-info">
+              {{ item.description }}              
+            </div>
+          </div>
+          {% endif %}
+          {% if item.name == "Оплата" %}    
+          <div class="tab-pane fade" id="payment-info" role="tabpanel" aria-labelledby="payment-info">
+            <div>
+              {{ item.description }}
+            </div>
+          </div>
+          {% endif %}
+          {% if item.name == "Доставка" %}    
+          <div class="tab-pane fade" id="delivery-info" role="tabpanel" aria-labelledby="delivery-info">
+            <div>
+              {{ item.description }}
+            </div>
+          </div>
+          {% endif %}   
+          {% endfor %}  
           <div class="tab-pane fade" id="tab-reviews" role="tabpanel" aria-labelledby="tab-reviews-tab">
-            <h2 class="product-single__reviews-title">Отзывы</h2>
-            {% for review in reviews %}
+            <h2 class="product-single__reviews-title">Отзывы </h2>
             <div class="product-single__reviews-list">
+              {% for review in reviews %}  
               <div class="product-single__reviews-item">
                 <div class="customer-avatar">
-                  <img loading="lazy" src="/media/title/user.png" alt="" />
+                  <img loading="lazy" src="/media/title/user.png" alt="">
                 </div>
                 <div class="customer-review">
                   <div class="customer-name">
@@ -133,16 +163,15 @@
                   </div>
                 </div>
               </div>
-            {% endfor %}  
-            </div>            
+              {% endfor %}
+            </div>
             <div class="product-single__review-form">
-              {% for product in products %}  
               <form action="{% url 'reviews:add_review' product.id %}" method="post" name="customer-review-form">
-              {% csrf_token %}
+                {% csrf_token %}
                 <h5>Оставь свой отзыв</h5>
-                <p>Отзыв могут оставлять только зарегестрированные пользователи</p>
+                <p>Отзыв могут оставлять только зарегестрированные пользователи *</p>
                 <div class="select-star-rating">
-                  <label>Рейтинг</label>
+                  <label>Рейтинг *</label>
                   <span class="star-rating">
                     <svg class="star-rating__star-icon" width="12" height="12" fill="#ccc" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">
                       <path d="M11.1429 5.04687C11.1429 4.84598 10.9286 4.76562 10.7679 4.73884L7.40625 4.25L5.89955 1.20312C5.83929 1.07589 5.72545 0.928571 5.57143 0.928571C5.41741 0.928571 5.30357 1.07589 5.2433 1.20312L3.73661 4.25L0.375 4.73884C0.207589 4.76562 0 4.84598 0 5.04687C0 5.16741 0.0870536 5.28125 0.167411 5.3683L2.60491 7.73884L2.02902 11.0871C2.02232 11.1339 2.01563 11.1741 2.01563 11.221C2.01563 11.3951 2.10268 11.5558 2.29688 11.5558C2.39063 11.5558 2.47768 11.5223 2.56473 11.4754L5.57143 9.89509L8.57813 11.4754C8.65848 11.5223 8.75223 11.5558 8.84598 11.5558C9.04018 11.5558 9.12054 11.3951 9.12054 11.221C9.12054 11.1741 9.12054 11.1339 9.11384 11.0871L8.53795 7.73884L10.9688 5.3683C11.0558 5.28125 11.1429 5.16741 11.1429 5.04687Z"/>
@@ -170,13 +199,98 @@
                   <button type="submit" class="btn btn-primary">Отправить</button>
                 </div>
               </form>
-              {% endfor %}  
             </div>
           </div>
         </div>
-      </div>
+      </div>  
+    
+    
+{#      <div class="product-single__details-tab">#}
+{#        <ul class="nav nav-tabs" id="myTab" role="tablist">#}
+{#          <li class="nav-item" role="presentation">#}
+{#            <a class="nav-link nav-link_underscore active" id="tab-description-tab" data-bs-toggle="tab" href="#tab-description" role="tab" aria-controls="tab-description" aria-selected="true">Описание</a>#}
+{#          </li>          #}
+{#          <li class="nav-item" role="presentation">#}
+{#            <a class="nav-link nav-link_underscore" id="tab-reviews-tab" data-bs-toggle="tab" href="#tab-reviews" role="tab" aria-controls="tab-reviews" aria-selected="false">Отзывы</a>#}
+{#          </li>#}
+{#        </ul>#}
+{#        <div class="tab-content">#}
+{#          <div class="tab-pane fade show active" id="tab-description" role="tabpanel" aria-labelledby="tab-description-tab">#}
+{#            <div class="product-single__description">#}
+{#            {{ product.description }}  #}
+{#            </div>#}
+{#          </div>        #}
+{#         #}
+{#          <div class="tab-pane fade" id="tab-reviews" role="tabpanel" aria-labelledby="tab-reviews-tab">#}
+{#            <h2 class="product-single__reviews-title">Отзывы</h2>#}
+{#            {% for review in reviews %}#}
+{#            <div class="product-single__reviews-list">#}
+{#              <div class="product-single__reviews-item">#}
+{#                <div class="customer-avatar">#}
+{#                  <img loading="lazy" src="/media/title/user.png" alt="" />#}
+{#                </div>#}
+{#                <div class="customer-review">#}
+{#                  <div class="customer-name">#}
+{#                    <h6>{{ review.user }}</h6>#}
+{#                    <div class="reviews-group d-flex">#}
+{#                      <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><use href="#icon_star" /></svg>#}
+{#                      <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><use href="#icon_star" /></svg>#}
+{#                      <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><use href="#icon_star" /></svg>#}
+{#                      <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><use href="#icon_star" /></svg>#}
+{#                      <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><use href="#icon_star" /></svg>#}
+{#                    </div>#}
+{#                  </div>#}
+{#                  <div class="review-date">{{ review.created_at }}</div>#}
+{#                  <div class="review-text">#}
+{#                    <p>{{ review.comment }}</p>#}
+{#                  </div>#}
+{#                </div>#}
+{#              </div>#}
+{#            {% endfor %}  #}
+{#            </div>            #}
+{#            <div class="product-single__review-form">#}
+{#              {% for product in products %}  #}
+{#              <form action="{% url 'reviews:add_review' product.id %}" method="post" name="customer-review-form">#}
+{#              {% csrf_token %}#}
+{#                <h5>Оставь свой отзыв</h5>#}
+{#                <p>Отзыв могут оставлять только зарегестрированные пользователи</p>#}
+{#                <div class="select-star-rating">#}
+{#                  <label>Рейтинг</label>#}
+{#                  <span class="star-rating">#}
+{#                    <svg class="star-rating__star-icon" width="12" height="12" fill="#ccc" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">#}
+{#                      <path d="M11.1429 5.04687C11.1429 4.84598 10.9286 4.76562 10.7679 4.73884L7.40625 4.25L5.89955 1.20312C5.83929 1.07589 5.72545 0.928571 5.57143 0.928571C5.41741 0.928571 5.30357 1.07589 5.2433 1.20312L3.73661 4.25L0.375 4.73884C0.207589 4.76562 0 4.84598 0 5.04687C0 5.16741 0.0870536 5.28125 0.167411 5.3683L2.60491 7.73884L2.02902 11.0871C2.02232 11.1339 2.01563 11.1741 2.01563 11.221C2.01563 11.3951 2.10268 11.5558 2.29688 11.5558C2.39063 11.5558 2.47768 11.5223 2.56473 11.4754L5.57143 9.89509L8.57813 11.4754C8.65848 11.5223 8.75223 11.5558 8.84598 11.5558C9.04018 11.5558 9.12054 11.3951 9.12054 11.221C9.12054 11.1741 9.12054 11.1339 9.11384 11.0871L8.53795 7.73884L10.9688 5.3683C11.0558 5.28125 11.1429 5.16741 11.1429 5.04687Z"/>#}
+{#                    </svg>#}
+{#                    <svg class="star-rating__star-icon" width="12" height="12" fill="#ccc" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">#}
+{#                      <path d="M11.1429 5.04687C11.1429 4.84598 10.9286 4.76562 10.7679 4.73884L7.40625 4.25L5.89955 1.20312C5.83929 1.07589 5.72545 0.928571 5.57143 0.928571C5.41741 0.928571 5.30357 1.07589 5.2433 1.20312L3.73661 4.25L0.375 4.73884C0.207589 4.76562 0 4.84598 0 5.04687C0 5.16741 0.0870536 5.28125 0.167411 5.3683L2.60491 7.73884L2.02902 11.0871C2.02232 11.1339 2.01563 11.1741 2.01563 11.221C2.01563 11.3951 2.10268 11.5558 2.29688 11.5558C2.39063 11.5558 2.47768 11.5223 2.56473 11.4754L5.57143 9.89509L8.57813 11.4754C8.65848 11.5223 8.75223 11.5558 8.84598 11.5558C9.04018 11.5558 9.12054 11.3951 9.12054 11.221C9.12054 11.1741 9.12054 11.1339 9.11384 11.0871L8.53795 7.73884L10.9688 5.3683C11.0558 5.28125 11.1429 5.16741 11.1429 5.04687Z"/>#}
+{#                    </svg>#}
+{#                    <svg class="star-rating__star-icon" width="12" height="12" fill="#ccc" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">#}
+{#                      <path d="M11.1429 5.04687C11.1429 4.84598 10.9286 4.76562 10.7679 4.73884L7.40625 4.25L5.89955 1.20312C5.83929 1.07589 5.72545 0.928571 5.57143 0.928571C5.41741 0.928571 5.30357 1.07589 5.2433 1.20312L3.73661 4.25L0.375 4.73884C0.207589 4.76562 0 4.84598 0 5.04687C0 5.16741 0.0870536 5.28125 0.167411 5.3683L2.60491 7.73884L2.02902 11.0871C2.02232 11.1339 2.01563 11.1741 2.01563 11.221C2.01563 11.3951 2.10268 11.5558 2.29688 11.5558C2.39063 11.5558 2.47768 11.5223 2.56473 11.4754L5.57143 9.89509L8.57813 11.4754C8.65848 11.5223 8.75223 11.5558 8.84598 11.5558C9.04018 11.5558 9.12054 11.3951 9.12054 11.221C9.12054 11.1741 9.12054 11.1339 9.11384 11.0871L8.53795 7.73884L10.9688 5.3683C11.0558 5.28125 11.1429 5.16741 11.1429 5.04687Z"/>#}
+{#                    </svg>#}
+{#                    <svg class="star-rating__star-icon" width="12" height="12" fill="#ccc" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">#}
+{#                      <path d="M11.1429 5.04687C11.1429 4.84598 10.9286 4.76562 10.7679 4.73884L7.40625 4.25L5.89955 1.20312C5.83929 1.07589 5.72545 0.928571 5.57143 0.928571C5.41741 0.928571 5.30357 1.07589 5.2433 1.20312L3.73661 4.25L0.375 4.73884C0.207589 4.76562 0 4.84598 0 5.04687C0 5.16741 0.0870536 5.28125 0.167411 5.3683L2.60491 7.73884L2.02902 11.0871C2.02232 11.1339 2.01563 11.1741 2.01563 11.221C2.01563 11.3951 2.10268 11.5558 2.29688 11.5558C2.39063 11.5558 2.47768 11.5223 2.56473 11.4754L5.57143 9.89509L8.57813 11.4754C8.65848 11.5223 8.75223 11.5558 8.84598 11.5558C9.04018 11.5558 9.12054 11.3951 9.12054 11.221C9.12054 11.1741 9.12054 11.1339 9.11384 11.0871L8.53795 7.73884L10.9688 5.3683C11.0558 5.28125 11.1429 5.16741 11.1429 5.04687Z"/>#}
+{#                    </svg>#}
+{#                    <svg class="star-rating__star-icon" width="12" height="12" fill="#ccc" viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg">#}
+{#                      <path d="M11.1429 5.04687C11.1429 4.84598 10.9286 4.76562 10.7679 4.73884L7.40625 4.25L5.89955 1.20312C5.83929 1.07589 5.72545 0.928571 5.57143 0.928571C5.41741 0.928571 5.30357 1.07589 5.2433 1.20312L3.73661 4.25L0.375 4.73884C0.207589 4.76562 0 4.84598 0 5.04687C0 5.16741 0.0870536 5.28125 0.167411 5.3683L2.60491 7.73884L2.02902 11.0871C2.02232 11.1339 2.01563 11.1741 2.01563 11.221C2.01563 11.3951 2.10268 11.5558 2.29688 11.5558C2.39063 11.5558 2.47768 11.5223 2.56473 11.4754L5.57143 9.89509L8.57813 11.4754C8.65848 11.5223 8.75223 11.5558 8.84598 11.5558C9.04018 11.5558 9.12054 11.3951 9.12054 11.221C9.12054 11.1741 9.12054 11.1339 9.11384 11.0871L8.53795 7.73884L10.9688 5.3683C11.0558 5.28125 11.1429 5.16741 11.1429 5.04687Z"/>#}
+{#                    </svg>#}
+{#                  </span>#}
+{#                  <input type="hidden" id="form-input-rating" value="{{ review_form.rating }}" />#}
+{#                </div>#}
+{#                <div class="mb-4">#}
+{#                  {{ review_form.comment }}#}
+{#                </div>#}
+{##}
+{#                <div class="form-action">#}
+{#                  <button type="submit" class="btn btn-primary">Отправить</button>#}
+{#                </div>#}
+{#              </form>#}
+{#              {% endfor %}  #}
+{#            </div>#}
+{#          </div>#}
+{#        </div>#}
+{#      </div>#}
     </section>
- 
+    {% endfor %}   
+
   </main>
 {% endblock %}
 

@@ -1,6 +1,7 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render,redirect
 from products.models import Product, ProductCategory, ProductImage
+from pages.models import Content
 from cart.forms import CartAddProductForm
 from reviews.forms import ReviewForm
 from reviews.models import Review
@@ -28,16 +29,20 @@ def products(request, category_id=None, page=1):
     return render(request, 'products/products.html', context)
 
 def product_detail(request, product_id):
+    categories = ProductCategory.objects.filter(parent=None)  # Получение корневых категорий
     products = Product.objects.filter(id=product_id)
     images = ProductImage.objects.filter(product=product_id)
+    contents = Content.objects.all()
     cart_product_form = CartAddProductForm()
     review_form = ReviewForm()
     reviews = Review.objects.filter(product=product_id)
     context = {'products': products,
+               'top_categories': categories,
                'images': images,
                'cart_product_form': cart_product_form,
                'review_form': review_form,
-               'reviews': reviews}
+               'reviews': reviews,
+               'contents': contents}
     return render(request, 'products/product_detail.html', context)
 
 
