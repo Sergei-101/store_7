@@ -5,6 +5,7 @@ from products.models import Product
 from cart.cart import Cart
 from cart.forms import CartAddProductForm
 from django.http import JsonResponse
+from django.core.serializers import serialize
 
 def cart_add_quick(request, product_id):
     cart = Cart(request)
@@ -17,6 +18,33 @@ def cart_add_quick(request, product_id):
     else:
         errors = form.errors.as_json()  # Получаем ошибки формы в JSON-формате
         return JsonResponse({'success': False, 'message': f'Произошла ошибка. Пожалуйста, проверьте введенные данные: {errors}'})
+
+
+def get_cart_contents(request):
+    cart = Cart(request)
+    cart_items = []
+
+    # Преобразуем каждый товар в корзине в словарь перед добавлением в список cart_items
+    for item in cart:
+        product_data = {
+            'test':'test',
+            'id': item['product'].id,
+            'name': item['product'].name,
+            'price': str(item['product'].final_price()),  # Получаем конечную цену товара
+            'quantity': item['quantity'],
+            'total_price': str(item['total_price']),
+        }
+        cart_items.append(product_data)
+
+    total_price = str(cart.get_total_price())
+
+    # Формируем JSON-объект с данными о содержимом корзины
+    cart_contents = {
+        'cart_items': cart_items,
+        'total_price': total_price,
+    }
+
+    return JsonResponse(cart_contents)
 
 def cart_add(request, product_id):
     cart = Cart(request)

@@ -1,3 +1,12 @@
+function updateCartContent(cartContent) {
+    // Находим элемент корзины на странице
+    var cartElement = $('.cart-content');
+
+    // Заменяем содержимое корзины новым содержимым
+    cartElement.html(cartContent);
+}
+
+
 $(document).ready(function() {
     // Обработчик клика на кнопку "Быстрый просмотр"
     $(document).on("click", ".js-quick-view", function (e) {
