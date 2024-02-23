@@ -12,7 +12,7 @@ $(document).ready(function() {
                 $.each(data.cart_items, function(index, item) {
                     var cartItemHTML = '<div class="cart-drawer-item d-flex position-relative">';
                     cartItemHTML += '<div class="position-relative">';
-                    cartItemHTML += '<img loading="lazy" class="cart-drawer-item__img" src="' + item.image_url + '" alt="' + item.name + '">';
+                    cartItemHTML += '<img loading="lazy" class="cart-drawer-item__img" src="' + item.image + '" alt="' + item.name + '">';
                     cartItemHTML += '</div>';
                     cartItemHTML += '<div class="cart-drawer-item__info flex-grow-1">';
                     cartItemHTML += '<h6 class="cart-drawer-item__title fw-normal">' + item.name + '</h6>';
@@ -25,9 +25,50 @@ $(document).ready(function() {
                     cartItemHTML += '<span class="cart-drawer-item__price money price">' + item.price + '</span>';
                     cartItemHTML += '</div>';
                     cartItemHTML += '</div>';
-
+                    cartItemHTML += '<button class="btn-close-xs position-absolute top-0 end-0 js-cart-item-remove"></button>';
+                    cartItemHTML += '</div>';
+                    cartItemHTML += '<hr class="cart-drawer-divider">';
                     // Вставляем HTML-разметку в корзину
                     $('#cart-items').append(cartItemHTML);
+                });
+                $.each(data.cart_items, function(index, item) {
+                    var cartItemHTML = '<tr>';
+                    cartItemHTML += '<tr>';
+                    cartItemHTML += '<td>';
+                    cartItemHTML += '<div class="shopping-cart__product-item">';
+                    cartItemHTML += '<img loading="lazy" src="' + item.image + '" alt="' + item.name + '" width="120" height="120" alt="" />';
+                    cartItemHTML += '</div>';
+                    cartItemHTML += '</td>';
+                    cartItemHTML += '<td>';
+                    cartItemHTML += '<div class="shopping-cart__product-item__detail">';
+                    cartItemHTML += '<h4>' + item.name + '</h4>';
+                    cartItemHTML += '</div>';
+                    cartItemHTML += '</td>';
+                    cartItemHTML += '<td>';
+                    cartItemHTML += '<span class="shopping-cart__product-price">' + item.price + '</span>';
+                    cartItemHTML += '</td>';
+                    cartItemHTML += '<td>';
+                    cartItemHTML += '<div class="qty-control position-relative">';
+                    cartItemHTML += '<input type="number" name="quantity" value="' + item.quantity + '" min="1" class="qty-control__number text-center">';
+                    cartItemHTML += '<div class="qty-control__reduce">-</div>';
+                    cartItemHTML += '<div class="qty-control__increase">+</div>';
+                    cartItemHTML += '</div><!-- .qty-control -->';
+                    cartItemHTML += '</td>';
+                    cartItemHTML += '<td>';
+                    cartItemHTML += '<span class="shopping-cart__subtotal">$</span>';
+                    cartItemHTML += '</td>';
+                    cartItemHTML += '<td>';
+                    cartItemHTML += '<a href="#"  >';
+                    cartItemHTML += '<svg width="10" height="10" viewBox="0 0 10 10" fill="#767676" xmlns="http://www.w3.org/2000/svg">';
+                    cartItemHTML += '<path d="M0.259435 8.85506L9.11449 0L10 0.885506L1.14494 9.74056L0.259435 8.85506Z"/>';
+                    cartItemHTML += '<path d="M0.885506 0.0889838L9.74057 8.94404L8.85506 9.82955L0 0.97449L0.885506 0.0889838Z"/>';
+                    cartItemHTML += '</svg> ';
+                    cartItemHTML += '</a>';
+                    cartItemHTML += '</td>';
+                    cartItemHTML += '</tr>';
+
+                    // Вставляем HTML-разметку в корзину
+                    $('#cart-items-basket').append(cartItemHTML);
                 });
 
                 // Обновляем общую цену корзины
@@ -47,7 +88,7 @@ $(document).ready(function() {
         // Отправляем AJAX-запрос для обновления количества товара в корзине
         $.ajax({
             type: 'POST',
-            url: '/cart/update/' + productId + '/',
+            url: '/cart/adds/' + productId + '/',
             data: {
                 'quantity': newQuantity,
                 'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()

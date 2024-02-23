@@ -425,8 +425,9 @@
                     <div class="col pe-4">
                       <a href="#" class="sub-menu__title"></a>
                       <ul class="sub-menu__list list-unstyled">
-                        <li class="sub-menu__item"><a href="./shop1.html" class="menu-link menu-link_us-s"></a></li>
-                        
+                        {% for category in top_categories %}  
+                        <li class="sub-menu__item"><a href="{% url 'products:category' category.id %}" class="menu-link menu-link_us-s">{{ category.name }}</a></li>
+                        {% endfor %}
                       </ul>
                     </div>
   
@@ -553,20 +554,21 @@
   <!---------------- Cart Drawer --------------->
   <div class="aside aside_right overflow-hidden cart-drawer" id="cartDrawer">
     <div class="aside-header d-flex align-items-center">
-      <h3 class="text-uppercase fs-6 mb-0">SHOPPING BAG ( <span class="cart-amount js-cart-items-count">1</span> ) </h3>
+      <h3 class="text-uppercase fs-6 mb-0">Корзина товаров ( <span class="cart-amount js-cart-items-count">1</span> ) </h3>
       <button class="btn-close-lg js-close-aside btn-close-aside ms-auto"></button>
-    </div><!-- /.aside-header --> 
-  <div id="cart-items"></div>
-      <div id="total-price"></div>
-    
+    </div><!-- /.aside-header -->
+
+    <div class="aside-content cart-drawer-items-list">     
+        <div id="cart-items"></div>    
+    </div><!-- /.aside-content -->
 
     <div class="cart-drawer-actions position-absolute start-0 bottom-0 w-100">
       <hr class="cart-drawer-divider">
       <div class="d-flex justify-content-between">
-        <h6 class="fs-base fw-medium">SUBTOTAL:</h6>
-        <span class="cart-subtotal fw-medium">${{ cart.get_total_price }}</span>
+        <h6 class="fs-base fw-medium">Итого:</h6>
+        <span class="cart-subtotal fw-medium" id="total-price"></span>
       </div><!-- /.d-flex justify-content-between -->
-      <a href="{% url 'cart:cart_detail' %} " class="btn btn-light mt-3 d-block">Корзина</a>
+      <a href="{% url 'cart:cart_detail' %}" class="btn btn-light mt-3 d-block">Корзина</a>
       <a href="{% url 'orders:order_create' %}" class="btn btn-primary mt-3 d-block">Оформить</a>
     </div><!-- /.aside-content -->
   </div><!-- /.aside -->

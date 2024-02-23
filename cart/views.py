@@ -23,27 +23,23 @@ def cart_add_quick(request, product_id):
 def get_cart_contents(request):
     cart = Cart(request)
     cart_items = []
-
     # Преобразуем каждый товар в корзине в словарь перед добавлением в список cart_items
     for item in cart:
         product_data = {
-            'test':'test',
             'id': item['product'].id,
             'name': item['product'].name,
             'price': str(item['product'].final_price()),  # Получаем конечную цену товара
             'quantity': item['quantity'],
             'total_price': str(item['total_price']),
+            'image': item['product'].image.url,
         }
         cart_items.append(product_data)
-
     total_price = str(cart.get_total_price())
-
     # Формируем JSON-объект с данными о содержимом корзины
     cart_contents = {
         'cart_items': cart_items,
         'total_price': total_price,
     }
-
     return JsonResponse(cart_contents)
 
 def cart_add(request, product_id):
