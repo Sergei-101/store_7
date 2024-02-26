@@ -1,11 +1,14 @@
 import csv
 from django.contrib import admin
 from django.http import HttpResponse
-from products.models import Product, ProductCategory, ProductImage, Promotion, CSVFile
+from products.models import Product, ProductCategory, ProductImage, Promotion, CSVFile, Supplier
 from slugify import slugify
 from products.forms import ProductForm
+from django.contrib.admin.widgets import FilteredSelectMultiple
+from django.db import models
+from django.forms import SelectMultiple
 
-
+admin.site.register(Supplier)
 admin.site.register(Promotion)
 
 class ProductImageInline(admin.TabularInline):
@@ -15,7 +18,7 @@ class ProductImageInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'base_price', 'is_active', 'category', 'id') # отоброжать поля
+    list_display = ('name', 'base_price', 'quantity', 'category', 'id') # отоброжать поля
     prepopulated_fields = {'slug': ('name',)}
     inlines = [ProductImageInline, ]
     actions = ['export_to_csv']

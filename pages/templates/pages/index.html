@@ -192,7 +192,8 @@
                   <div class="position-relative pb-3">
                     <div class="pc__img-wrapper pc__img-wrapper_wide3">
                       <a href="{% url 'products:product_detail' product.id %}">
-                        <img loading="lazy" src="{{ product.images.all.0.image.url }}" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img">
+                        
+                        <img loading="lazy" src="{{ product.images.all.0.image.url }}{{ product.image.thumbnail.url }}" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img">
                       </a>
                     </div>
                     

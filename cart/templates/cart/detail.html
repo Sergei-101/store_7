@@ -58,9 +58,6 @@
                 <td>
                   <div class="shopping-cart__product-item__detail">
                     <h4>{{ product }}</h4>
-                    <ul class="shopping-cart__product-item__options">
-                      <li>доп текст</li>                      
-                    </ul>
                   </div>
                 </td>
                 <td>
@@ -156,7 +153,9 @@
             </div>
             <div class="mobile_fixed-btn_wrapper">
               <div class="button-wrapper container">
-                <button class="btn btn-primary btn-checkout form-check " >ОФОРМИТЬ ЗАКАЗ</button>
+                <a href='{% url "orders:order_create" %}'>
+                  <button class="btn btn-primary btn-checkout form-check " >ОФОРМИТЬ ЗАКАЗ</button>
+                </a>  
               </div>
             </div>
           </div>

@@ -46,9 +46,7 @@ class Cart:
         """
         product_id = str(product.id)
         if product_id not in self.cart:
-            price = product.price_with_markup_and_vat()  # Получаем начальную цену товара
-            if product.promotion and product.promotion.is_active():  # Проверяем, есть ли на товар скидка и активна ли она
-                price = product.promotion.discount_percentage  # Применяем скидку к цене
+            price = product.final_price()  # Получаем начальную цену товара            
             self.cart[product_id] = {'quantity': 0, 'price': str(price)}
         if override_quantity:
             self.cart[product_id]['quantity'] = quantity
