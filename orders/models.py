@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
 from django.db import models
-
+from phonenumber_field.modelfields import PhoneNumberField
 from products.models import Product
+
 
 
 class Order(models.Model):
@@ -16,24 +17,48 @@ class Order(models.Model):
         (DELIVERED, 'Доставлен'),
     )
 
-    first_name = models.CharField(max_length=64)
-    last_name = models.CharField(max_length=64)
-    email = models.EmailField(max_length=256)
-    phone_number = models.CharField(max_length=50)
-    address = models.CharField(max_length=256)
-    description = models.TextField()
-    created = models.DateTimeField(auto_now_add=True)
-    status = models.SmallIntegerField(default=CREATED, choices=STATUSES)
-    total_cost = models.DecimalField(max_digits=10, decimal_places=2)
-    initiator = models.ForeignKey(to=User, on_delete=models.CASCADE, blank=True, null=True)
+    PERSONAL = 'personal'
+    BUSINESS = 'business'
+    CUSTOMER_TYPE_CHOICES = [
+        (PERSONAL, 'Физическое лицо'),
+        (BUSINESS, 'Юридическое лицо'),
+    ]
 
-    def __str__(self):
-        return f'#{self.id}. {self.first_name} {self.last_name}'
+    DELIVERY = 'delivery'
+    PICKUP = 'pickup'
+    DELIVERY_METHOD_CHOICES = [
+        (DELIVERY, 'Доставка по адресу'),
+        (PICKUP, 'Самовывоз'),
+    ]
+
+    # Для Юр. лиц
+    company_name = models.CharField(max_length=100, blank=True, null=True, verbose_name='Название компании')
+    unp = models.CharField(max_length=9, blank=True, null=True, verbose_name='УНП')
+    checking_account = models.CharField(max_length=20, blank=True, null=True, verbose_name='Расчетный счет')
+    bic = models.CharField(max_length=20, blank=True, null=True, verbose_name='Бик банка')
+    bank_name = models.CharField(max_length=100, blank=True, null=True, verbose_name='Наименование банка')
+    legal_address = models.CharField(max_length=256, blank=True, null=True, verbose_name='Юридический адрес')
+
+    # Общие для всех
+    contact_person = models.CharField(max_length=128, verbose_name='Контактное лицо')
+    address = models.CharField(max_length=256, blank=True, null=True, verbose_name='Адрес доставки')
+    email = models.EmailField(max_length=256, verbose_name='E-Mail')
+    phone_number = PhoneNumberField(verbose_name='Телефон')
+    description = models.TextField(blank=True, null=True, verbose_name='Комментарии к заказу')
+    created = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
+    status = models.SmallIntegerField(default=CREATED, choices=STATUSES, verbose_name='Статус заказа')
+    total_cost = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Общая стоимость')
+    initiator = models.ForeignKey(to=User, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Инициатор')
+    customer_type = models.CharField(max_length=10, choices=CUSTOMER_TYPE_CHOICES, verbose_name='Тип заказчика')
+    delivery_method = models.CharField(max_length=10, choices=DELIVERY_METHOD_CHOICES, verbose_name='Метод доставки')
 
     class Meta:
         ordering = ['-created']
         verbose_name = 'Ордер'
         verbose_name_plural = 'Ордера'
+
+    def __str__(self):
+        return f'#{self.id}. {self.company_name if self.company_name else f"{self.contact_person}"}'
 
    
 

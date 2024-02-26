@@ -1,0 +1,7 @@
+.grid-banner__item_rect {
+  min-height: 19.375rem;
+
+  @include media-breakpoint-up(lg) {
+    min-height: 24.875rem;
+  }
+}

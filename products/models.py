@@ -62,14 +62,26 @@ class Characteristic(models.Model):
         verbose_name = 'Характеристика'
         verbose_name_plural = 'Характеристики'      
       
+class Unit(models.Model): # Еденица измерения
+    name = models.CharField(max_length=100)
+    full_name = models.CharField(max_length=100, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Еденица измерения'
+        verbose_name_plural = 'Еденицы измерения'
 
 
 class Product(models.Model):
     category = models.ForeignKey(ProductCategory, on_delete=models.CASCADE, related_name='products', verbose_name="Категория")
     name = models.CharField(max_length=255, verbose_name="Наименование")
     slug = models.SlugField(max_length=255, unique=True)
+    image = models.ImageField(upload_to='product_images', blank=True, null=True, verbose_name="Изображение")
     description = models.TextField(verbose_name="Описание")
-    quantity = models.IntegerField(default=0, verbose_name="Кол-во") # Активный товар    
+    quantity = models.IntegerField(default=0, verbose_name="Кол-во") # Активный товар
+    unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, verbose_name="Еденица измерения")
     base_price = models.DecimalField(max_digits=6, decimal_places=2, verbose_name="Базовая цена") # Базовая цена товара без наценок и ндс
     markup_percentage = models.DecimalField(max_digits=6, decimal_places=2, default=0, verbose_name="Процент к товару") # Процент наценки на цену без ндс
     vat_price = models.DecimalField(max_digits=6, decimal_places=2, default=20, verbose_name="НДС") # НДС на цену

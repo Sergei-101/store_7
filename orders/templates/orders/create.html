@@ -28,51 +28,46 @@
             <em>Просмотрите и отправьте свой заказ</em>
           </span>
         </a>
-      </div>
+      </div>  
       <form action="{% url 'orders:order_create' %}" method="post" name="checkout-form">
       {% csrf_token %} 
         <div class="checkout-form">
           <div class="billing-info__wrapper">             
             <h4>ПЛАТЕЖНЫЕ РЕКВИЗИТЫ</h4>
-            <div class="row">                  
-              <div class="col-md-6">
-                <div class="form-floating my-3">
-                  {{ form.first_name }}
-                  <label for="{{ form.first_name.id_for_label }}">Имя</label>
+            <div class="row">
+                <div class="form-floating my-3">            
+                    <select id="customer-type" name="customer_type" >
+                        <option value="personal" selected>Физ. лица</option>
+                        <option value="business">Юр. Лица</option>
+                    </select>
                 </div>
-              </div>
-              <div class="col-md-6">
-                <div class="form-floating my-3">
-                  {{ form.last_name }}
-                  <label for="{{ form.last_name.id_for_label }}">фамилия</label>
+                <div id="personal-form">                    
+                     <p>{{ personal_form.contact_person }}</p>
+                     <p>{{ personal_form.address }}</p>
+                     <p>{{ personal_form.email }}</p>
+                     <p>{{ personal_form.phone_number }}</p>
+                     <p>{{ personal_form.description }}</p>
+                     <p>{{ personal_form.delivery_method }}</p>
+                     
                 </div>
-              </div>     
-              <div class="col-md-12">
-                <div class="form-floating my-3">
-                  {{ form.email }}
-                  <label for="{{ form.email.id_for_label }}">email</label>
+                <div id="business-form" style="display: none;">                    
+{#                    {{ business_form.as_p }}#}
+                        <p>{{ business_form.company_name }} </p>   
+                        <p>{{ business_form.unp }} </p>   
+                        <p>{{ business_form.checking_account }} </p>   
+                        <p>{{ business_form.bic }} </p>   
+                        <p>{{ business_form.bank_name }} </p>   
+                        <p>{{ business_form.legal_address }} </p>   
+                        <p>{{ business_form.contact_person }} </p>   
+                        <p>{{ business_form.address }} </p>   
+                        <p>{{ business_form.email }} </p>   
+                        <p>{{ business_form.phone_number }} </p>   
+                        <p>{{ business_form.description }} </p>   
+                        <p>{{ business_form.delivery_method }} </p>   
                 </div>
-              </div>
-              <div class="col-md-12">
-                <div class="form-floating my-3">
-                  {{ form.phone_number }}
-                  <label for="{{ form.phone_number.id_for_label }}">Номер телефона</label>
-                </div>
-              </div>  
-              <div class="col-md-12">
-                <div class="form-floating my-3">
-                  {{ form.address }}
-                  <label for="{{ form.address.id_for_label }}">Адрес доставки</label>
-                </div>
-              </div> 
-              <div class="col-md-12">
-                <div class="form-floating my-3">
-                  {{ form.description }}
-                  <label for="{{ form.description.id_for_label }}">Примечание к заказу</label>
-                </div>
-              </div>  
+                <button type="submit">Submit</button>
             </div>
-          </div>            
+          </div>
           <div class="checkout__totals-wrapper">
             <div class="sticky-content">
               <div class="checkout__totals">
@@ -117,7 +112,7 @@
                         <td align="right">– {{ cart.coupon.discount }}% </td>
 
                     </tr>
-                    <tr>    
+                    <tr>
                         <th>Итого к оплате</th>
                         <td align="right">${{ cart.get_total_price_after_discount|floatformat:2 }}</td>
                     </tr>
@@ -130,7 +125,7 @@
                   </tbody>
                 </table>
               </div>
-              <div class="checkout__payment-methods">    
+              <div class="checkout__payment-methods">
                 <div class="form-check">
                   <input class="form-check-input form-check-input_fill" type="radio" name="checkout_payment_method" id="checkout_payment_method_3">
                   <label class="form-check-label" for="checkout_payment_method_3">
@@ -143,7 +138,7 @@
                 <div class="form-check">
                   <input class="form-check-input form-check-input_fill" type="radio" name="checkout_payment_method" id="checkout_payment_method_4">
                   <label class="form-check-label" for="checkout_payment_method_4">
-                    БАНКОВСКОЙ КАРТОЙ 
+                    БАНКОВСКОЙ КАРТОЙ
                     <p class="option-detail">
                       ТЕКСТ
                     </p>

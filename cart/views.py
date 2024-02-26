@@ -4,8 +4,43 @@ from coupons.forms import CouponApplyForm
 from products.models import Product
 from cart.cart import Cart
 from cart.forms import CartAddProductForm
+from django.http import JsonResponse
+from django.core.serializers import serialize
+
+def cart_add_quick(request, product_id):
+    cart = Cart(request)
+    product = get_object_or_404(Product, id=product_id)
+    form = CartAddProductForm(request.POST)
+    if form.is_valid():
+        cd = form.cleaned_data
+        cart.add(product=product, quantity=cd['quantity'], override_quantity=cd['override'])
+        return JsonResponse({'success': True, 'message': 'Товар успешно добавлен в корзину'})
+    else:
+        errors = form.errors.as_json()  # Получаем ошибки формы в JSON-формате
+        return JsonResponse({'success': False, 'message': f'Произошла ошибка. Пожалуйста, проверьте введенные данные: {errors}'})
 
 
+def get_cart_contents(request):
+    cart = Cart(request)
+    cart_items = []
+    # Преобразуем каждый товар в корзине в словарь перед добавлением в список cart_items
+    for item in cart:
+        product_data = {
+            'id': item['product'].id,
+            'name': item['product'].name,
+            'price': str(item['product'].final_price()),  # Получаем конечную цену товара
+            'quantity': item['quantity'],
+            'total_price': str(item['total_price']),
+            'image': item['product'].image.url,
+        }
+        cart_items.append(product_data)
+    total_price = str(cart.get_total_price())
+    # Формируем JSON-объект с данными о содержимом корзины
+    cart_contents = {
+        'cart_items': cart_items,
+        'total_price': total_price,
+    }
+    return JsonResponse(cart_contents)
 
 def cart_add(request, product_id):
     cart = Cart(request)
@@ -17,8 +52,6 @@ def cart_add(request, product_id):
                  quantity=cd['quantity'],
                  override_quantity=cd['override'])
     return redirect('cart:cart_detail')
-
-
 
 def cart_remove(request, product_id):
     cart = Cart(request)

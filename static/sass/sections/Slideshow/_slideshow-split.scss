@@ -1,0 +1,13 @@
+.slideshow_split {
+  @include media-breakpoint-down(md) {
+    height: auto;
+  }
+}
+
+.slide-split_text {
+  flex: 2 2 40%;
+}
+
+.slide-split_media {
+  flex: 1 1 60%;
+}
