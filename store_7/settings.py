@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'pages',
     'debug_toolbar',
     'ckeditor',
+    'phonenumber_field',
 
 ]
 
