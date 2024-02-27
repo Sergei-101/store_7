@@ -23,12 +23,11 @@ class PersonalOrderForm(forms.ModelForm):
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'you@example.com'}))
     phone_number = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '+375(29)1112233'}))
     description = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Примечание к заказу'}))
-    delivery_method = forms.ChoiceField(choices=Order.DELIVERY_METHOD_CHOICES,
-                                        widget=forms.Select(attrs={'class': 'form-control'}))
+
 
     class Meta:
         model = Order
-        fields = ['contact_person', 'address', 'email', 'phone_number', 'description', 'delivery_method']
+        fields = ['contact_person', 'address', 'email', 'phone_number', 'description']
         labels = None
 
 class BusinessOrderForm(forms.ModelForm):
@@ -43,10 +42,9 @@ class BusinessOrderForm(forms.ModelForm):
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'you@example.com'}))
     phone_number = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '+375(29)1112233'}))
     description = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Примечание к заказу'}))
-    delivery_method = forms.ChoiceField(choices=Order.DELIVERY_METHOD_CHOICES,
-                                        widget=forms.Select(attrs={'class': 'form-control'}))
+
 
     class Meta:
         model = Order
-        fields = ['company_name', 'unp', 'checking_account', 'bic', 'bank_name', 'legal_address', 'contact_person', 'address', 'email', 'phone_number', 'description', 'delivery_method']
+        fields = ['company_name', 'unp', 'checking_account', 'bic', 'bank_name', 'legal_address', 'contact_person', 'address', 'email', 'phone_number', 'description']
         labels = None

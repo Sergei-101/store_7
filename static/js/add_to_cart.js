@@ -159,20 +159,33 @@ $(document).ready(function() {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-            const personalForm = document.getElementById('personal-form');
-            const businessForm = document.getElementById('business-form');
-            const customerTypeSelect = document.getElementById('customer-type');
+    const personalForm = document.getElementById('personal-form');
+    const businessForm = document.getElementById('business-form');
+    const customerTypeSelect = document.getElementById('customer-type');
 
-            customerTypeSelect.addEventListener('change', function() {
-                if (this.value === 'personal') {
-                    personalForm.style.display = 'block';
-                    businessForm.style.display = 'none';
-                } else {
-                    personalForm.style.display = 'none';
-                    businessForm.style.display = 'block';
-                }
-            });
+    const deliveryMethodSelect = document.getElementById('delivery-method');
+    const addressField = document.getElementById('address-field');
 
-            // Trigger change event on page load to initially display the appropriate form
-            customerTypeSelect.dispatchEvent(new Event('change'));
+
+    customerTypeSelect.addEventListener('change', function() {
+        if (this.value === 'personal') {
+            personalForm.style.display = 'block';
+            businessForm.style.display = 'none';
+        } else {
+            personalForm.style.display = 'none';
+            businessForm.style.display = 'block';
+        }
+    });
+
+    deliveryMethodSelect.addEventListener('change', function() {
+        if (this.value === 'delivery') {
+            addressField.style.display = 'block';
+        } else {
+            addressField.style.display = 'none';
+        }
+    });
+
+    // Trigger change event on page load to initially display the appropriate form
+    customerTypeSelect.dispatchEvent(new Event('change'));
+    deliveryMethodSelect.dispatchEvent(new Event('change'));
 });

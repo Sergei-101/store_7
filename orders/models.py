@@ -24,12 +24,6 @@ class Order(models.Model):
         (BUSINESS, 'Юридическое лицо'),
     ]
 
-    DELIVERY = 'delivery'
-    PICKUP = 'pickup'
-    DELIVERY_METHOD_CHOICES = [
-        (DELIVERY, 'Доставка по адресу'),
-        (PICKUP, 'Самовывоз'),
-    ]
 
     # Для Юр. лиц
     company_name = models.CharField(max_length=100, blank=True, null=True, verbose_name='Название компании')
@@ -41,7 +35,7 @@ class Order(models.Model):
 
     # Общие для всех
     contact_person = models.CharField(max_length=128, verbose_name='Контактное лицо')
-    address = models.CharField(max_length=256, blank=True, null=True, verbose_name='Адрес доставки')
+    address = models.CharField(max_length=256, default='Самовывоз', verbose_name='Адрес доставки')
     email = models.EmailField(max_length=256, verbose_name='E-Mail')
     phone_number = PhoneNumberField(verbose_name='Телефон')
     description = models.TextField(blank=True, null=True, verbose_name='Комментарии к заказу')
@@ -50,7 +44,7 @@ class Order(models.Model):
     total_cost = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Общая стоимость')
     initiator = models.ForeignKey(to=User, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Инициатор')
     customer_type = models.CharField(max_length=10, choices=CUSTOMER_TYPE_CHOICES, verbose_name='Тип заказчика')
-    delivery_method = models.CharField(max_length=10, choices=DELIVERY_METHOD_CHOICES, verbose_name='Метод доставки')
+
 
     class Meta:
         ordering = ['-created']
