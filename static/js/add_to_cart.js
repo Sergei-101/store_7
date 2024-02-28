@@ -8,7 +8,6 @@ $(document).ready(function() {
                 // Очищаем текущее содержимое корзины
                 $('#cart-items').empty();
 
-
                 // Создаем HTML-разметку для каждого элемента корзины
                 $.each(data.cart_items, function(index, item) {
                     var cartItemHTML = '<div class="cart-drawer-item d-flex position-relative">';
@@ -229,3 +228,36 @@ document.addEventListener('DOMContentLoaded', function() {
     toggleAddressField.call(deliveryMethodSelectPersonal, addressFieldPersonal);
     toggleAddressField.call(deliveryMethodSelectBusiness, addressFieldBusiness);
 });
+
+$(document).ready(function() {
+    // Обработчик клика на кнопку "Быстрый просмотр"
+    $(document).on("click", ".js-quick-view", function (e) {
+        e.preventDefault(); // Предотвращаем стандартное действие кнопки
+
+        // Получаем идентификатор товара из атрибута data-product-id кнопки
+        var productId = $(this).data('product-id');
+
+        // Отправляем AJAX-запрос на сервер для получения информации о товаре
+        $.ajax({
+            url: '/products/products/' + productId + '/quick_view/', // URL для обработки AJAX-запроса
+            type: 'GET', // Метод запроса
+            success: function (response) {
+                // Обработка успешного ответа от сервера
+                $('#quick-view-product-id').val(productId); // Устанавливаем идентификатор товара в скрытое поле формы
+                // Вставляем остальные данные о товаре в окно быстрого просмотра
+                $('#product-name').text(response.name); // Вставляем название товара
+                $('#product-price').text('Цена: ' + response.price); // Вставляем цену товара
+                $('#product-description').html(response.description);
+                $('#product-image').attr('src', response.image); // Устанавливаем изображение товара
+                // Показываем окно быстрого просмотра
+            },
+            error: function (xhr, status, error) {
+                // Обработка ошибки
+                console.error('Ошибка при загрузке информации о товаре:', error);
+            }
+        });
+    });
+
+    // Здесь вы можете добавить другие обработчики событий и функции, если это необходимо
+});
+
