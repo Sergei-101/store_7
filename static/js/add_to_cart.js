@@ -8,6 +8,7 @@ $(document).ready(function() {
                 // Очищаем текущее содержимое корзины
                 $('#cart-items').empty();
 
+
                 // Создаем HTML-разметку для каждого элемента корзины
                 $.each(data.cart_items, function(index, item) {
                     var cartItemHTML = '<div class="cart-drawer-item d-flex position-relative">';
@@ -25,50 +26,54 @@ $(document).ready(function() {
                     cartItemHTML += '<span class="cart-drawer-item__price money price">' + item.price + '</span>';
                     cartItemHTML += '</div>';
                     cartItemHTML += '</div>';
-                    cartItemHTML += '<button class="btn-close-xs position-absolute top-0 end-0 js-cart-item-remove"></button>';
+                    cartItemHTML += '<button class="btn-close-xs position-absolute top-0 end-0 js-cart-item-remove" data-product-id="' + item.id + '"></button>';
                     cartItemHTML += '</div>';
                     cartItemHTML += '<hr class="cart-drawer-divider">';
                     // Вставляем HTML-разметку в корзину
                     $('#cart-items').append(cartItemHTML);
                 });
                 $.each(data.cart_items, function(index, item) {
-                    var cartItemHTML = '<tr>';
-                    cartItemHTML += '<tr>';
-                    cartItemHTML += '<td>';
-                    cartItemHTML += '<div class="shopping-cart__product-item">';
-                    cartItemHTML += '<img loading="lazy" src="' + item.image + '" alt="' + item.name + '" width="120" height="120" alt="" />';
-                    cartItemHTML += '</div>';
-                    cartItemHTML += '</td>';
-                    cartItemHTML += '<td>';
-                    cartItemHTML += '<div class="shopping-cart__product-item__detail">';
-                    cartItemHTML += '<h4>' + item.name + '</h4>';
-                    cartItemHTML += '</div>';
-                    cartItemHTML += '</td>';
-                    cartItemHTML += '<td>';
-                    cartItemHTML += '<span class="shopping-cart__product-price">' + item.price + '</span>';
-                    cartItemHTML += '</td>';
-                    cartItemHTML += '<td>';
-                    cartItemHTML += '<div class="qty-control position-relative">';
-                    cartItemHTML += '<input type="number" name="quantity" value="' + item.quantity + '" min="1" class="qty-control__number text-center">';
-                    cartItemHTML += '<div class="qty-control__reduce">-</div>';
-                    cartItemHTML += '<div class="qty-control__increase">+</div>';
-                    cartItemHTML += '</div><!-- .qty-control -->';
-                    cartItemHTML += '</td>';
-                    cartItemHTML += '<td>';
-                    cartItemHTML += '<span class="shopping-cart__subtotal">$</span>';
-                    cartItemHTML += '</td>';
-                    cartItemHTML += '<td>';
-                    cartItemHTML += '<a href="#"  >';
-                    cartItemHTML += '<svg width="10" height="10" viewBox="0 0 10 10" fill="#767676" xmlns="http://www.w3.org/2000/svg">';
-                    cartItemHTML += '<path d="M0.259435 8.85506L9.11449 0L10 0.885506L1.14494 9.74056L0.259435 8.85506Z"/>';
-                    cartItemHTML += '<path d="M0.885506 0.0889838L9.74057 8.94404L8.85506 9.82955L0 0.97449L0.885506 0.0889838Z"/>';
-                    cartItemHTML += '</svg> ';
-                    cartItemHTML += '</a>';
-                    cartItemHTML += '</td>';
-                    cartItemHTML += '</tr>';
+                    var existingCartItem = $('#cart-items-basket').find('[data-product-id="' + item.id + '"]');
 
-                    // Вставляем HTML-разметку в корзину
-                    $('#cart-items-basket').append(cartItemHTML);
+                    if (existingCartItem.length) {
+                        existingCartItem.find('.qty-control__number').val(item.quantity);
+                    } else {
+                        var cartItemHTML = '<tr>';
+                        cartItemHTML += '<td>';
+                        cartItemHTML += '<div class="shopping-cart__product-item">';
+                        cartItemHTML += '<img loading="lazy" src="' + item.image + '" alt="' + item.name + '" width="120" height="120" alt="" />';
+                        cartItemHTML += '</div>';
+                        cartItemHTML += '</td>';
+                        cartItemHTML += '<td>';
+                        cartItemHTML += '<div class="shopping-cart__product-item__detail">';
+                        cartItemHTML += '<h4>' + item.name + '</h4>';
+                        cartItemHTML += '</div>';
+                        cartItemHTML += '</td>';
+                        cartItemHTML += '<td>';
+                        cartItemHTML += '<span class="shopping-cart__product-price">' + item.price + '</span>';
+                        cartItemHTML += '</td>';
+                        cartItemHTML += '<td>';
+                        cartItemHTML += '<div class="qty-control position-relative">';
+                        cartItemHTML += '<input type="number" name="quantity" value="' + item.quantity + '" min="1" class="qty-control__number text-center" data-product-id="' + item.id + '">';
+                        cartItemHTML += '<div class="qty-control__reduce">-</div>';
+                        cartItemHTML += '<div class="qty-control__increase">+</div>';
+                        cartItemHTML += '</div><!-- .qty-control -->';
+                        cartItemHTML += '</td>';
+                        cartItemHTML += '<td>';
+                        cartItemHTML += '<span class="shopping-cart__subtotal">$</span>';
+                        cartItemHTML += '</td>';
+                        cartItemHTML += '<td>';
+                        cartItemHTML += '<a href="#" class="js-cart-item-remove" data-product-id="' + item.id + '">';
+                        cartItemHTML += '<svg width="10" height="10" viewBox="0 0 10 10" fill="#767676" xmlns="http://www.w3.org/2000/svg">';
+                        cartItemHTML += '<path d="M0.259435 8.85506L9.11449 0L10 0.885506L1.14494 9.74056L0.259435 8.85506Z"/>';
+                        cartItemHTML += '<path d="M0.885506 0.0889838L9.74057 8.94404L8.85506 9.82955L0 0.97449L0.885506 0.0889838Z"/>';
+                        cartItemHTML += '</svg> ';
+                        cartItemHTML += '</a>';
+                        cartItemHTML += '</td>';
+                        cartItemHTML += '</tr>';
+
+                        $('#cart-items-basket').append(cartItemHTML);
+                    }
                 });
 
                 // Обновляем общую цену корзины
@@ -153,10 +158,36 @@ $(document).ready(function() {
             }
         });
     });
+    $(document).on('click', '.js-cart-item-remove', function(e) {
+    e.preventDefault();
+    var product_id = $(this).data('product-id');
+
+    // Отправляем AJAX-запрос для удаления товара из корзины
+    $.ajax({
+        type: 'POST',
+        url: '/cart/remove/' + product_id + '/',
+        data: {
+            'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+        },
+        success: function(data) {
+            updateCartContents();
+            if (data.success) {
+                passive;
+            } else {
+                alert(data.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error('Произошла ошибка при отправке запроса на сервер:', error);
+        }
+    });
+    });
 
     // Обновление корзины при загрузке страницы
     updateCartContents();
 });
+
+
 
 document.addEventListener('DOMContentLoaded', function() {
     const personalForm = document.getElementById('personal-form');
