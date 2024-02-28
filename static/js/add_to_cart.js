@@ -261,3 +261,55 @@ $(document).ready(function() {
     // Здесь вы можете добавить другие обработчики событий и функции, если это необходимо
 });
 
+//Добавление из быстрого просмотра
+$(document).on("click", ".js-addtocart", function (e) {
+    e.preventDefault(); // Предотвращаем стандартное действие кнопки
+    var productId = $('#quick-view-product-id').val(); // Получаем идентификатор товара из скрытого поля формы
+    var quantity = $('#quick-view-quantity').val(); // Получаем количество товара из поля формы
+    var csrfToken = getCookie('csrftoken'); // Получаем CSRF-токен
+
+    $.ajax({
+        type: 'POST',
+        url: '/cart/adds/' + productId + '/',
+        data: {
+            'quantity': quantity
+        },
+        beforeSend: function(xhr, settings) {
+            xhr.setRequestHeader("X-CSRFToken", csrfToken);
+        },
+        success: function(data) {
+            if (data.success) {
+                // Если товар успешно добавлен в корзину, выведите сообщение об этом
+                // alert('Товар успешно добавлен в корзину!');
+                passive;
+                // Закрываем окно быстрого просмотра после успешного добавления в корзину
+                $('#quick-view-modal').modal('hide');
+            } else {
+                // Если возникла ошибка при добавлении товара в корзину, выведите сообщение об ошибке
+                alert('Произошла ошибка: ' + data.message);
+            }
+        },
+        error: function(xhr, status, error) {
+            // Выводим сообщение об ошибке, если возникла проблема с AJAX-запросом
+            alert('Произошла ошибка при отправке запроса на сервер.');
+        }
+    });
+});
+
+
+// Функция для получения CSRF-токена из cookie
+function getCookie(name) {
+var cookieValue = null;
+if (document.cookie && document.cookie !== '') {
+    var cookies = document.cookie.split(';');
+    for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].trim();
+        // Находим CSRF-токен в cookie
+        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+            break;
+        }
+    }
+}
+return cookieValue;
+}
