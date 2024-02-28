@@ -56,7 +56,7 @@ def quick_view(request, product_id):
         'name': product.name,
         'price': product.final_price(),
         'description': product.description,
-        # 'image_url': product.image.url  # Путь к изображению
+        'image': product.image.url  # Путь к изображению
     }
 
     # Возвращаем JsonResponse с данными о товаре

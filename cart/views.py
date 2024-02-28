@@ -13,11 +13,18 @@ def cart_add_quick(request, product_id):
     form = CartAddProductForm(request.POST)
     if form.is_valid():
         cd = form.cleaned_data
-        cart.add(product=product, quantity=cd['quantity'], override_quantity=cd['override'])
+        # Проверяем, есть ли товар уже в корзине
+        if cart.has_product(product_id):
+            # Если есть, обновляем количество
+            cart.update(product=product, quantity=cd['quantity'])
+        else:
+            # Если нет, добавляем товар в корзину
+            cart.add(product=product, quantity=cd['quantity'], override_quantity=cd['override'])
         return JsonResponse({'success': True, 'message': 'Товар успешно добавлен в корзину'})
     else:
         errors = form.errors.as_json()  # Получаем ошибки формы в JSON-формате
         return JsonResponse({'success': False, 'message': f'Произошла ошибка. Пожалуйста, проверьте введенные данные: {errors}'})
+
 
 
 def get_cart_contents(request):
@@ -53,11 +60,16 @@ def cart_add(request, product_id):
                  override_quantity=cd['override'])
     return redirect('cart:cart_detail')
 
+
 def cart_remove(request, product_id):
     cart = Cart(request)
     product = get_object_or_404(Product, id=product_id)
     cart.remove(product)
-    return redirect('cart:cart_detail')
+
+    return JsonResponse({
+        'success': True,
+        'message': 'Товар успешно удален из корзины',
+   })
 
 
 def cart_detail(request):

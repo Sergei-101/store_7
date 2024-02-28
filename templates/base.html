@@ -596,20 +596,11 @@
 
                 <div class="swiper-wrapper">
                   <div class="swiper-slide product-single__image-item">
-                    <img loading="lazy" src="../images/products/quickview_1.jpg" alt="" />
+                    <img id="product-image" src="" alt="">
                   </div>
-                  <div class="swiper-slide product-single__image-item">
-                    <img loading="lazy" src="../images/products/quickview_2.jpg" alt="" />
-                  </div>
-                  <div class="swiper-slide product-single__image-item">
-                    <img loading="lazy" src="../images/products/quickview_3.jpg" alt="" />
-                  </div>
-                  <div class="swiper-slide product-single__image-item">
-                    <img loading="lazy" src="../images/products/quickview_4.jpg" alt="" />
-                  </div>
+                  
                 </div>
-                <div class="swiper-button-prev"><svg width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_prev_sm" /></svg></div>
-                <div class="swiper-button-next"><svg width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_next_sm" /></svg></div>
+                
               </div>
             </div>
           </div>
@@ -624,13 +615,14 @@
 
             </h1>
             <div class="product-single__price">
-              <span class="current-price" id="product-price"></span> <!-- Цена товара (из js ajax) -->
+              <span class="current-price price-old" id="product-price"></span> <!-- Цена товара (из js ajax) -->
+              <span class="current-price " id="product-price"> 22 </span> <!-- Цена товара (из js ajax) -->
+                
             </div>
             <div class="product-single__short-desc">
               <p id="product-description"></p> <!-- Описание товара (из js ajax) -->            
             </div>
-            <p id="product-id"></p>
-                        
+            <p id="product-id"></p>                        
             <form id="quick-view-addtocart-form" method="post">
                 {% csrf_token %}
                 <input type="hidden" name="product_id" id="quick-view-product-id" value="">

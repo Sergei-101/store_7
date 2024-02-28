@@ -13,10 +13,8 @@ def order_create(request):
     cart = Cart(request)
     personal_form = PersonalOrderForm()
     business_form = BusinessOrderForm()
-
     if request.method == 'POST':
         customer_type = request.POST.get('customer_type')
-
         if customer_type == 'business':
             form = BusinessOrderForm(request.POST)
         else:
@@ -31,6 +29,10 @@ def order_create(request):
             if request.user.is_authenticated:
                 current_user = request.user
                 form.instance.initiator = current_user
+            if customer_type == 'business':
+                form.instance.customer_type = 'business'
+            else:
+                form.instance.customer_type = 'personal'
             order = form.save()
             for item in cart:
                 OrderItem.objects.create(order=order,

@@ -9,7 +9,7 @@ class OrderItemInline(admin.TabularInline):
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['id', 'get_customer_name', 'status', 'total_cost', 'created']
-    list_filter = ['status', 'customer_type', 'delivery_method']
+    list_filter = ['status', 'customer_type']
     search_fields = ['id', 'company_name', 'contact_person', 'email', 'phone_number']
     inlines = [OrderItemInline]
 

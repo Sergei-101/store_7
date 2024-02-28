@@ -94,3 +94,11 @@ class Cart:
 
     def get_total_price_after_discount(self):
         return self.get_total_price() - self.get_discount()
+
+    def update(self, product, quantity):
+        product_id = str(product.id)
+        self.cart[product_id]['quantity'] = quantity
+        self.save()
+
+    def has_product(self, product_id):
+        return str(product_id) in self.cart
