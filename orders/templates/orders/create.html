@@ -41,7 +41,8 @@
                 </div>
                     <form action="{% url 'orders:order_create' %}" method="post" name="checkout-form">
                         {% csrf_token %}
-                        <div id="personal-form">                    
+                        <div id="personal-form">
+                             <input type="hidden" name="customer_type" value="personal">
                              <p>{{ personal_form.contact_person }}</p>                             
                              <p>{{ personal_form.email }}</p>
                              <p>{{ personal_form.phone_number }}</p>
@@ -66,6 +67,7 @@
                 <div id="business-form" style="display: none;">                    
                     <form action="{% url 'orders:order_create' %}" method="post" name="checkout-form">
                         {% csrf_token %}
+                        <input type="hidden" name="customer_type" value="business">
                         <p>{{ business_form.company_name }} </p>   
                         <p>{{ business_form.unp }} </p>   
                         <p>{{ business_form.checking_account }} </p>   
@@ -77,12 +79,12 @@
                         <p>{{ business_form.phone_number }} </p>   
                         <p>{{ business_form.description }} </p>                           
                         <div class="form-floating my-3">            
-                            <select class="form-control" id="delivery-method" name="delivery_method">
-                                <option value="delivery" >Доставка по адресу</option>
+                            <select class="form-control" id="delivery-method-business" name="delivery_method">
+                                <option value="delivery">Доставка по адресу</option>
                                 <option value="pickup" selected>Самовывоз</option>
                             </select>
                         </div>
-                        <div id="address-field" class="form-floating my-3">
+                        <div id="address-field-business" class="form-floating my-3">
                             <p>{{ business_form.address }}</p>
                         </div>
                         <div class="policy-text">
@@ -94,7 +96,7 @@
                 
             </div>
           </div>
-          <div class="checkout__totals-wrapper">
+        <div class="checkout__totals-wrapper">
             <div class="sticky-content">
               <div class="checkout__totals">
                 <h3>Заказ</h3>

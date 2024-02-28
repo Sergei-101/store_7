@@ -163,9 +163,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const businessForm = document.getElementById('business-form');
     const customerTypeSelect = document.getElementById('customer-type');
 
-    const deliveryMethodSelect = document.getElementById('delivery-method');
-    const addressField = document.getElementById('address-field');
-
+    const deliveryMethodSelectPersonal = document.getElementById('delivery-method');
+    const deliveryMethodSelectBusiness = document.getElementById('delivery-method-business');
+    const addressFieldPersonal = document.getElementById('address-field');
+    const addressFieldBusiness = document.getElementById('address-field-business');
 
     customerTypeSelect.addEventListener('change', function() {
         if (this.value === 'personal') {
@@ -177,15 +178,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    deliveryMethodSelect.addEventListener('change', function() {
+    deliveryMethodSelectPersonal.addEventListener('change', function() {
+        toggleAddressField.call(this, addressFieldPersonal);
+    });
+
+    deliveryMethodSelectBusiness.addEventListener('change', function() {
+        toggleAddressField.call(this, addressFieldBusiness);
+    });
+
+    function toggleAddressField(addressField) {
         if (this.value === 'delivery') {
             addressField.style.display = 'block';
         } else {
             addressField.style.display = 'none';
         }
-    });
+    }
 
-    // Trigger change event on page load to initially display the appropriate form
-    customerTypeSelect.dispatchEvent(new Event('change'));
-    deliveryMethodSelect.dispatchEvent(new Event('change'));
+    // Изначально скрываем или показываем поле в зависимости от выбранного метода доставки
+    toggleAddressField.call(deliveryMethodSelectPersonal, addressFieldPersonal);
+    toggleAddressField.call(deliveryMethodSelectBusiness, addressFieldBusiness);
 });

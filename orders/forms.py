@@ -2,6 +2,7 @@ from django import forms
 from orders.models import Order
 
 
+
 # class OrderCreateForm(forms.ModelForm):
 #     first_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Иван'}))
 #     last_name = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Иванов'}))
@@ -23,6 +24,7 @@ class PersonalOrderForm(forms.ModelForm):
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'you@example.com'}))
     phone_number = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '+375(29)1112233'}))
     description = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Примечание к заказу'}))
+
 
 
     class Meta:
