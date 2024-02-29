@@ -61,24 +61,26 @@ class CSVFileAdmin(admin.ModelAdmin):
                 category_name_slug = category_name
                 category, created = ProductCategory.objects.get_or_create(name=category_name, slug=category_name_slug)
                 name = row[0]
-                price = row[1]
+                base_price = row[1]
                 description = row[2]
                 slug = slugify(name)
                 quantity = row[4]
+                image = row[5]
 
                 product, created = Product.objects.get_or_create(
                     name=name,
-                    price=price,
+                    base_price=base_price,
                     description=description,
                     category=category,
                     slug=slug,
-                    quantity=quantity
+                    quantity=quantity,
+                    image=image
                 )
-                images_paths = row[5].split(',') if row[5] else []
-                for image_path in images_paths:
-                    if image_path:
-                        product_image = ProductImage(product=product, image=image_path.strip())
-                        product_image.save()
+                # images_paths = row[5].split(',') if row[5] else []
+                # for image_path in images_paths:
+                #     if image_path:
+                #         product_image = ProductImage(product=product, image=image_path.strip())
+                #         product_image.save()
 
             # Пометить файл как обработанный
             csv_file.processed = True
