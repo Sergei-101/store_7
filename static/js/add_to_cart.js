@@ -7,6 +7,7 @@ $(document).ready(function() {
             success: function(data) {
                 // Очищаем текущее содержимое корзины
                 $('#cart-items').empty();
+                $('#cart-items-basket').empty();
 
                 // Создаем HTML-разметку для каждого элемента корзины
                 $.each(data.cart_items, function(index, item) {
@@ -37,46 +38,47 @@ $(document).ready(function() {
                     if (existingCartItem.length) {
                         existingCartItem.find('.qty-control__number').val(item.quantity);
                     } else {
-                        var cartItemHTML = '<tr>';
-                        cartItemHTML += '<td>';
-                        cartItemHTML += '<div class="shopping-cart__product-item">';
-                        cartItemHTML += '<img loading="lazy" src="' + item.image + '" alt="' + item.name + '" width="120" height="120" alt="" />';
-                        cartItemHTML += '</div>';
-                        cartItemHTML += '</td>';
-                        cartItemHTML += '<td>';
-                        cartItemHTML += '<div class="shopping-cart__product-item__detail">';
-                        cartItemHTML += '<h4>' + item.name + '</h4>';
-                        cartItemHTML += '</div>';
-                        cartItemHTML += '</td>';
-                        cartItemHTML += '<td>';
-                        cartItemHTML += '<span class="shopping-cart__product-price">' + item.price + '</span>';
-                        cartItemHTML += '</td>';
-                        cartItemHTML += '<td>';
-                        cartItemHTML += '<div class="qty-control position-relative">';
-                        cartItemHTML += '<input type="number" name="quantity" value="' + item.quantity + '" min="1" class="qty-control__number text-center" data-product-id="' + item.id + '">';
+                        var cartItemBasketHTML = '<tr>';
+                        cartItemBasketHTML += '<td>';
+                        cartItemBasketHTML += '<div class="shopping-cart__product-item">';
+                        cartItemBasketHTML += '<img loading="lazy" src="' + item.image + '" alt="' + item.name + '" width="120" height="120" alt="" />';
+                        cartItemBasketHTML += '</div>';
+                        cartItemBasketHTML += '</td>';
+                        cartItemBasketHTML += '<td>';
+                        cartItemBasketHTML += '<div class="shopping-cart__product-item__detail">';
+                        cartItemBasketHTML += '<h4>' + item.name + '</h4>';
+                        cartItemBasketHTML += '</div>';
+                        cartItemBasketHTML += '</td>';
+                        cartItemBasketHTML += '<td>';
+                        cartItemBasketHTML += '<span class="shopping-cart__product-price">' + item.price + '</span>';
+                        cartItemBasketHTML += '</td>';
+                        cartItemBasketHTML += '<td>';
+                        cartItemBasketHTML += '<div class="qty-control position-relative">';
+                        cartItemBasketHTML += '<input type="number" name="quantity" value="' + item.quantity + '" min="1" class="qty-control__number text-center" data-product-id="' + item.id + '">';
                         // cartItemHTML += '<div class="qty-control__reduce_1">-</div>';
                         // cartItemHTML += '<div class="qty-control__increase_1">+</div>';
-                        cartItemHTML += '</div><!-- .qty-control -->';
-                        cartItemHTML += '</td>';
-                        cartItemHTML += '<td>';
-                        cartItemHTML += '<span class="shopping-cart__subtotal">$</span>';
-                        cartItemHTML += '</td>';
-                        cartItemHTML += '<td>';
-                        cartItemHTML += '<a href="#" class="js-cart-item-remove" data-product-id="' + item.id + '">';
-                        cartItemHTML += '<svg width="10" height="10" viewBox="0 0 10 10" fill="#767676" xmlns="http://www.w3.org/2000/svg">';
-                        cartItemHTML += '<path d="M0.259435 8.85506L9.11449 0L10 0.885506L1.14494 9.74056L0.259435 8.85506Z"/>';
-                        cartItemHTML += '<path d="M0.885506 0.0889838L9.74057 8.94404L8.85506 9.82955L0 0.97449L0.885506 0.0889838Z"/>';
-                        cartItemHTML += '</svg> ';
-                        cartItemHTML += '</a>';
-                        cartItemHTML += '</td>';
-                        cartItemHTML += '</tr>';
+                        cartItemBasketHTML += '</div><!-- .qty-control -->';
+                        cartItemBasketHTML += '</td>';
+                        cartItemBasketHTML += '<td>';
+                        cartItemBasketHTML += '<span class="shopping-cart__subtotal">$</span>';
+                        cartItemBasketHTML += '</td>';
+                        cartItemBasketHTML += '<td>';
+                        cartItemBasketHTML += '<a href="#" class="js-cart-item-remove" data-product-id="' + item.id + '">';
+                        cartItemBasketHTML += '<svg width="10" height="10" viewBox="0 0 10 10" fill="#767676" xmlns="http://www.w3.org/2000/svg">';
+                        cartItemBasketHTML += '<path d="M0.259435 8.85506L9.11449 0L10 0.885506L1.14494 9.74056L0.259435 8.85506Z"/>';
+                        cartItemBasketHTML += '<path d="M0.885506 0.0889838L9.74057 8.94404L8.85506 9.82955L0 0.97449L0.885506 0.0889838Z"/>';
+                        cartItemBasketHTML += '</svg> ';
+                        cartItemBasketHTML += '</a>';
+                        cartItemBasketHTML += '</td>';
+                        cartItemBasketHTML += '</tr>';
 
-                        $('#cart-items-basket').append(cartItemHTML);
+                        $('#cart-items-basket').append(cartItemBasketHTML);
                     }
                 });
 
                 // Обновляем общую цену корзины
                 $('#total-price').text(data.total_price);
+                $('#total-price-basket').text(data.total_price);
             },
             error: function(xhr, status, error) {
                 console.error('Произошла ошибка при получении данных о корзине:', error);
