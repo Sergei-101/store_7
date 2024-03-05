@@ -183,7 +183,11 @@ $(document).ready(function() {
         }
     });
     });
-
+    $('.js-open-aside').click(function() {
+        // В этом месте вы открываете боковую панель корзины (например, показываете модальное окно или сайдбар)
+        // После открытия, сразу обновите содержимое корзины
+        updateCartContents();
+    });
     // Обновление корзины при загрузке страницы
     updateCartContents();
 });
@@ -259,6 +263,7 @@ $(document).ready(function() {
                     // Пример:
                     $('#product-price-old').text(response.oldprice +  ' BYN'); // Вставляем цену товара
                 }
+
             },
             error: function (xhr, status, error) {
                 // Обработка ошибки

@@ -18,9 +18,10 @@
 
     <div class="pt-2 pt-lg-0"></div>
     <div class="accordion" id="categories-list">
+    
         {% for category in top_categories %}
         <li class="list-item">
-            <a href="{% url 'products:category' category.id %}" class="menu-link py-1">{{ category.name }}</a>
+            <a href="{% url 'products:category' category.id %}" class="menu-link py-1">{{ category.name }}</a>            
         </li>
         {% endfor %}
         {% for category in top_categories %}
