@@ -52,7 +52,7 @@
 {#                <td>#}
 {#                  <div class="shopping-cart__product-item">#}
 {#                    <img loading="lazy" src="{{ product.image.url }}" width="120" height="120" alt="" />#}
-{#                      #}
+{##}
 {#                  </div>#}
 {#                </td>#}
 {#                <td>#}
@@ -105,7 +105,7 @@
                 <tbody>
                   <tr>
                     <th>Итого</th>
-                    <td>${{ cart.get_total_price }}</td>
+                    <td id="total-price-basket">$</td>
                   </tr>
                   <tr>
                     <th>Доставка</th>

@@ -7,6 +7,7 @@ $(document).ready(function() {
             success: function(data) {
                 // Очищаем текущее содержимое корзины
                 $('#cart-items').empty();
+                $('#cart-items-basket').empty();
 
                 // Создаем HTML-разметку для каждого элемента корзины
                 $.each(data.cart_items, function(index, item) {
@@ -19,8 +20,8 @@ $(document).ready(function() {
                     cartItemHTML += '<div class="d-flex align-items-center justify-content-between mt-1">';
                     cartItemHTML += '<div class="qty-control position-relative">';
                     cartItemHTML += '<input type="number" name="quantity" value="' + item.quantity + '" min="1" class="qty-control__number border-0 text-center" data-product-id="' + item.id + '">';
-                    cartItemHTML += '<div class="qty-control__reduce text-start">-</div>';
-                    cartItemHTML += '<div class="qty-control__increase text-end">+</div>';
+                    cartItemHTML += '<div class="qty-control__reduce_1 text-start">-</div>';
+                    cartItemHTML += '<div class="qty-control__increase_1 text-end">+</div>';
                     cartItemHTML += '</div><!-- .qty-control -->';
                     cartItemHTML += '<span class="cart-drawer-item__price money price">' + item.price + '</span>';
                     cartItemHTML += '</div>';
@@ -37,46 +38,47 @@ $(document).ready(function() {
                     if (existingCartItem.length) {
                         existingCartItem.find('.qty-control__number').val(item.quantity);
                     } else {
-                        var cartItemHTML = '<tr>';
-                        cartItemHTML += '<td>';
-                        cartItemHTML += '<div class="shopping-cart__product-item">';
-                        cartItemHTML += '<img loading="lazy" src="' + item.image + '" alt="' + item.name + '" width="120" height="120" alt="" />';
-                        cartItemHTML += '</div>';
-                        cartItemHTML += '</td>';
-                        cartItemHTML += '<td>';
-                        cartItemHTML += '<div class="shopping-cart__product-item__detail">';
-                        cartItemHTML += '<h4>' + item.name + '</h4>';
-                        cartItemHTML += '</div>';
-                        cartItemHTML += '</td>';
-                        cartItemHTML += '<td>';
-                        cartItemHTML += '<span class="shopping-cart__product-price">' + item.price + '</span>';
-                        cartItemHTML += '</td>';
-                        cartItemHTML += '<td>';
-                        cartItemHTML += '<div class="qty-control position-relative">';
-                        cartItemHTML += '<input type="number" name="quantity" value="' + item.quantity + '" min="1" class="qty-control__number text-center" data-product-id="' + item.id + '">';
-                        cartItemHTML += '<div class="qty-control__reduce">-</div>';
-                        cartItemHTML += '<div class="qty-control__increase">+</div>';
-                        cartItemHTML += '</div><!-- .qty-control -->';
-                        cartItemHTML += '</td>';
-                        cartItemHTML += '<td>';
-                        cartItemHTML += '<span class="shopping-cart__subtotal">$</span>';
-                        cartItemHTML += '</td>';
-                        cartItemHTML += '<td>';
-                        cartItemHTML += '<a href="#" class="js-cart-item-remove" data-product-id="' + item.id + '">';
-                        cartItemHTML += '<svg width="10" height="10" viewBox="0 0 10 10" fill="#767676" xmlns="http://www.w3.org/2000/svg">';
-                        cartItemHTML += '<path d="M0.259435 8.85506L9.11449 0L10 0.885506L1.14494 9.74056L0.259435 8.85506Z"/>';
-                        cartItemHTML += '<path d="M0.885506 0.0889838L9.74057 8.94404L8.85506 9.82955L0 0.97449L0.885506 0.0889838Z"/>';
-                        cartItemHTML += '</svg> ';
-                        cartItemHTML += '</a>';
-                        cartItemHTML += '</td>';
-                        cartItemHTML += '</tr>';
+                        var cartItemBasketHTML = '<tr>';
+                        cartItemBasketHTML += '<td>';
+                        cartItemBasketHTML += '<div class="shopping-cart__product-item">';
+                        cartItemBasketHTML += '<img loading="lazy" src="' + item.image + '" alt="' + item.name + '" width="120" height="120" alt="" />';
+                        cartItemBasketHTML += '</div>';
+                        cartItemBasketHTML += '</td>';
+                        cartItemBasketHTML += '<td>';
+                        cartItemBasketHTML += '<div class="shopping-cart__product-item__detail">';
+                        cartItemBasketHTML += '<h4>' + item.name + '</h4>';
+                        cartItemBasketHTML += '</div>';
+                        cartItemBasketHTML += '</td>';
+                        cartItemBasketHTML += '<td>';
+                        cartItemBasketHTML += '<span class="shopping-cart__product-price">' + item.price + '</span>';
+                        cartItemBasketHTML += '</td>';
+                        cartItemBasketHTML += '<td>';
+                        cartItemBasketHTML += '<div class="qty-control position-relative">';
+                        cartItemBasketHTML += '<input type="number" name="quantity" value="' + item.quantity + '" min="1" class="qty-control__number text-center" data-product-id="' + item.id + '">';
+                        // cartItemHTML += '<div class="qty-control__reduce_1">-</div>';
+                        // cartItemHTML += '<div class="qty-control__increase_1">+</div>';
+                        cartItemBasketHTML += '</div><!-- .qty-control -->';
+                        cartItemBasketHTML += '</td>';
+                        cartItemBasketHTML += '<td>';
+                        cartItemBasketHTML += '<span class="shopping-cart__subtotal">$</span>';
+                        cartItemBasketHTML += '</td>';
+                        cartItemBasketHTML += '<td>';
+                        cartItemBasketHTML += '<a href="#" class="js-cart-item-remove" data-product-id="' + item.id + '">';
+                        cartItemBasketHTML += '<svg width="10" height="10" viewBox="0 0 10 10" fill="#767676" xmlns="http://www.w3.org/2000/svg">';
+                        cartItemBasketHTML += '<path d="M0.259435 8.85506L9.11449 0L10 0.885506L1.14494 9.74056L0.259435 8.85506Z"/>';
+                        cartItemBasketHTML += '<path d="M0.885506 0.0889838L9.74057 8.94404L8.85506 9.82955L0 0.97449L0.885506 0.0889838Z"/>';
+                        cartItemBasketHTML += '</svg> ';
+                        cartItemBasketHTML += '</a>';
+                        cartItemBasketHTML += '</td>';
+                        cartItemBasketHTML += '</tr>';
 
-                        $('#cart-items-basket').append(cartItemHTML);
+                        $('#cart-items-basket').append(cartItemBasketHTML);
                     }
                 });
 
                 // Обновляем общую цену корзины
                 $('#total-price').text(data.total_price);
+                $('#total-price-basket').text(data.total_price);
             },
             error: function(xhr, status, error) {
                 console.error('Произошла ошибка при получении данных о корзине:', error);
@@ -110,7 +112,7 @@ $(document).ready(function() {
     });
 
     // Обработчик нажатия на кнопку уменьшения количества товара
-    $(document).on('click', '.qty-control__reduce', function() {
+    $(document).on('click', '.qty-control__reduce_1', function() {
         var inputField = $(this).siblings('.qty-control__number');
         var currentQuantity = parseInt(inputField.val());
         if (currentQuantity > 1) {
@@ -120,7 +122,7 @@ $(document).ready(function() {
     });
 
     // Обработчик нажатия на кнопку увеличения количества товара
-    $(document).on('click', '.qty-control__increase', function() {
+    $(document).on('click', '.qty-control__increase_1', function() {
         var inputField = $(this).siblings('.qty-control__number');
         var currentQuantity = parseInt(inputField.val());
         inputField.val(currentQuantity + 1);
@@ -173,7 +175,7 @@ $(document).ready(function() {
             if (data.success) {
                 passive;
             } else {
-                alert(data.message);
+                passive;
             }
         },
         error: function(xhr, status, error) {
@@ -181,7 +183,11 @@ $(document).ready(function() {
         }
     });
     });
-
+    $('.js-open-aside').click(function() {
+        // В этом месте вы открываете боковую панель корзины (например, показываете модальное окно или сайдбар)
+        // После открытия, сразу обновите содержимое корзины
+        updateCartContents();
+    });
     // Обновление корзины при загрузке страницы
     updateCartContents();
 });
@@ -236,6 +242,8 @@ $(document).ready(function() {
 
         // Получаем идентификатор товара из атрибута data-product-id кнопки
         var productId = $(this).data('product-id');
+        // Получаем значение активности акции из атрибута data-promotion-active кнопки
+        var isPromotionActive = $(this).data('promotion-active');
 
         // Отправляем AJAX-запрос на сервер для получения информации о товаре
         $.ajax({
@@ -246,10 +254,16 @@ $(document).ready(function() {
                 $('#quick-view-product-id').val(productId); // Устанавливаем идентификатор товара в скрытое поле формы
                 // Вставляем остальные данные о товаре в окно быстрого просмотра
                 $('#product-name').text(response.name); // Вставляем название товара
-                $('#product-price').text('Цена: ' + response.price); // Вставляем цену товара
+                $('#product-price').text(response.price + ' BYN'); // Вставляем цену товара
                 $('#product-description').html(response.description);
                 $('#product-image').attr('src', response.image); // Устанавливаем изображение товара
-                // Показываем окно быстрого просмотра
+                if (isPromotionActive === 'True') {
+                    // Если акция активна, выполнить соответствующие действия
+                    // Например, изменить стиль или добавить дополнительную информацию
+                    // Пример:
+                    $('#product-price-old').text(response.oldprice +  ' BYN'); // Вставляем цену товара
+                }
+
             },
             error: function (xhr, status, error) {
                 // Обработка ошибки

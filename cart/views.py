@@ -66,10 +66,7 @@ def cart_remove(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     cart.remove(product)
 
-    return JsonResponse({
-        'success': True,
-        'message': 'Товар успешно удален из корзины',
-   })
+    return redirect('cart:cart_detail')
 
 
 def cart_detail(request):

@@ -10672,10 +10672,26 @@ textarea.form-control-lg {
   user-select: none;
   -ms-user-select: none; }
 
+.qty-control__reduce_1,
+.qty-control__increase_1 {
+  position: absolute;
+  top: 0;
+  width: .75rem;
+  padding: 0;
+  cursor: pointer;
+  user-select: none;
+  -ms-user-select: none; }
+
 .qty-control__reduce {
   left: 0; }
 
+.qty-control__reduce_1 {
+  left: 0; }
+
 .qty-control__increase {
+  right: 0; }
+
+.qty-control__increase_1 {
   right: 0; }
 
 .cart-drawer-divider {
