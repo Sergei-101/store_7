@@ -17,40 +17,21 @@
     </div><!-- /.aside-header -->
 
     <div class="pt-2 pt-lg-0"></div>
-    <div class="accordion" id="categories-list">
-    
-        {% for category in top_categories %}
-        <li class="list-item">
-            <a href="{% url 'products:category' category.id %}" class="menu-link py-1">{{ category.name }}</a>            
-        </li>
-        {% endfor %}
-        {% for category in top_categories %}
-        <div class="accordion-item mb-2 pb-1">
-            <h5 class="accordion-header" id="accordion-heading-{{ category.id }}">
-                <button class="accordion-button p-0 border-0 fs-5 text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-filter-{{ category.id }}" aria-expanded="false" aria-controls="accordion-filter-{{ category.id }}">
-                    {{ category.name }}
-                    <svg class="accordion-button__icon type2" viewBox="0 0 10 6" xmlns="http://www.w3.org/2000/svg">
-                        <g aria-hidden="true" stroke="none" fill-rule="evenodd">
-                            <path d="M5.35668 0.159286C5.16235 -0.053094 4.83769 -0.0530941 4.64287 0.159286L0.147611 5.05963C-0.0492049 5.27473 -0.049205 5.62357 0.147611 5.83813C0.344427 6.05323 0.664108 6.05323 0.860924 5.83813L5 1.32706L9.13858 5.83867C9.33589 6.05378 9.65507 6.05378 9.85239 5.83867C10.0492 5.62357 10.0492 5.27473 9.85239 5.06018L5.35668 0.159286Z"/>
-                        </g>
-                    </svg>
-                </button>
-            </h5>
-            <div id="accordion-filter-{{ category.id }}" class="accordion-collapse collapse" aria-labelledby="accordion-heading-{{ category.id }}" data-bs-parent="#categories-list">
-                <div class="accordion-body px-0 pb-0 pt-2">
-                    <ul class="list-unstyled mb-0">
-                        {% for child in category.children.all %}
-                        <li class="list-item">
-                            <a href="{% url 'products:category' category.id %}" class="menu-link py-1">{{ child.name }}</a>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-            </div>
-        </div><!-- /.accordion-item -->
-        {% endfor %}
+       <div class="container_product">
+          {% for category in top_categories %} 
+          <div class="box_product">
+            <div class="label_product">{{ category.name }}</div>
+              <div class="content_product">
+                  {% for child in category.children.all %}
+                    <p><a href="{% url 'products:category' category.id %}" class="menu-link py-1">{{ child.name }}</a></p>
+                  {% endfor %}    
+              </div>
+          </div>
+          {% endfor %}  
+       </div>       
+       
     </div><!-- /.accordion -->
-</div><!-- /.shop-sidebar -->
+       
 
       <div class="shop-list flex-grow-1">
         <div class="d-flex justify-content-between mb-4 pb-md-2">
@@ -138,7 +119,7 @@
             {% if product.is_promotion_active %}
               <div class="pc-labels position-absolute top-0 start-0 w-100 d-flex justify-content-between">
                 <div class="pc-labels__right ms-auto">
-                  <span class="pc-label pc-label_sale d-block text-white">-{{product.promotion.discount_percentage}}%</span>
+                  <span class="pc-label pc-label_sale d-block text-white">-{{product.promotion.discount_percentage|floatformat:0}}%</span>
                 </div>
               </div>
             {% endif %}

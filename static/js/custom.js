@@ -41,7 +41,6 @@ function updateCartContents() {
         success: function(data) {
             // Очищаем текущее содержимое корзины
             $('#cart-items').empty();
-            $('#cart-items-basket').empty();
 
             // Создаем HTML-разметку для каждого элемента корзины
             $.each(data.cart_items, function(index, item) {
@@ -54,10 +53,10 @@ function updateCartContents() {
                 cartItemHTML += '<div class="d-flex align-items-center justify-content-between mt-1">';
                 cartItemHTML += '<div class="qty-control position-relative">';
                 cartItemHTML += '<input type="number" name="quantity" value="' + item.quantity + '" min="1" class="qty-control__number border-0 text-center" data-product-id="' + item.id + '">';
-                cartItemHTML += '<div class="qty-control__reduce text-start">-</div>';
-                cartItemHTML += '<div class="qty-control__increase text-end">+</div>';
+                cartItemHTML += '<div class="qty-control__reduce_1 text-start">-</div>';
+                cartItemHTML += '<div class="qty-control__increase_1 text-end">+</div>';
                 cartItemHTML += '</div><!-- .qty-control -->';
-                // cartItemHTML += '<span class="cart-drawer-item__price money price">' + item.price + '</span>';
+                cartItemHTML += '<span class="cart-drawer-item__price money price">' + item.total_price + '</span>';
                 cartItemHTML += '</div>';
                 cartItemHTML += '</div>';
                 cartItemHTML += '<button class="btn-close-xs position-absolute top-0 end-0 js-cart-item-remove js-cart-item-remove-cust" data-product-id="' + item.id + '"></button>';
@@ -66,53 +65,10 @@ function updateCartContents() {
                 // Вставляем HTML-разметку в корзину
                 $('#cart-items').append(cartItemHTML);
             });
-            $.each(data.cart_items, function(index, item) {
-                var existingCartItem = $('#cart-items-basket').find('[data-product-id="' + item.id + '"]');
-
-                if (existingCartItem.length) {
-                    existingCartItem.find('.qty-control__number').val(item.quantity);
-                } else {
-                    var cartItemBasketHTML = '<tr>';
-                    cartItemBasketHTML += '<td>';
-                    cartItemBasketHTML += '<div class="shopping-cart__product-item">';
-                    cartItemBasketHTML += '<img loading="lazy" src="' + item.image + '" alt="' + item.name + '" width="120" height="120" alt="" />';
-                    cartItemBasketHTML += '</div>';
-                    cartItemBasketHTML += '</td>';
-                    cartItemBasketHTML += '<td>';
-                    cartItemBasketHTML += '<div class="shopping-cart__product-item__detail">';
-                    cartItemBasketHTML += '<h4>' + item.name + '</h4>';
-                    cartItemBasketHTML += '</div>';
-                    cartItemBasketHTML += '</td>';
-                    cartItemBasketHTML += '<td>';
-                    cartItemBasketHTML += '<span class="shopping-cart__product-price">' + item.price + '</span>';
-                    cartItemBasketHTML += '</td>';
-                    cartItemBasketHTML += '<td>';
-                    cartItemBasketHTML += '<div class="qty-control position-relative">';
-                    cartItemBasketHTML += '<input type="number" name="quantity" value="' + item.quantity + '" min="1" class="qty-control__number text-center" data-product-id="' + item.id + '">';
-                    cartItemBasketHTML += '<div class="qty-control__reduce">-</div>';
-                    cartItemBasketHTML += '<div class="qty-control__increase">+</div>';
-                    cartItemBasketHTML += '</div><!-- .qty-control -->';
-                    cartItemBasketHTML += '</td>';
-                    cartItemBasketHTML += '<td>';
-                    cartItemBasketHTML += '<span class="shopping-cart__subtotal">$</span>';
-                    cartItemBasketHTML += '</td>';
-                    cartItemBasketHTML += '<td>';
-                    cartItemBasketHTML += '<a href="#" class="js-cart-item-remove js-cart-item-remove-cust" data-product-id="' + item.id + '">';
-                    cartItemBasketHTML += '<svg width="10" height="10" viewBox="0 0 10 10" fill="#767676" xmlns="http://www.w3.org/2000/svg">';
-                    cartItemBasketHTML += '<path d="M0.259435 8.85506L9.11449 0L10 0.885506L1.14494 9.74056L0.259435 8.85506Z"/>';
-                    cartItemBasketHTML += '<path d="M0.885506 0.0889838L9.74057 8.94404L8.85506 9.82955L0 0.97449L0.885506 0.0889838Z"/>';
-                    cartItemBasketHTML += '</svg> ';
-                    cartItemBasketHTML += '</a>';
-                    cartItemBasketHTML += '</td>';
-                    cartItemBasketHTML += '</tr>';
-
-                    $('#cart-items-basket').append(cartItemBasketHTML);
-                }
-            });
 
             // Обновляем общую цену корзины
             $('#total-price').text(data.total_price);
-            $('#total-price-basket').text(data.total_price);
+
         },
         error: function(xhr, status, error) {
             console.error('Произошла ошибка при получении данных о корзине:', error);
@@ -150,7 +106,7 @@ $('.js-add-cart-cust').click(function() {
         success: function(data) {
             if (data.success) {
                 // Обработка успешного добавления в корзину
-                passive;
+                updateCartContents();
             } else {
                 alert(data.message);
             }
@@ -159,7 +115,7 @@ $('.js-add-cart-cust').click(function() {
             alert('Произошла ошибка при отправке запроса на сервер.');
         }
     });
-    updateCartContents();
+
 });
 
 // Обработчик клика на кнопку "удаление товаров из корзины"
@@ -176,41 +132,60 @@ $(document).on('click', '.js-cart-item-remove-cust', function(e) {
         },
         success: function(data) {
             if (data.success) {
-                passive;
+                updateCartContents();
             } else {
-                passive;
+                updateCartContents();
             }
         },
         error: function(xhr, status, error) {
             console.error('Произошла ошибка при отправке запроса на сервер:', error);
         }
     });
-    updateCartContents();
+
 });
 
-// $(document).on('change', '.qty-control__number', function() {
-//     var productId = $(this).data('product-id');
-//     var newQuantity = $(this).val();
-//
-//     // Отправляем AJAX-запрос для обновления количества товара в корзине
-//     $.ajax({
-//         type: 'POST',
-//         url: '/cart/adds/' + productId + '/',
-//         data: {
-//             'quantity': newQuantity,
-//             'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
-//         },
-//         success: function(data) {
-//             // После успешного обновления количества товара, обновляем общую цену корзины
-//             $('#total-price').text(data.total_price);
-//             // Затем обновляем содержимое корзины
-//         },
-//         error: function(xhr, status, error) {
-//             console.error('Произошла ошибка при отправке запроса на сервер:', error);
-//         }
-//     });
-//     updateCartContents();
-// });
+$(document).on('change', '.qty-control__number', function() {
+    var productId = $(this).data('product-id');
+    var newQuantity = $(this).val();
+
+    // Отправляем AJAX-запрос для обновления количества товара в корзине
+    $.ajax({
+        type: 'POST',
+        url: '/cart/adds/' + productId + '/',
+        data: {
+            'quantity': newQuantity,
+            'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+        },
+        success: function(data) {
+            // После успешного обновления количества товара, обновляем общую цену корзины
+            $('#total-price').text(data.total_price);
+            updateCartContents();
+            // Затем обновляем содержимое корзины
+        },
+        error: function(xhr, status, error) {
+            console.error('Произошла ошибка при отправке запроса на сервер:', error);
+        }
+    });
+
+});
+$(document).on('click', '.qty-control__reduce_1', function() {
+    var inputField = $(this).siblings('.qty-control__number');
+
+    var currentQuantity = parseInt(inputField.val());
+    console.log(inputField, currentQuantity )
+    if (currentQuantity > 1) {
+        inputField.val(currentQuantity - 1);
+        inputField.change(); // Имитируем событие изменения, чтобы обработчик срабатывал
+    }
+});
+
+// Обработчик нажатия на кнопку увеличения количества товара
+$(document).on('click', '.qty-control__increase_1', function() {
+    var inputField = $(this).siblings('.qty-control__number');
+    var currentQuantity = parseInt(inputField.val());
+    inputField.val(currentQuantity + 1);
+    inputField.change(); // Имитируем событие изменения, чтобы обработчик срабатывал
+});
 
 document.addEventListener('DOMContentLoaded', function() {
     const personalForm = document.getElementById('personal-form');
@@ -252,3 +227,22 @@ document.addEventListener('DOMContentLoaded', function() {
     toggleAddressField.call(deliveryMethodSelectPersonal, addressFieldPersonal);
     toggleAddressField.call(deliveryMethodSelectBusiness, addressFieldBusiness);
 });
+
+// Аккордеон меню боковое
+const boxes = Array.from(document.querySelectorAll(".box_product")); // считываем все элементы аккордеона в массив
+boxes.forEach((box) => {
+  box.addEventListener("click", boxHandler); // при нажатии на бокс вызываем ф-ию boxHanlder
+});
+function boxHandler(e) {
+  e.preventDefault(); // сбрасываем стандартное поведение
+  let currentBox = e.target.closest(".box_product"); // определяем текущий бокс
+  let currentContent = e.target.nextElementSibling; // находим скрытый контент
+  currentBox.classList.toggle("active"); // присваиваем ему активный класс
+  if (currentBox.classList.contains("active")) {
+    // если класс активный ..
+    currentContent.style.maxHeight = currentContent.scrollHeight + "px"; // открываем контент
+  } else {
+    // в противном случае
+    currentContent.style.maxHeight = 0; // скрываем контент
+  }
+}
