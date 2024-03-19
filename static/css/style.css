@@ -15351,3 +15351,53 @@ body.coming-soon-page {
     display: block; }
 
 /*# sourceMappingURL=style.css.map */
+.container_product {
+  padding: 10px;
+  max-width: 800px;
+}
+
+.container_product .box_product {
+  position: relative;
+  margin-bottom: 10px; /* Нижний отступ между элементами аккордеона */
+}
+
+.container_product .box_product:last-child {
+  margin-bottom: 0; /* Для последнего элемента нижний отступ убираем */
+}
+
+.container_product .box_product .label_product {
+  position: relative;
+  padding: 10px; /* Внутренний отступ для видимой части */
+  background-color: #86BC42 ; /* Цвет элемента аккордеона */
+  color: #fff; /* Цвет шрифта элемента аккордеона */
+  cursor: pointer; /* Меняем курсор при наведении */
+}
+
+.container_product .box_product .label_product::after {
+  content: "+"; /* Задаем иконку "+" для элемента аккордеона */
+  position: absolute;
+  top: 50%; /* Выравнивание по центру */
+  transform: translateY(-50%);
+  right: 20px;
+  font-size: 15px;
+  font-weight: bold;
+}
+
+.container_product .box_product.active .label_product::after {
+  content: "\2014"; /* Меняем иконку на "-" при нажатии на элемент */
+}
+
+.container_product .box_product .content_product {
+  position: relative;
+  background-color: #fff; /* Цвет фона контента */
+  overflow: hidden;
+  max-height: 0; /* Скрываем контент */
+  transition: 0.3s; /* Для плавности анимации */
+}
+
+.container_product .box_product .content_product p {
+  padding-left: 7px;
+  margin-bottom: 0px;
+
+}
+

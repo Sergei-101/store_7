@@ -14,6 +14,7 @@ from slugify import slugify
 
 
 
+
 def products(request, category_id=None, page=1):
     categories = ProductCategory.objects.filter(parent=None)  # Получение корневых категорий
     products = Product.objects.filter(category=category_id) if category_id else Product.objects.all()

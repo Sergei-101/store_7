@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+    <main>
+    <div class="mb-4 pb-4"></div>
+    <section class="shop-checkout container">
+      <h2 class="page-title">ОФОРМЛЕНИЕ ЗАКАЗА</h2>
+      <div class="checkout-steps">
+        <a href="#" class="checkout-steps__item active">
+          <span class="checkout-steps__item-number">01</span>
+          <span class="checkout-steps__item-title">
+            <span>КАРЗИНА ТОВАРОВ</span>
+            <em>Список добавленных товаров</em>
+          </span>
+        </a>
+        <a href="#" class="checkout-steps__item active">
+          <span class="checkout-steps__item-number">02</span>
+          <span class="checkout-steps__item-title">
+            <span>ОФОРМЛЕНИЕ ЗАКАЗА</span>
+            <em>Оформление адреса доставки</em>
+          </span>
+        </a>
+        <a href="#" class="checkout-steps__item">
+          <span class="checkout-steps__item-number">03</span>
+          <span class="checkout-steps__item-title">
+            <span>ПОДТВЕРЖДЕНИЕ</span>
+            <em>Просмотрите и отправьте свой заказ</em>
+          </span>
+        </a>
+      </div>  
+      <form action="{% url 'orders:order_create' %}" method="post" name="checkout-form">
+      {% csrf_token %} 
+        <div class="checkout-form">
+          <div class="billing-info__wrapper">             
+            <h4>ПЛАТЕЖНЫЕ РЕКВИЗИТЫ</h4>
+            <div class="row">
+                <div class="form-floating my-3">            
+                    <select id="customer-type" name="customer_type" >
+                        <option value="personal" selected>Физ. лица</option>
+                        <option value="business">Юр. Лица</option>
+                    </select>
+                </div>
+                <div id="personal-form">                    
+                     <p>{{ personal_form.contact_person }}</p>
+                     <p>{{ personal_form.address }}</p>
+                     <p>{{ personal_form.email }}</p>
+                     <p>{{ personal_form.phone_number }}</p>
+                     <p>{{ personal_form.description }}</p>
+                     <p>{{ personal_form.delivery_method }}</p>
+                     
+                </div>
+                <div id="business-form" style="display: none;">                    
+{#                    {{ business_form.as_p }}#}
+                        <p>{{ business_form.company_name }} </p>   
+                        <p>{{ business_form.unp }} </p>   
+                        <p>{{ business_form.checking_account }} </p>   
+                        <p>{{ business_form.bic }} </p>   
+                        <p>{{ business_form.bank_name }} </p>   
+                        <p>{{ business_form.legal_address }} </p>   
+                        <p>{{ business_form.contact_person }} </p>   
+                        <p>{{ business_form.address }} </p>   
+                        <p>{{ business_form.email }} </p>   
+                        <p>{{ business_form.phone_number }} </p>   
+                        <p>{{ business_form.description }} </p>   
+                        <p>{{ business_form.delivery_method }} </p>   
+                </div>
+                <button type="submit" name="checkout-form"> Submit</button>
+            </div>
+          </div>
+          <div class="checkout__totals-wrapper">
+            <div class="sticky-content">
+              <div class="checkout__totals">
+                <h3>Заказ</h3>
+                <table class="checkout-cart-items">
+                  <thead>
+                    <tr>
+                      <th>НАИМЕНОВАНИЕ ТОВАРА</th>
+                      <th align="right">СТОИМОСТЬ</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for item in cart %}
+                    <tr>
+                      <td>
+                        {{ item.product }} x {{ item.quantity }}
+                      </td>
+                      <td align="right">
+                        ${{ item.total_price }}
+                      </td>
+                    </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+                <table class="checkout-totals">
+                  <tbody>
+                    <tr>
+                      <th>ИТОГО</th>
+                      <td align="right">${{ cart.get_total_price }}</td>
+                    </tr>
+                    <tr>
+                      <th>ДОСТАВКА</th>
+                      <td align="right">Free shipping</td>
+                    </tr>
+                    <tr>
+                    {% if cart.coupon %}
+                        <th>Скидка</th>
+                        <td align="right">– ${{ cart.get_discount|floatformat:2 }}</td>
+                    </tr>
+                    <tr>
+                        <th>"{{ cart.coupon.code }}" Промокод</th>
+                        <td align="right">– {{ cart.coupon.discount }}% </td>
+
+                    </tr>
+                    <tr>
+                        <th>Итого к оплате</th>
+                        <td align="right">${{ cart.get_total_price_after_discount|floatformat:2 }}</td>
+                    </tr>
+                    {% else %}
+                  <tr>
+                    <th>Итого к оплате</th>
+                    <td align="right">${{ cart.get_total_price }}</td>
+                  </tr>
+                    {% endif %}
+                  </tbody>
+                </table>
+              </div>
+              <div class="checkout__payment-methods">
+                <div class="form-check">
+                  <input class="form-check-input form-check-input_fill" type="radio" name="checkout_payment_method" id="checkout_payment_method_3">
+                  <label class="form-check-label" for="checkout_payment_method_3">
+                    НАЛИЧНЫМИ
+                    <p class="option-detail">
+                      ТЕКСТ
+                    </p>
+                  </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input form-check-input_fill" type="radio" name="checkout_payment_method" id="checkout_payment_method_4">
+                  <label class="form-check-label" for="checkout_payment_method_4">
+                    БАНКОВСКОЙ КАРТОЙ
+                    <p class="option-detail">
+                      ТЕКСТ
+                    </p>
+                  </label>
+                </div>
+                <div class="policy-text">
+                  ВЫ согл. на обработку персональных данных <a href="#">privacy policy</a>.
+                </div>
+              </div>
+              <button class="btn btn-primary btn-checkout" type="submit">ОФОРМИТЬ ЗАКАЗ</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </section>
+  </main>
+
+    <div class="mb-5 pb-xl-5"></div>
+{% endblock %}
+
+  
