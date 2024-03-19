@@ -276,20 +276,49 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Аккордеон меню боковое
-const boxes = Array.from(document.querySelectorAll(".box_product")); // считываем все элементы аккордеона в массив
+const boxes = Array.from(document.querySelectorAll(".box_product"));
+
+
 boxes.forEach((box) => {
-  box.addEventListener("click", boxHandler); // при нажатии на бокс вызываем ф-ию boxHanlder
+    const links = box.querySelectorAll(".menu-link");
+
+    links.forEach((link) => {
+        link.addEventListener("click", (e) => {
+            // Если необходимо перейти по ссылке, оставьте следующую строку закомментированной:
+            // e.preventDefault();
+        });
+    });
+
+    box.addEventListener("click", boxHandler);
 });
+
 function boxHandler(e) {
-  e.preventDefault(); // сбрасываем стандартное поведение
-  let currentBox = e.target.closest(".box_product"); // определяем текущий бокс
-  let currentContent = e.target.nextElementSibling; // находим скрытый контент
-  currentBox.classList.toggle("active"); // присваиваем ему активный класс
-  if (currentBox.classList.contains("active")) {
-    // если класс активный ..
-    currentContent.style.maxHeight = currentContent.scrollHeight + "px"; // открываем контент
-  } else {
-    // в противном случае
-    currentContent.style.maxHeight = 0; // скрываем контент
-  }
+    let currentBox = e.target.closest(".box_product");
+    let currentContent = e.target.nextElementSibling;
+    currentBox.classList.toggle("active");
+
+    if (currentBox.classList.contains("active")) {
+        currentContent.style.maxHeight = currentContent.scrollHeight + "px";
+        // activeCategories.add(currentBox.dataset.categoryId); // Добавляем текущую категорию в активные
+    } else {
+        currentContent.style.maxHeight = 0;
+        // activeCategories.delete(currentBox.dataset.categoryId); // Удаляем текущую категорию из активных
+    }
+
+    // // Сохраняем состояние в localStorage
+    // localStorage.setItem("activeCategories", JSON.stringify(Array.from(activeCategories)));
 }
+
+// document.addEventListener("DOMContentLoaded", () => {
+//     const savedActiveCategories = JSON.parse(localStorage.getItem("activeCategories")) || [];
+//
+//     savedActiveCategories.forEach((categoryId) => {
+//         const categoryBox = document.querySelector(`.box_product[data-category-id="${categoryId}"]`);
+//         if (categoryBox) {
+//             categoryBox.classList.add("active");
+//             // Также откройте контент для каждой активной категории
+//             // ...
+//         }
+//     });
+// });
+
