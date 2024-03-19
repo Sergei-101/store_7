@@ -112,7 +112,7 @@ $(document).ready(function() {
     });
 
     // Обработчик нажатия на кнопку уменьшения количества товара
-    $(document).on('click', '.qty-control__reduce_1', function() {
+    $(document).on('click', '.qty-control__reduce', function() {
         var inputField = $(this).siblings('.qty-control__number');
 
         var currentQuantity = parseInt(inputField.val());
@@ -124,7 +124,7 @@ $(document).ready(function() {
     });
 
     // Обработчик нажатия на кнопку увеличения количества товара
-    $(document).on('click', '.qty-control__increase_1', function() {
+    $(document).on('click', '.qty-control__increase', function() {
         var inputField = $(this).siblings('.qty-control__number');
         var currentQuantity = parseInt(inputField.val());
         inputField.val(currentQuantity + 1);
