@@ -83,17 +83,16 @@ $('.js-open-aside-update').click(function() {
 });
 
 // Обработчик клика на кнопку "Добавить в корзину"
-$('.js-add-cart-cust').click(function() {
+$('.js-add-cart-cust').click(function(e) {
+    e.preventDefault();
 
-    var product_id = $(this).data('product-id');
     var quantity = $('#quick-view-quantity').val();
     var override = $('#override').val();
     var csrfToken = $('input[name="csrfmiddlewaretoken"]').val(); // Получение CSRF-токена из скрытого поля формы
-
     if (quantity < 1) {
         quantity = 1;
     }
-    product_id = product_id ? product_id : $('#quick-view-product-id').val();  // Получаем идентификатор товара из скрытого поля формы
+    var product_id = $(this).data('product-id') ??  $('#quick-view-product-id').val();  // Получаем идентификатор товара из скрытого поля формы
     $(this).css('background-color', 'green') // Изменение цветка кнопки при нажатии
     $.ajax({
         type: 'POST',
