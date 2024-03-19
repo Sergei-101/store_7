@@ -52,7 +52,7 @@ function updateCartContents() {
                 cartItemHTML += '<h6 class="cart-drawer-item__title fw-normal">' + item.name + '</h6>';
                 cartItemHTML += '<div class="d-flex align-items-center justify-content-between mt-1">';
                 cartItemHTML += '<div class="qty-control position-relative">';
-                cartItemHTML += '<input type="number" name="quantity" value="' + item.quantity + '" min="1" class="qty-control__number border-0 text-center" data-product-id="' + item.id + '">';
+                cartItemHTML += '<input type="number" name="quantity" value="' + item.quantity + '" min="1" class="qty-control__number qty-control__number-new border-0 text-center" data-product-id="' + item.id + '">';
                 cartItemHTML += '<div class="qty-control__reduce_1 text-start">-</div>';
                 cartItemHTML += '<div class="qty-control__increase_1 text-end">+</div>';
                 cartItemHTML += '</div><!-- .qty-control -->';
@@ -82,18 +82,9 @@ $('.js-open-aside-update').click(function() {
     updateCartContents();
 });
 
-// Обработчик клика на кнопку "Добавить в корзину"
-$('.js-add-cart-cust').click(function(e) {
-    e.preventDefault();
+// Функция добавить в корзину
+function add_to_cart(product_id, quantity, override, csrfToken) {
 
-    var quantity = $('#quick-view-quantity').val();
-    var override = $('#override').val();
-    var csrfToken = $('input[name="csrfmiddlewaretoken"]').val(); // Получение CSRF-токена из скрытого поля формы
-    if (quantity < 1) {
-        quantity = 1;
-    }
-    var product_id = $(this).data('product-id') ??  $('#quick-view-product-id').val();  // Получаем идентификатор товара из скрытого поля формы
-    $(this).css('background-color', 'green') // Изменение цветка кнопки при нажатии
     $.ajax({
         type: 'POST',
         url: '/cart/adds/' + product_id + '/',
@@ -102,7 +93,7 @@ $('.js-add-cart-cust').click(function(e) {
             'override': override,
             'csrfmiddlewaretoken': csrfToken  // Передача CSRF-токена в запросе
         },
-        success: function(data) {
+        success: function (data) {
             if (data.success) {
                 // Обработка успешного добавления в корзину
                 updateCartContents();
@@ -110,12 +101,41 @@ $('.js-add-cart-cust').click(function(e) {
                 alert(data.message);
             }
         },
-        error: function(xhr, status, error) {
+        error: function (xhr, status, error) {
             alert('Произошла ошибка при отправке запроса на сервер.');
         }
     });
+}
+
+// Обработчик клика на кнопку "Добавить в корзину" быстрое добавление
+$('.js-add-cart-cust').click(function() {
+
+    var quantity = $('#quick-view-quantity').val();
+    var override = $('#override').val();
+    var csrfToken = $('input[name="csrfmiddlewaretoken"]').val(); // Получение CSRF-токена из скрытого поля формы
+    if (quantity < 1) {
+        quantity = 1;
+    }
+    var product_id = $(this).data('product-id') ??  $('#quick-view-product-id').val();  // Получаем идентификатор товара из скрытого поля формы
+    add_to_cart(product_id, quantity, override, csrfToken)
 
 });
+
+// Обработчик клика на кнопку "Добавить в корзину" quick-view
+$('.js-add-cart-cust-quick-view').click(function(e) {
+    e.preventDefault();
+    var quantity = $('#quick-view-quantity').val();
+    var override = $('#override').val();
+    var csrfToken = $('input[name="csrfmiddlewaretoken"]').val(); // Получение CSRF-токена из скрытого поля формы
+    var product_id = $('#quick-view-product-id').val();  // Получаем идентификатор товара из скрытого поля формы
+    $(this).css('background-color', 'green') // Изменение цветка кнопки при нажатии
+    add_to_cart(product_id, quantity, override, csrfToken)
+    setTimeout(function() {
+        window.location.reload();
+    }, 200);
+});
+
+
 
 // Обработчик клика на кнопку "удаление товаров из корзины"
 $(document).on('click', '.js-cart-item-remove-cust', function(e) {
@@ -143,7 +163,7 @@ $(document).on('click', '.js-cart-item-remove-cust', function(e) {
 
 });
 
-$(document).on('change', '.qty-control__number', function() {
+$(document).on('change', '.qty-control__number-new', function() {
     var productId = $(this).data('product-id');
     var newQuantity = $(this).val();
 
@@ -167,6 +187,34 @@ $(document).on('change', '.qty-control__number', function() {
     });
 
 });
+
+$(document).on('change', '.qty-control__number-new-2', function() {
+    var productId = $(this).data('product-id');
+    var newQuantity = $(this).val();
+
+    // Отправляем AJAX-запрос для обновления количества товара в корзине
+    $.ajax({
+        type: 'POST',
+        url: '/cart/adds/' + productId + '/',
+        data: {
+            'quantity': newQuantity,
+            'csrfmiddlewaretoken': $('input[name="csrfmiddlewaretoken"]').val()
+        },
+        success: function(data) {
+            // После успешного обновления количества товара, обновляем общую цену корзины
+            $('#total-price').text(data.total_price);
+            updateCartContents();
+            window.location.reload();
+            // Затем обновляем содержимое корзины
+        },
+        error: function(xhr, status, error) {
+            console.error('Произошла ошибка при отправке запроса на сервер:', error);
+        }
+
+    });
+
+});
+
 $(document).on('click', '.qty-control__reduce_1', function() {
     var inputField = $(this).siblings('.qty-control__number');
 
