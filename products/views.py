@@ -23,17 +23,19 @@ def products(request, category_id=None, page=1):
     products_paginator = paginator.page(page)
     images = ProductImage.objects.all()
     cart_product_form = CartAddProductForm()
-
     # Получаем ID активной категории из URL
     active_category_id = request.resolver_match.kwargs.get('category_id')
-
     context = {
         'products': products_paginator,
         'top_categories': categories,
         'images': images,
         'cart_product_form': cart_product_form,
-        'active_category_id': active_category_id  # Передача ID активной категории в контекст
-    }
+        'active_category_id': active_category_id,
+        'category_types': {category.id: 'parent' if category.children.exists() else 'child' for category in categories},
+        }
+
+
+
     return render(request, 'products/products.html', context)
 
 def product_detail(request, product_id):

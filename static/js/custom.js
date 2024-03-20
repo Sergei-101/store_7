@@ -276,7 +276,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Аккордеон меню боковое
-
+// JavaScript
 document.addEventListener('DOMContentLoaded', function () {
     var activeAccordionItems = localStorage.getItem('activeAccordionItems');
     if (activeAccordionItems) {
@@ -301,6 +301,19 @@ boxes.forEach((box) => {
 function boxHandler(e) {
     let currentBox = e.currentTarget;
     let currentContent = currentBox.querySelector(".content_product");
+    let currentCategoryId = currentBox.getAttribute('data-category-id');
+    let currentCategoryType = currentBox.getAttribute('data-category-type');
+
+    if (currentCategoryType === 'parent') {
+        // Если категория родительская, скрываем все аккордеоны, кроме текущего
+        boxes.forEach((otherBox) => {
+            if (otherBox !== currentBox) {
+                otherBox.classList.remove('active');
+                otherBox.querySelector('.content_product').style.maxHeight = null;
+            }
+        });
+    }
+
     currentBox.classList.toggle("active");
 
     if (currentBox.classList.contains("active")) {
