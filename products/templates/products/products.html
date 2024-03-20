@@ -18,17 +18,17 @@
 
     <div class="pt-2 pt-lg-0"></div>
        <div class="container_product">
-          {% for category in top_categories %} 
-          <div class="box_product"  data-category-id="{{ category.id }}">
-            <div class="label_product" data-category-id="{{ category.id }}">{{ category.name }}</div>
-            <div class="content_product" data-category-id="{{ category.id }}">
-                {% for child in category.children.all %}
-                    <p><a href="{% url 'products:category' category.id %}" class="menu-link py-1" data-category-id="{{ category.id }}">{{ child.name }}</a></p>
-                {% endfor %}
+            {% for category in top_categories %}
+            <div class="box_product {% if category.id == active_category_id %}active{% endif %}" data-category-id="{{ category.id }}">
+                <div class="label_product" data-category-id="{{ category.id }}">{{ category.name }}</div>
+                <div class="content_product" data-category-id="{{ category.id }}">
+                    {% for child in category.children.all %}
+                    <p><a href="{% url 'products:category' child.id %}" class="menu-link py-1 {% if child.id == active_category_id %}active{% endif %}" data-category-id="{{ category.id }}">{{ child.name }}</a></p>
+                    {% endfor %}
+                </div>
             </div>
-          </div>
-          {% endfor %}  
-       </div>       
+            {% endfor %}
+       </div>
        
     </div><!-- /.accordion -->
        

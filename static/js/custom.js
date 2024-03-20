@@ -276,49 +276,40 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Аккордеон меню боковое
+
+document.addEventListener('DOMContentLoaded', function () {
+    var activeAccordionItems = localStorage.getItem('activeAccordionItems');
+    if (activeAccordionItems) {
+        activeAccordionItems = JSON.parse(activeAccordionItems);
+        activeAccordionItems.forEach(function (categoryId) {
+            var element = document.querySelector('.box_product[data-category-id="' + categoryId + '"]');
+            if (element) {
+                element.classList.add('active');
+                var content = element.querySelector('.content_product');
+                content.style.maxHeight = content.scrollHeight + "px";
+            }
+        });
+    }
+});
+
 const boxes = Array.from(document.querySelectorAll(".box_product"));
 
-
 boxes.forEach((box) => {
-    const links = box.querySelectorAll(".menu-link");
-
-    links.forEach((link) => {
-        link.addEventListener("click", (e) => {
-            // Если необходимо перейти по ссылке, оставьте следующую строку закомментированной:
-            // e.preventDefault();
-        });
-    });
-
     box.addEventListener("click", boxHandler);
 });
 
 function boxHandler(e) {
-    let currentBox = e.target.closest(".box_product");
-    let currentContent = e.target.nextElementSibling;
+    let currentBox = e.currentTarget;
+    let currentContent = currentBox.querySelector(".content_product");
     currentBox.classList.toggle("active");
 
     if (currentBox.classList.contains("active")) {
         currentContent.style.maxHeight = currentContent.scrollHeight + "px";
-        // activeCategories.add(currentBox.dataset.categoryId); // Добавляем текущую категорию в активные
     } else {
         currentContent.style.maxHeight = 0;
-        // activeCategories.delete(currentBox.dataset.categoryId); // Удаляем текущую категорию из активных
     }
 
-    // // Сохраняем состояние в localStorage
-    // localStorage.setItem("activeCategories", JSON.stringify(Array.from(activeCategories)));
+    // Сохраняем состояние активных категорий в localStorage
+    let activeCategories = Array.from(document.querySelectorAll('.box_product.active')).map(box => box.getAttribute('data-category-id'));
+    localStorage.setItem('activeAccordionItems', JSON.stringify(activeCategories));
 }
-
-// document.addEventListener("DOMContentLoaded", () => {
-//     const savedActiveCategories = JSON.parse(localStorage.getItem("activeCategories")) || [];
-//
-//     savedActiveCategories.forEach((categoryId) => {
-//         const categoryBox = document.querySelector(`.box_product[data-category-id="${categoryId}"]`);
-//         if (categoryBox) {
-//             categoryBox.classList.add("active");
-//             // Также откройте контент для каждой активной категории
-//             // ...
-//         }
-//     });
-// });
-
