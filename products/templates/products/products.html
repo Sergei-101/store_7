@@ -23,7 +23,7 @@
                 <div class="label_product" data-category-id="{{ category.id }}">{{ category.name }}</div>
                 <div class="content_product" data-category-id="{{ category.id }}">
                     {% for child in category.children.all %}
-                    <p><a href="{% url 'products:category' child.id %}" class="menu-link py-1 {% if child.id == active_category_id %}active{% endif %}" data-category-id="{{ category.id }}">{{ child.name }}</a></p>
+                    <p><a href="{% url 'products:category' child.slug %}" class="menu-link py-1 {% if child.id == active_category_id %}active{% endif %}" data-category-id="{{ category.id }}">{{ child.name }}</a></p>
                     {% endfor %}
                 </div>
             </div>
@@ -78,7 +78,7 @@
             <div class="product-card product-card_style9 border rounded-3 mb-3 mb-md-4 mb-xxl-5">
               <div class="position-relative pb-3">
                 <div class="pc__img-wrapper pc__img-wrapper_wide3">
-                  <a href="{% url 'products:product_detail' product.id %}"><img loading="lazy" src="{{ product.image.url }}" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img"></a>
+                  <a href="{% url 'products:product_detail' product.slug %}"><img loading="lazy" src="{{ product.image.url }}" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img"></a>
                 </div>
                 <div class="anim_appear-bottom position-absolute w-100 text-center">
                   <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-add-cart js-add-cart-cust js-open-aside " data-aside="cartDrawer" title="Add To Cart" data-product-id="{{ product.id }}">

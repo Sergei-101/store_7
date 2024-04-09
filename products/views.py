@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render,redirect
-from products.models import Product, ProductCategory, ProductImage
+from products.models import Product, ProductCategory, ProductImage, Characteristic
 from pages.models import Content
 from cart.forms import CartAddProductForm
 from reviews.forms import ReviewForm
@@ -15,9 +15,11 @@ from slugify import slugify
 
 
 
-def products(request, category_id=None, page=1):
+def products(request, category_slug=None, page=1):
+    print(category_slug)
     categories = ProductCategory.objects.filter(parent=None)  # Получение корневых категорий
-    products = Product.objects.filter(category=category_id) if category_id else Product.objects.all()
+    products = Product.objects.filter(category__slug=category_slug) if category_slug else Product.objects.all()
+    print(products)
     per_page = 25
     paginator = Paginator(products, per_page)
     products_paginator = paginator.page(page)
@@ -33,19 +35,29 @@ def products(request, category_id=None, page=1):
         'active_category_id': active_category_id,
         'category_types': {category.id: 'parent' if category.children.exists() else 'child' for category in categories},
         }
-
-
-
     return render(request, 'products/products.html', context)
 
-def product_detail(request, product_id):
+def product_list(request):
+    products = Product.objects.all()
+
+    # Получение всех доступных характеристик
+    available_characteristics = Characteristic.objects.values('value').distinct()
+
+    # Фильтрация по характеристикам
+    characteristics = request.GET.getlist('characteristics')
+    for characteristic in characteristics:
+        products = products.filter(characteristics__value=characteristic)
+
+    return render(request, 'products/product_list.html', {'products': products, 'available_characteristics': available_characteristics})
+
+def product_detail(request, category_slug):
     categories = ProductCategory.objects.filter(parent=None)  # Получение корневых категорий
-    products = Product.objects.filter(id=product_id)
-    images = ProductImage.objects.filter(product=product_id)
+    products = Product.objects.filter(slug=category_slug)
+    images = ProductImage.objects.filter(product__slug=category_slug)
     contents = Content.objects.all()
     cart_product_form = CartAddProductForm()
     review_form = ReviewForm()
-    reviews = Review.objects.filter(product=product_id)
+    reviews = Review.objects.filter(product__slug=category_slug)
     context = {'products': products,
                'top_categories': categories,
                'images': images,
