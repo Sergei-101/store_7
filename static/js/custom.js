@@ -276,20 +276,53 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // Аккордеон меню боковое
-const boxes = Array.from(document.querySelectorAll(".box_product")); // считываем все элементы аккордеона в массив
-boxes.forEach((box) => {
-  box.addEventListener("click", boxHandler); // при нажатии на бокс вызываем ф-ию boxHanlder
+// JavaScript
+document.addEventListener('DOMContentLoaded', function () {
+    var activeAccordionItems = localStorage.getItem('activeAccordionItems');
+    if (activeAccordionItems) {
+        activeAccordionItems = JSON.parse(activeAccordionItems);
+        activeAccordionItems.forEach(function (categoryId) {
+            var element = document.querySelector('.box_product[data-category-id="' + categoryId + '"]');
+            if (element) {
+                element.classList.add('active');
+                var content = element.querySelector('.content_product');
+                content.style.maxHeight = content.scrollHeight + "px";
+            }
+        });
+    }
 });
+
+const boxes = Array.from(document.querySelectorAll(".box_product"));
+
+boxes.forEach((box) => {
+    box.addEventListener("click", boxHandler);
+});
+
 function boxHandler(e) {
-  e.preventDefault(); // сбрасываем стандартное поведение
-  let currentBox = e.target.closest(".box_product"); // определяем текущий бокс
-  let currentContent = e.target.nextElementSibling; // находим скрытый контент
-  currentBox.classList.toggle("active"); // присваиваем ему активный класс
-  if (currentBox.classList.contains("active")) {
-    // если класс активный ..
-    currentContent.style.maxHeight = currentContent.scrollHeight + "px"; // открываем контент
-  } else {
-    // в противном случае
-    currentContent.style.maxHeight = 0; // скрываем контент
-  }
+    let currentBox = e.currentTarget;
+    let currentContent = currentBox.querySelector(".content_product");
+    let currentCategoryId = currentBox.getAttribute('data-category-id');
+    let currentCategoryType = currentBox.getAttribute('data-category-type');
+
+    if (currentCategoryType === 'parent') {
+        // Если категория родительская, скрываем все аккордеоны, кроме текущего
+        boxes.forEach((otherBox) => {
+            if (otherBox !== currentBox) {
+                otherBox.classList.remove('active');
+                otherBox.querySelector('.content_product').style.maxHeight = null;
+            }
+        });
+    }
+
+    currentBox.classList.toggle("active");
+
+    if (currentBox.classList.contains("active")) {
+        currentContent.style.maxHeight = currentContent.scrollHeight + "px";
+    } else {
+        currentContent.style.maxHeight = 0;
+    }
+
+    // Сохраняем состояние активных категорий в localStorage
+    let activeCategories = Array.from(document.querySelectorAll('.box_product.active')).map(box => box.getAttribute('data-category-id'));
+    localStorage.setItem('activeAccordionItems', JSON.stringify(activeCategories));
 }

@@ -15400,4 +15400,12 @@ body.coming-soon-page {
   margin-bottom: 0px;
 
 }
+.menu-link {
+    color: #333; /* Цвет неактивной ссылки */
+    text-decoration: none; /* Убираем подчеркивание */
+}
 
+.menu-link.active {
+    color: #0074D9; /* Цвет активной ссылки */
+    /* Дополнительные стили для активной ссылки, если необходимо */
+}

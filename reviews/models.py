@@ -11,6 +11,7 @@ class Review(models.Model):
     rating = models.PositiveIntegerField(validators=[MinValueValidator(1), MaxValueValidator(5)])
     comment = models.TextField()
     created_at = models.DateTimeField(auto_now_add=True)
+    available = models.BooleanField(default=False, verbose_name='Видимость')
 
     def __str__(self):
         return f"{self.user.username} - {self.product.name}"

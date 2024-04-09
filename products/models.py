@@ -10,11 +10,12 @@ import string
 
 class ProductCategory(models.Model):
     name = models.CharField(max_length=255, unique=True, verbose_name="Имя категории")
-    slug = models.SlugField(max_length=255, unique=True)
+    slug = models.SlugField(max_length=255, unique=True, db_index=True)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children', verbose_name="Родительская категория")
 
     def __str__(self):
         return self.name
+
 
     class Meta:
         verbose_name = 'Категория'
@@ -52,15 +53,7 @@ class Promotion(models.Model):
         return self.name
 
 
-class Characteristic(models.Model):
-    name = models.CharField(max_length=100)
 
-    def __str__(self):
-        return self.name
-
-    class Meta:
-        verbose_name = 'Характеристика'
-        verbose_name_plural = 'Характеристики'      
       
 class Unit(models.Model): # Еденица измерения
     name = models.CharField(max_length=100)
@@ -87,8 +80,8 @@ class Product(models.Model):
     vat_price = models.DecimalField(max_digits=6, decimal_places=2, default=20, verbose_name="НДС") # НДС на цену
     supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Поставщик") # Поставщик товара    
     promotion = models.ForeignKey(Promotion, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Акция")
-    characteristics = models.ManyToManyField(Characteristic, through='ProductCharacteristic', verbose_name="Характеристика")
     article = models.CharField(max_length=100, blank=True, verbose_name="Артикул")  # Поле для артикула товара
+    available = models.BooleanField(default=True, verbose_name='Видимость')
     
     class Meta:
         verbose_name = 'Продукт'
@@ -154,13 +147,24 @@ def apply_discount_to_supplier_on_promotion_save(sender, instance, action, **kwa
         products.update(promotion=instance)
 
 
-class ProductCharacteristic(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE)
-    characteristic = models.ForeignKey(Characteristic, on_delete=models.CASCADE)
-    value = models.CharField(max_length=100)
+class CharacteristicCategory(models.Model):
+    name = models.CharField(max_length=255, verbose_name="Характеристика")
 
     def __str__(self):
-        return f"{self.product} - {self.characteristic}: {self.value}"
+        return f"{self.name}"
+
+class Characteristic(models.Model):
+    name = models.ForeignKey(CharacteristicCategory, on_delete=models.CASCADE, related_name='characteristics', verbose_name='Каталог характ')
+    value = models.CharField(max_length=255, verbose_name="Значение")
+    product = models.ForeignKey(Product, on_delete=models.CASCADE,  verbose_name="Товар")
+
+
+    class Meta:
+        verbose_name = 'Характеристика'
+        verbose_name_plural = 'Характеристики'
+
+    def __str__(self):
+        return f"{self.product} - {self.name}: {self.value}"
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')

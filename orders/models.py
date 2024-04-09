@@ -35,7 +35,7 @@ class Order(models.Model):
 
     # Общие для всех
     contact_person = models.CharField(max_length=128, verbose_name='Контактное лицо')
-    address = models.CharField(max_length=256, default='Самовывоз', verbose_name='Адрес доставки')
+    address = models.CharField(max_length=256, blank=True, null=True, default='Самовывоз', verbose_name='Адрес доставки')
     email = models.EmailField(max_length=256, verbose_name='E-Mail')
     phone_number = PhoneNumberField(verbose_name='Телефон')
     description = models.TextField(blank=True, null=True, verbose_name='Комментарии к заказу')

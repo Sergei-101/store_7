@@ -14,7 +14,7 @@ def contact(request):
     return render(request, 'pages/contact.html')
 
 
-def product_line(requsest):
+def product_line(request):
     products = Product.objects.order_by('-id')[:15]
     posts = Post.objects.all()
     context = {

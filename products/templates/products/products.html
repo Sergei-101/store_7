@@ -18,27 +18,27 @@
 
     <div class="pt-2 pt-lg-0"></div>
        <div class="container_product">
-          {% for category in top_categories %} 
-          <div class="box_product">
-            <div class="label_product">{{ category.name }}</div>
-              <div class="content_product">
-                  {% for child in category.children.all %}
-                    <p><a href="{% url 'products:category' category.id %}" class="menu-link py-1">{{ child.name }}</a></p>
-                  {% endfor %}    
-              </div>
-          </div>
-          {% endfor %}  
-       </div>       
+            {% for category in top_categories %}
+            <div class="box_product {% if category.id == active_category_id %}active{% endif %}" data-category-id="{{ category.id }}">
+                <div class="label_product" data-category-id="{{ category.id }}">{{ category.name }}</div>
+                <div class="content_product" data-category-id="{{ category.id }}">
+                    {% for child in category.children.all %}
+                    <p><a href="{% url 'products:category' child.slug %}" class="menu-link py-1 {% if child.id == active_category_id %}active{% endif %}" data-category-id="{{ category.id }}">{{ child.name }}</a></p>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+       </div>
        
     </div><!-- /.accordion -->
        
 
       <div class="shop-list flex-grow-1">
         <div class="d-flex justify-content-between mb-4 pb-md-2">
-          <div class="breadcrumb mb-0 d-none d-md-block flex-grow-1">
-            <a href="#" class="menu-link menu-link_us-s text-uppercase fw-medium" > Home{{ product.category.parent.name }}</a>
+          <div class="breadcrumb mb-0 d-none d-md-block flex-grow-1">            
+            <a href="#" class="menu-link menu-link_us-s text-uppercase fw-medium" > Home{{ products.category.parent.name }}</a>
             <span class="breadcrumb-separator menu-link fw-medium ps-1 pe-1">/</span>
-            <a href="#" class="menu-link menu-link_us-s text-uppercase fw-medium" > Category{{ product.category.name }}</a>
+            <a href="#" class="menu-link menu-link_us-s text-uppercase fw-medium" > Category{{ products.category.name }}</a>            
           </div><!-- /.breadcrumb -->
 
           <div class="shop-acs d-flex align-items-center justify-content-between justify-content-md-end flex-grow-1">
@@ -78,7 +78,7 @@
             <div class="product-card product-card_style9 border rounded-3 mb-3 mb-md-4 mb-xxl-5">
               <div class="position-relative pb-3">
                 <div class="pc__img-wrapper pc__img-wrapper_wide3">
-                  <a href="{% url 'products:product_detail' product.id %}"><img loading="lazy" src="{{ product.image.url }}" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img"></a>
+                  <a href="{% url 'products:product_detail' product.slug %}"><img loading="lazy" src="{{ product.image.url }}" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img"></a>
                 </div>
                 <div class="anim_appear-bottom position-absolute w-100 text-center">
                   <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-add-cart js-add-cart-cust js-open-aside " data-aside="cartDrawer" title="Add To Cart" data-product-id="{{ product.id }}">
@@ -129,18 +129,19 @@
         </div><!-- /.products-grid row -->
 
         <nav class="shop-pages d-flex justify-content-between mt-3" aria-label="Page navigation">
-          <a href="#" class="btn-link d-inline-flex align-items-center">
+          <a href="{% if products.has_previous %}{% url 'products:paginator' products.previous_page_number %}{% else %}#{% endif %}" class="btn-link d-inline-flex align-items-center">
             <svg class="me-1" width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_prev_sm" /></svg>
-            <span class="fw-medium">PREV</span>
+            <span class="fw-medium" {% if not products.has_previos %} disabled {% endif %}>Предыдущая</span>
           </a>
           <ul class="pagination mb-0">
-            <li class="page-item"><a class="btn-link px-1 mx-2 btn-link_active" href="#">1</a></li>
-            <li class="page-item"><a class="btn-link px-1 mx-2" href="#">2</a></li>
-            <li class="page-item"><a class="btn-link px-1 mx-2" href="#">3</a></li>
-            <li class="page-item"><a class="btn-link px-1 mx-2" href="#">4</a></li>
+            {% for page in products.paginator.page_range %}              
+            <li class="page-item"><a class="btn-link px-1 mx-2" href="{% url 'products:paginator' page %}">{{ page }}</a></li>
+            {% endfor %}  
+{#            <li class="page-item"><a class="btn-link px-1 mx-2 btn-link_active" href="#">1</a></li>#}
+
           </ul>
-          <a href="#" class="btn-link d-inline-flex align-items-center">
-            <span class="fw-medium me-1">NEXT</span>
+          <a href="{% if products.has_next %}{% url 'products:paginator' products.next_page_number %}{% else %}#{% endif %}" class="btn-link d-inline-flex align-items-center">
+            <span class="fw-medium me-1" {% if not products.has_next %} disabled {% endif %}>Следующая</span>
             <svg width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_next_sm" /></svg>
           </a>
         </nav>
