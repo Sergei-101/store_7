@@ -3,9 +3,14 @@ from orders.models import Order, OrderItem
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
-    raw_id_fields = ['product']
+    autocomplete_fields = ['product']
 
 
+class OrderItemAdmin(admin.ModelAdmin):
+    list_display = ['order', 'product', 'quantity']
+    search_fields = ['id', 'order']
+
+admin.site.register(OrderItem, OrderItemAdmin)
 
 class OrderAdmin(admin.ModelAdmin):
     list_display = ['id', 'get_customer_name', 'status', 'total_cost', 'created']

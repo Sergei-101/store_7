@@ -3,7 +3,7 @@ from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
 from django.dispatch import receiver
 from django.db.models.signals import m2m_changed
-from datetime import date
+from datetime import date, datetime
 import random
 import string
 
@@ -52,7 +52,9 @@ class Promotion(models.Model):
     def __str__(self):
         return self.name
 
-
+class Manufacturer(models.Model):
+    name = models.CharField(max_length=255, verbose_name="Название")
+    description = models.TextField(verbose_name='Описание', blank=True, null=True)
 
       
 class Unit(models.Model): # Еденица измерения
@@ -75,10 +77,12 @@ class Product(models.Model):
     description = models.TextField(verbose_name="Описание")
     quantity = models.IntegerField(default=0, verbose_name="Кол-во") # Активный товар
     unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, verbose_name="Еденица измерения")
+    weight = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, verbose_name="Вес")
     base_price = models.DecimalField(max_digits=6, decimal_places=2, verbose_name="Базовая цена") # Базовая цена товара без наценок и ндс
     markup_percentage = models.DecimalField(max_digits=6, decimal_places=2, default=0, verbose_name="Процент к товару") # Процент наценки на цену без ндс
     vat_price = models.DecimalField(max_digits=6, decimal_places=2, default=20, verbose_name="НДС") # НДС на цену
-    supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Поставщик") # Поставщик товара    
+    supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Поставщик") # Поставщик товара
+    manufacturer = models.ForeignKey(Manufacturer, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Производитель")
     promotion = models.ForeignKey(Promotion, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Акция")
     article = models.CharField(max_length=100, blank=True, verbose_name="Артикул")  # Поле для артикула товара
     available = models.BooleanField(default=True, verbose_name='Видимость')
@@ -132,6 +136,17 @@ class Product(models.Model):
             return round(discounted_price, 2)
         else:
             return self.price_with_markup_and_vat()
+
+    def get_sales_count(self, month=None, year=None):
+        # Если month и year не переданы, используем текущий месяц и год
+        if month is None:
+            month = datetime.now().month
+        if year is None:
+            year = datetime.now().year
+
+        # Подсчёт количества продаж товара за указанный месяц
+        return sum(
+            item.quantity for item in self.order_items.filter(order__created__month=month, order__created__year=year))
 
 @receiver(m2m_changed, sender=Promotion.categories.through)
 def apply_discount_to_category_on_promotion_save(sender, instance, action, **kwargs):

@@ -25,7 +25,8 @@ class CharacteristicInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'base_price', 'quantity', 'category', 'id') # отоброжать поля
+    list_display = ('name', 'base_price', 'quantity', 'category', 'id','available') # отоброжать поля
+    search_fields = ['name', 'category__name']
     prepopulated_fields = {'slug': ('name',)}
     inlines = [CharacteristicInline, ProductImageInline]
     actions = ['export_to_csv']
@@ -51,7 +52,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(ProductCategory)
 class ProductCategoryAdmin(admin.ModelAdmin):
-    list_display = ('name', 'parent')
+    list_display = ('parent', 'name')
     list_filter = ('parent',)
     search_fields = ('name',)
     prepopulated_fields = {'slug': ('name',)}
@@ -65,9 +66,16 @@ class CSVFileAdmin(admin.ModelAdmin):
             decoded_file = csv_file.file.read().decode('utf-8').splitlines()
             reader = csv.reader(decoded_file, delimiter=';')
             for row in reader:
-                category_name = row[3]
-                category_name_slug = category_name
-                category, created = ProductCategory.objects.get_or_create(name=category_name, slug=category_name_slug)
+                categories = row[3].split(',')  # Разделение категорий через запятую
+                parent_category_name = categories[0].strip()  # Первая категория как родительская
+                parent_category, created = ProductCategory.objects.get_or_create(name=parent_category_name,
+                                                                                 slug=slugify(parent_category_name))
+                # Создание дочерних категорий, если указаны
+                for category_name in categories[1:]:
+                    category_name = category_name.strip()
+                    category, created = ProductCategory.objects.get_or_create(name=category_name,
+                                                                              slug=slugify(category_name),
+                                                                              parent=parent_category)
                 name = row[0]
                 base_price = row[1]
                 description = row[2]
@@ -79,7 +87,7 @@ class CSVFileAdmin(admin.ModelAdmin):
                     name=name,
                     base_price=base_price,
                     description=description,
-                    category=category,
+                    category=parent_category,
                     slug=slug,
                     quantity=quantity,
                     image=image

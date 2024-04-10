@@ -16,10 +16,8 @@ from slugify import slugify
 
 
 def products(request, category_slug=None, page=1):
-    print(category_slug)
     categories = ProductCategory.objects.filter(parent=None)  # Получение корневых категорий
-    products = Product.objects.filter(category__slug=category_slug) if category_slug else Product.objects.all()
-    print(products)
+    products = Product.objects.filter(category__slug=category_slug, available=True) if category_slug else Product.objects.filter(available=True)
     per_page = 25
     paginator = Paginator(products, per_page)
     products_paginator = paginator.page(page)
@@ -78,8 +76,9 @@ def quick_view(request, product_id):
         'oldprice': product.price_with_markup_and_vat(),
         'price': product.final_price(),
         'description': product.description,
+        'article': product.article,
+        'category': product.category.name,
         'image': product.image.url  # Путь к изображению
     }
-
     # Возвращаем JsonResponse с данными о товаре
     return JsonResponse(data)

@@ -15,6 +15,8 @@ $(document).on("click", ".js-quick-view-cust", function () {
             // Вставляем остальные данные о товаре в окно быстрого просмотра
             $('#product-name').text(response.name); // Вставляем название товара
             $('#product-price').text(response.price + ' BYN'); // Вставляем цену товара
+            $('#product-article').text(response.article); // Вставляем артикул товара
+            $('#product-category').text(response.category); // Вставляем артикул товара
             $('#product-description').html(response.description);
             $('#product-image').attr('src', response.image); // Устанавливаем изображение товара
             if (isPromotionActive === 'True') {
@@ -68,6 +70,9 @@ function updateCartContents() {
 
             // Обновляем общую цену корзины
             $('#total-price').text(data.total_price);
+            $('#number_of_items_in_cart').text(data.number_of_items_in_cart);
+            $('#number_of_items_in_cart_1').text(data.number_of_items_in_cart);
+            $('#number_of_items_in_cart_2').text(data.number_of_items_in_cart);
 
         },
         error: function(xhr, status, error) {

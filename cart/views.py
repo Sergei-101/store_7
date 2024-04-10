@@ -41,11 +41,14 @@ def get_cart_contents(request):
             'image': item['product'].image.url,
         }
         cart_items.append(product_data)
+    number_of_items_in_cart = str(len(cart_items))
+
     total_price = str(cart.get_total_price())
     # Формируем JSON-объект с данными о содержимом корзины
     cart_contents = {
         'cart_items': cart_items,
         'total_price': total_price,
+        'number_of_items_in_cart': number_of_items_in_cart,
     }
     return JsonResponse(cart_contents)
 
