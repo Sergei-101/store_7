@@ -25,7 +25,7 @@ def order_create(request):
             if cart.coupon:
                 form.instance.total_cost = cart.get_total_price_after_discount()
             else:
-                form.instance.total_cost = cart.get_total_price()
+                form.instance.total_cost = cart.get_total_price()               
 
             if request.user.is_authenticated:
                 current_user = request.user

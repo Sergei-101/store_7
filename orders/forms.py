@@ -50,3 +50,4 @@ class BusinessOrderForm(forms.ModelForm):
         model = Order
         fields = ['company_name', 'unp', 'checking_account', 'bic', 'bank_name', 'legal_address', 'contact_person', 'address', 'email', 'phone_number', 'description']
         labels = None
+
