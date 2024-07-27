@@ -114,7 +114,7 @@
                         {{ item.product }} x {{ item.quantity }}
                       </td>
                       <td align="right">
-                        ${{ item.total_price }}
+                        {{ item.total_price }} BYN
                       </td>
                     </tr>
                     {% endfor %}
@@ -124,7 +124,7 @@
                   <tbody>
                     <tr>
                       <th>ИТОГО</th>
-                      <td align="right">${{ cart.get_total_price }}</td>
+                      <td align="right">{{ cart.get_total_price }} BYN</td>
                     </tr>
                     <tr>
                       <th>ДОСТАВКА</th>
@@ -133,7 +133,7 @@
                     <tr>
                     {% if cart.coupon %}
                         <th>Скидка</th>
-                        <td align="right">– ${{ cart.get_discount|floatformat:2 }}</td>
+                        <td align="right">– {{ cart.get_discount|floatformat:2 }} BYN</td>
                     </tr>
                     <tr>
                         <th>"{{ cart.coupon.code }}" Промокод</th>
@@ -142,12 +142,12 @@
                     </tr>
                     <tr>
                         <th>Итого к оплате</th>
-                        <td align="right">${{ cart.get_total_price_after_discount|floatformat:2 }}</td>
+                        <td align="right">{{ cart.get_total_price_after_discount|floatformat:2 }} BYN</td>
                     </tr>
                     {% else %}
                   <tr>
                     <th>Итого к оплате</th>
-                    <td align="right">${{ cart.get_total_price }}</td>
+                    <td align="right">{{ cart.get_total_price }} BYN</td>
                   </tr>
                     {% endif %}
                   </tbody>
