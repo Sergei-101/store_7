@@ -82,3 +82,11 @@ def quick_view(request, product_id):
     }
     # Возвращаем JsonResponse с данными о товаре
     return JsonResponse(data)
+
+def product_search(request):
+    query = request.GET.get('q')
+    if query:
+        products = Product.objects.filter(name__icontains=query)
+    else:
+        products = Product.objects.all()
+    return render(request, 'products/search_results.html', {'products': products})

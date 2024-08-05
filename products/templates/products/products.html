@@ -96,7 +96,7 @@
 
               <div class="pc__info position-relative">
                 <p class="pc__category">{{ product.category.name }}</p>
-                <h6 class="pc__title"><a href="./product1_simple.html">{{ product.name }}</a></h6>
+                <h6 class="pc__title"><a href="{% url 'products:product_detail' product.slug %}">{{ product.name }}</a></h6>
                 <div class="product-card__review d-sm-flex align-items-center">
                   <div class="reviews-group d-flex">
                     <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><use href="#icon_star" /></svg>
