@@ -5,7 +5,7 @@
   <main>
     <div class="mb-4 pb-4"></div>
     <section class="shop-checkout container">
-      <h2 class="page-title">Order Received</h2>
+<!--      <h2 class="page-title">Order Received</h2>-->
       <div class="checkout-steps">
         <a href="#" class="checkout-steps__item active">
           <span class="checkout-steps__item-number">01</span>
@@ -49,17 +49,17 @@
             <span>{{ order.created }}</span>
           </div>
           <div class="order-info__item">
-            <label>Итого</label>
-            <span>${{ order.total_cost }}</span>
+            <label>Итого к оплате</label>
+            <span>{{ order.total_cost }} BYN</span>
           </div>
-          <div class="order-info__item">
-            <label>Метод оплаты</label>
-            <span>Direct Bank Transfer</span>
-          </div>
+<!--          <div class="order-info__item">-->
+<!--            <label>Метод оплаты</label>-->
+<!--            <span>Direct Bank Transfer</span>-->
+<!--          </div>-->
         </div>
         <div class="checkout__totals-wrapper">
           <div class="checkout__totals">
-            <h3>Order Details</h3>
+            <h3>ДЕТАЛИ ЗАКАЗА</h3>
             <table class="checkout-cart-items">
               <thead>
                 <tr>
@@ -74,7 +74,7 @@
                     {{ item.product }} x {{ item.quantity }}
                   </td>
                   <td align="right">
-                    $ {{ item.total }}
+                    {{ item.total }} BYN
                   </td>
                 </tr>
                 {% endfor %}
@@ -83,13 +83,13 @@
             <table class="checkout-totals">
               <tbody>
                 
-                <tr>
-                  <th>ДОСТАВКА</th>
-                  <td align="right">Free shipping</td>
-                </tr>                
+<!--                <tr>-->
+<!--                  <th>ДОСТАВКА</th>-->
+<!--                  <td align="right">Free shipping</td>-->
+<!--                </tr>                -->
                 <tr>
                   <th>ИТОГО К ОПЛАТЕ</th>
-                  <td align="right">${{ order.total_cost }}</td>
+                  <td align="right">{{ order.total_cost }} BYN</td>
                 </tr>
               </tbody>
             </table>

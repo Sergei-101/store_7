@@ -129,22 +129,31 @@
         </div><!-- /.products-grid row -->
 
         <nav class="shop-pages d-flex justify-content-between mt-3" aria-label="Page navigation">
-          <a href="{% if products.has_previous %}{% url 'products:paginator' products.previous_page_number %}{% else %}#{% endif %}" class="btn-link d-inline-flex align-items-center">
-            <svg class="me-1" width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_prev_sm" /></svg>
-            <span class="fw-medium" {% if not products.has_previos %} disabled {% endif %}>Предыдущая</span>
-          </a>
-          <ul class="pagination mb-0">
-            {% for page in products.paginator.page_range %}              
-            <li class="page-item"><a class="btn-link px-1 mx-2" href="{% url 'products:paginator' page %}">{{ page }}</a></li>
-            {% endfor %}  
-{#            <li class="page-item"><a class="btn-link px-1 mx-2 btn-link_active" href="#">1</a></li>#}
-
-          </ul>
-          <a href="{% if products.has_next %}{% url 'products:paginator' products.next_page_number %}{% else %}#{% endif %}" class="btn-link d-inline-flex align-items-center">
-            <span class="fw-medium me-1" {% if not products.has_next %} disabled {% endif %}>Следующая</span>
-            <svg width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_next_sm" /></svg>
-          </a>
+            <a href="{% if products.has_previous %}{% url 'products:paginator' products.previous_page_number %}{% else %}#{% endif %}" class="btn-link d-inline-flex align-items-center">
+                <svg class="me-1" width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_prev_sm" /></svg>
+                <span class="fw-medium" {% if not products.has_previous %} disabled {% endif %}>Предыдущая</span>
+            </a>
+            <ul class="pagination mb-0">
+                {% for page in products.paginator.page_range %}
+                    {% if page <= 10 %}
+                        {% if page == products.number %}
+                            <li class="page-item active"><span> {{ page }}</span></li>
+                        {% else %}
+                            <li class="page-item"><a class="btn-link px-1 mx-2" href="{% url 'products:paginator' page %}">{{ page }}</a></li>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+                {% if products.paginator.num_pages > 10 %}
+                    <li class="page-item"><span>...</span></li>
+                    <li class="page-item"><a class="btn-link px-1 mx-2" href="{% url 'products:paginator' products.paginator.num_pages %}">{{ products.paginator.num_pages }}</a></li>
+                {% endif %}
+            </ul>
+            <a href="{% if products.has_next %}{% url 'products:paginator' products.next_page_number %}{% else %}#{% endif %}" class="btn-link d-inline-flex align-items-center">
+                <span class="fw-medium me-1" {% if not products.has_next %} disabled {% endif %}>Следующая</span>
+                <svg width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_next_sm" /></svg>
+            </a>
         </nav>
+
       </div>
     </section><!-- /.shop-main container -->
   </main>
