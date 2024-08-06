@@ -88,5 +88,5 @@ def product_search(request):
     if query:
         products = Product.objects.filter(name__icontains=query)
     else:
-        products = Product.objects.all()
+        products = None
     return render(request, 'products/search_results.html', {'products': products})
