@@ -26,7 +26,10 @@
   <![endif]-->
 
   <!------------- Document Title -------------->
-  <title>Store elektromontash</title>
+  <meta charset="UTF-8">
+  <meta name="description" content=" {% if meta_description %} {{ meta_description }} {% endif %}">
+  <meta name="keywords" content="{% if meta_keywords %} {{ meta_keywords }} {% endif %}">
+  <title>{% if title %} {{ title }} {% else %} Store {% endif %}</title>
 
 </head>
 
@@ -421,21 +424,21 @@
               </li>
               <li class="navigation__item">
                 <a href="{% url "products:products" %}" class="navigation__link">Каталог</a>
-                <div class="mega-menu">
-                  <div class="container d-flex">
-                    <div class="col pe-4">
-                      <a href="#" class="sub-menu__title"></a>
-                      <ul class="sub-menu__list list-unstyled">
-                        {% for category in top_categories %}  
-                        <li class="sub-menu__item"><a href="{% url 'products:category' category.id %}" class="menu-link menu-link_us-s">{{ category.name }}</a></li>
-                        {% endfor %}
-                      </ul>
-                    </div>
-  
-  
-                    
-                  </div><!-- /.container d-flex -->
-                </div>
+<!--                <div class="mega-menu">-->
+<!--                  <div class="container d-flex">-->
+<!--                    <div class="col pe-4">-->
+<!--                      <a href="#" class="sub-menu__title"></a>-->
+<!--                      <ul class="sub-menu__list list-unstyled">-->
+<!--                        {% for category in top_categories %}  -->
+<!--                        <li class="sub-menu__item"><a href="{% url 'products:category' category.id %}" class="menu-link menu-link_us-s">{{ category.name }}</a></li>-->
+<!--                        {% endfor %}-->
+<!--                      </ul>-->
+<!--                    </div>-->
+<!--  -->
+<!--  -->
+<!--                    -->
+<!--                  </div>&lt;!&ndash; /.container d-flex &ndash;&gt;-->
+<!--                </div>-->
               </li>
               <li class="navigation__item">
                 <a href="{% url 'posts:index' %}" class="navigation__link">Статьи</a>

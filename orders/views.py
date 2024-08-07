@@ -53,8 +53,8 @@ def order_create(request):
             cart.clear()
 
             basket_history = OrderItem.objects.filter(order=order)
-            return render(request, 'orders/complete.html', {'order': order, 'basket_history': basket_history, 'weight': weight})
+            return render(request, 'orders/complete.html', {'title': 'Оформление заказа','order': order, 'basket_history': basket_history, 'weight': weight})
 
-    return render(request, 'orders/create.html', {'cart': cart, 'personal_form': personal_form, 'business_form': business_form})
+    return render(request, 'orders/create.html', {'title': 'Оформление заказа','cart': cart, 'personal_form': personal_form, 'business_form': business_form})
 
 

@@ -7,5 +7,6 @@ admin.site.register(Post)
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name',) # отоброжать поля
     prepopulated_fields = {'slug': ('name',)}
-    
+
+
 
