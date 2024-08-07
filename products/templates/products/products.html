@@ -78,7 +78,7 @@
             <div class="product-card product-card_style9 border rounded-3 mb-3 mb-md-4 mb-xxl-5">
               <div class="position-relative pb-3">
                 <div class="pc__img-wrapper pc__img-wrapper_wide3">
-                  <a href="{% url 'products:product_detail' product.slug %}"><img loading="lazy" src="{{ product.image.url }}" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img"></a>
+                  <a href="{{ product.get_absolute_url }}"><img loading="lazy" src="{{ product.image.url }}" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img"></a>
                 </div>
                 <div class="anim_appear-bottom position-absolute w-100 text-center">
                   <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-add-cart js-add-cart-cust js-open-aside " data-aside="cartDrawer" title="Add To Cart" data-product-id="{{ product.id }}">
@@ -96,7 +96,7 @@
 
               <div class="pc__info position-relative">
                 <p class="pc__category">{{ product.category.name }}</p>
-                <h6 class="pc__title"><a href="{% url 'products:product_detail' product.slug %}">{{ product.name }}</a></h6>
+                <h6 class="pc__title"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h6>
                 <div class="product-card__review d-sm-flex align-items-center">
                   <div class="reviews-group d-flex">
                     <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><use href="#icon_star" /></svg>

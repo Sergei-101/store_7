@@ -1,11 +1,15 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.urls import reverse
 
 
 class Category(models.Model):
     name = models.CharField(max_length=255)
     slug = models.SlugField()
     updated_at = models.DateTimeField(auto_now=True)
+
+    def get_absolute_url(self):
+        return reverse('posts:post_category', kwargs={'category_slug':self.slug})
 
     def __str__(self):
         return self.name
@@ -25,6 +29,9 @@ class Post(models.Model):
     meta_description = models.TextField(blank=True, null=True, verbose_name="Описание (для Seo)")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    def get_absolute_url(self):
+        return reverse('posts:post_detail', kwargs={'post_title':self.slug})
 
 
     def save(self, *args, **kwargs):

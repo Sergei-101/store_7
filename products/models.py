@@ -6,6 +6,7 @@ from django.db.models.signals import m2m_changed
 from datetime import date, datetime
 import random
 import string
+from django.urls import reverse
 
 
 class ProductCategory(models.Model):
@@ -13,6 +14,9 @@ class ProductCategory(models.Model):
     slug = models.SlugField(max_length=255, unique=True, db_index=True)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children', verbose_name="Родительская категория")
     updated_at = models.DateTimeField(auto_now=True)
+
+    def get_absolute_url(self):
+        return reverse('products:category', kwargs={'category_slug':self.slug})
 
     def __str__(self):
         return self.name
@@ -92,7 +96,12 @@ class Product(models.Model):
     meta_description = models.TextField(blank=True,null=True,verbose_name="Описание (для Seo)")
     updated_at = models.DateTimeField(auto_now=True)
     product_link = models.CharField(max_length=500, blank=True, null=True, verbose_name="Ссылка на продукт")
-    
+
+
+    def get_absolute_url(self):
+        return reverse('products:product_detail', kwargs={'category_slug':self.slug})
+
+
     class Meta:
         verbose_name = 'Продукт'
         verbose_name_plural = 'Продукты'
