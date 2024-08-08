@@ -4,10 +4,10 @@ from orders.models import OrderItem
 from orders.forms import PersonalOrderForm, BusinessOrderForm
 from cart.cart import Cart
 from products.models import Product
-
 from django.shortcuts import render
 from .forms import PersonalOrderForm, BusinessOrderForm
-from .models import OrderItem
+from .models import OrderItem, Order
+from django.contrib.admin.views.decorators import staff_member_required
 
 
 def order_create(request):
@@ -58,3 +58,7 @@ def order_create(request):
     return render(request, 'orders/create.html', {'title': 'Оформление заказа','cart': cart, 'personal_form': personal_form, 'business_form': business_form})
 
 
+@staff_member_required
+def admin_order_detail(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    return render(request, 'admin/orders/order/detail.html', {'order': order})

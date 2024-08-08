@@ -13,6 +13,8 @@ class ProductCategory(models.Model):
     name = models.CharField(max_length=255, unique=True, verbose_name="Имя категории")
     slug = models.SlugField(max_length=255, unique=True, db_index=True)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children', verbose_name="Родительская категория")
+    image = models.ImageField(upload_to='other_images', blank=True, null=True, verbose_name="Изображение")
+    text_icon = models.CharField(max_length=255, blank=True, null=True, verbose_name="Иконка")
     updated_at = models.DateTimeField(auto_now=True)
 
     def get_absolute_url(self):
@@ -61,6 +63,14 @@ class Promotion(models.Model):
 class Manufacturer(models.Model):
     name = models.CharField(max_length=255, verbose_name="Название")
     description = models.TextField(verbose_name='Описание', blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+
+    class Meta:
+        verbose_name = 'Производители'
+        verbose_name_plural = 'Производитель'
 
       
 class Unit(models.Model): # Еденица измерения
@@ -185,7 +195,11 @@ class CharacteristicCategory(models.Model):
     name = models.CharField(max_length=255, verbose_name="Характеристика")
 
     def __str__(self):
-        return f"{self.name}"
+        return self.name
+
+    class Meta:
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
 
 class Characteristic(models.Model):
     name = models.ForeignKey(CharacteristicCategory, on_delete=models.CASCADE, related_name='characteristics', verbose_name='Каталог характ')
