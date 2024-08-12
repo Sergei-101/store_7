@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'ckeditor',
     'phonenumber_field',
+    'django.contrib.sitemaps',
 
 ]
 

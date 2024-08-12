@@ -80,5 +80,9 @@ def cart_detail(request):
                             'override': True})
     coupon_apply_form = CouponApplyForm()
     contex = {'cart': cart,
-              'coupon_apply_form': coupon_apply_form}
+              'coupon_apply_form': coupon_apply_form,
+              'meta_keywords': 'Корзина товаров',
+              'meta_description': 'Корзина товаров',
+              'title': 'Корзина товаров',
+    }
     return render(request, 'cart/detail.html', contex)

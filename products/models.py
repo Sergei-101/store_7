@@ -6,12 +6,19 @@ from django.db.models.signals import m2m_changed
 from datetime import date, datetime
 import random
 import string
+from django.urls import reverse
 
 
 class ProductCategory(models.Model):
     name = models.CharField(max_length=255, unique=True, verbose_name="Имя категории")
     slug = models.SlugField(max_length=255, unique=True, db_index=True)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children', verbose_name="Родительская категория")
+    image = models.ImageField(upload_to='other_images', blank=True, null=True, verbose_name="Изображение")
+    text_icon = models.CharField(max_length=255, blank=True, null=True, verbose_name="Иконка")
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def get_absolute_url(self):
+        return reverse('products:category', kwargs={'category_slug':self.slug})
 
     def __str__(self):
         return self.name
@@ -23,7 +30,8 @@ class ProductCategory(models.Model):
 
 
 class Supplier(models.Model):
-    supplier = models.CharField(max_length=255, blank=True, null=True, verbose_name="Поставщик") # Поставщик товара        
+    supplier = models.CharField(max_length=255, blank=True, null=True, verbose_name="Поставщик") # Поставщик товара
+    link_supplier = models.CharField(max_length=500,blank=True,null=True, verbose_name="Ссылка на поставщика")
 
     def __str__(self):
         return self.supplier
@@ -56,6 +64,14 @@ class Manufacturer(models.Model):
     name = models.CharField(max_length=255, verbose_name="Название")
     description = models.TextField(verbose_name='Описание', blank=True, null=True)
 
+    def __str__(self):
+        return self.name
+
+
+    class Meta:
+        verbose_name = 'Производители'
+        verbose_name_plural = 'Производитель'
+
       
 class Unit(models.Model): # Еденица измерения
     name = models.CharField(max_length=100)
@@ -74,19 +90,28 @@ class Product(models.Model):
     name = models.CharField(max_length=255, verbose_name="Наименование")
     slug = models.SlugField(max_length=255, unique=True)
     image = models.ImageField(upload_to='product_images', blank=True, null=True, verbose_name="Изображение")
-    description = models.TextField(verbose_name="Описание")
+    description = models.TextField(blank=True,null=True,verbose_name="Описание")
     quantity = models.IntegerField(default=0, verbose_name="Кол-во") # Активный товар
-    unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True, verbose_name="Еденица измерения")
+    unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True,blank=True ,verbose_name="Еденица измерения")
     weight = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, verbose_name="Вес")
     base_price = models.DecimalField(max_digits=6, decimal_places=2, verbose_name="Базовая цена") # Базовая цена товара без наценок и ндс
-    markup_percentage = models.DecimalField(max_digits=6, decimal_places=2, default=0, verbose_name="Процент к товару") # Процент наценки на цену без ндс
-    vat_price = models.DecimalField(max_digits=6, decimal_places=2, default=20, verbose_name="НДС") # НДС на цену
+    markup_percentage = models.DecimalField(max_digits=6, decimal_places=2, default=25, verbose_name="Процент к товару") # Процент наценки на цену без ндс
+    vat_price = models.DecimalField(max_digits=6, decimal_places=2, default=0, verbose_name="НДС") # НДС на цену
     supplier = models.ForeignKey(Supplier, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Поставщик") # Поставщик товара
     manufacturer = models.ForeignKey(Manufacturer, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Производитель")
     promotion = models.ForeignKey(Promotion, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Акция")
     article = models.CharField(max_length=100, blank=True, verbose_name="Артикул")  # Поле для артикула товара
     available = models.BooleanField(default=True, verbose_name='Видимость')
-    
+    meta_keywords = models.CharField(max_length=255,blank=True,null=True,verbose_name="Ключевые слова (для Seo)")
+    meta_description = models.TextField(blank=True,null=True,verbose_name="Описание (для Seo)")
+    updated_at = models.DateTimeField(auto_now=True)
+    product_link = models.CharField(max_length=500, blank=True, null=True, verbose_name="Ссылка на продукт")
+
+
+    def get_absolute_url(self):
+        return reverse('products:product_detail', kwargs={'category_slug':self.slug})
+
+
     class Meta:
         verbose_name = 'Продукт'
         verbose_name_plural = 'Продукты'
@@ -108,6 +133,10 @@ class Product(models.Model):
                     if not Product.objects.filter(article=sku).exists():  # Проверяем уникальность артикула в базе данных
                         unique_sku_generated = True
                 self.article = sku  # Присваиваем сгенерированный артикул
+        if not self.meta_keywords:
+            self.meta_keywords = f"купить, {self.name}"
+        if not self.meta_description:
+            self.meta_description = self.description
         super().save(*args, **kwargs)
     
     def price_with_markup_and_vat(self):
@@ -166,7 +195,11 @@ class CharacteristicCategory(models.Model):
     name = models.CharField(max_length=255, verbose_name="Характеристика")
 
     def __str__(self):
-        return f"{self.name}"
+        return self.name
+
+    class Meta:
+        verbose_name = 'Категория'
+        verbose_name_plural = 'Категории'
 
 class Characteristic(models.Model):
     name = models.ForeignKey(CharacteristicCategory, on_delete=models.CASCADE, related_name='characteristics', verbose_name='Каталог характ')

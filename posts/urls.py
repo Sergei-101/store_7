@@ -5,7 +5,7 @@ app_name = 'posts'
 
 urlpatterns = [
     path('', all_post, name='index'),
-    path('category/<int:category_id>', post_category, name='post_category'),
-    path('detail/<int:post_id>', post_detail, name='post_detail'),
+    path('category/<slug:category_slug>', post_category, name='post_category'),
+    path('detail/<slug:post_title>', post_detail, name='post_detail'),
 
 ]

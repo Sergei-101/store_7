@@ -19,7 +19,15 @@ from django.urls import path, include
 from pages.views import index
 from django.conf.urls.static import static
 from django.conf import settings
+from django.contrib.sitemaps.views import sitemap
+from products.sitemaps import ProductSitemap, ProductCategorySitemap, PostSitemap, CategorySitemap
 
+sitemaps = {
+    'products': ProductSitemap,
+    'productcategories': ProductCategorySitemap,
+    'post': PostSitemap,
+    'category': CategorySitemap,
+}
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,12 +40,14 @@ urlpatterns = [
     path('posts/', include('posts.urls', namespace='posts')),
     path('reviews/', include('reviews.urls', namespace='reviews')),
     path('pages/', include('pages.urls', namespace='pages')),
+    path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
     path('__debug__/', include("debug_toolbar.urls")),
 
 
 
 ]
 
+handler404 = 'pages.views.custom_404'
 
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

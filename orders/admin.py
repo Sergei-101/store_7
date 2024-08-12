@@ -1,5 +1,11 @@
 from django.contrib import admin
+from django.utils.safestring import mark_safe
 from orders.models import Order, OrderItem
+from django.urls import reverse
+
+def order_detail(obj):
+    url = reverse('orders:admin_order_detail', args=[obj.id])
+    return mark_safe(f'<a href="{url}">View</a>')
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
@@ -13,7 +19,7 @@ class OrderItemAdmin(admin.ModelAdmin):
 admin.site.register(OrderItem, OrderItemAdmin)
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['id', 'get_customer_name', 'status', 'total_cost', 'created']
+    list_display = ['id', 'get_customer_name', 'status', 'total_cost', 'created', order_detail]
     list_filter = ['status', 'customer_type']
     search_fields = ['id', 'company_name', 'contact_person', 'email', 'phone_number']
     inlines = [OrderItemInline]
@@ -28,3 +34,4 @@ class OrderAdmin(admin.ModelAdmin):
     get_customer_name.short_description = 'Customer Name'
 
 admin.site.register(Order, OrderAdmin)
+

@@ -33,12 +33,12 @@
           <div class="billing-info__wrapper">             
             <h4>ПЛАТЕЖНЫЕ РЕКВИЗИТЫ</h4>
             <div class="row">
-                <div class="form-floating my-3">            
-                    <select class="form-control" id="customer-type" name="customer_type" >
-                        <option value="personal" selected>Физ. лица</option>
-                        <option value="business">Юр. Лица</option>
-                    </select>
-                </div>
+<!--                <div class="form-floating my-3">            -->
+<!--                    <select class="form-control" id="customer-type" name="customer_type" >-->
+<!--                        <option value="personal" selected>Физ. лица</option>-->
+<!--                        <option value="business">Юр. Лица</option>-->
+<!--                    </select>-->
+<!--                </div>-->
                     <form action="{% url 'orders:order_create' %}" method="post" name="checkout-form">
                         {% csrf_token %}
                         <div id="personal-form">
@@ -46,16 +46,18 @@
                              <p>{{ personal_form.contact_person }}</p>                             
                              <p>{{ personal_form.email }}</p>
                              <p>{{ personal_form.phone_number }}</p>
-                             <p>{{ personal_form.description }}</p>                             
-                             <div class="form-floating my-3">            
-                                <select class="form-control" id="delivery-method" name="delivery_method">
-                                    <option value="delivery" >Доставка по адресу</option>
-                                    <option value="pickup" selected>Самовывоз</option>
-                                </select>
-                             </div>
-                             <div id="address-field" class="form-floating my-3">
-                                <p>{{ personal_form.address }}</p>
-                            </div>
+                             <p>{{ personal_form.address }}</p>
+                             <p>{{ personal_form.description }}</p>
+
+<!--                             <div class="form-floating my-3">            -->
+<!--                                <select class="form-control" id="delivery-method" name="delivery_method">-->
+<!--                                    <option value="delivery" >Доставка по адресу</option>-->
+<!--                                    <option value="pickup" selected>Самовывоз</option>-->
+<!--                                </select>-->
+<!--                             </div>-->
+<!--                             <div id="address-field" class="form-floating my-3">-->
+<!--                                <p>{{ personal_form.address }}</p>-->
+<!--                            </div>-->
                              <div class="policy-text">
                                 ВЫ согл. на обработку персональных данных <a href="#">privacy policy</a>.
                              </div>
@@ -64,35 +66,35 @@
                     </form>         
                 </div>
                    
-                <div id="business-form" style="display: none;">                    
-                    <form action="{% url 'orders:order_create' %}" method="post" name="checkout-form">
-                        {% csrf_token %}
-                        <input type="hidden" name="customer_type" value="business">
-                        <p>{{ business_form.company_name }} </p>   
-                        <p>{{ business_form.unp }} </p>   
-                        <p>{{ business_form.checking_account }} </p>   
-                        <p>{{ business_form.bic }} </p>   
-                        <p>{{ business_form.bank_name }} </p>   
-                        <p>{{ business_form.legal_address }} </p>   
-                        <p>{{ business_form.contact_person }} </p>                             
-                        <p>{{ business_form.email }} </p>   
-                        <p>{{ business_form.phone_number }} </p>   
-                        <p>{{ business_form.description }} </p>                           
-                        <div class="form-floating my-3">            
-                            <select class="form-control" id="delivery-method-business" name="delivery_method">
-                                <option value="delivery">Доставка по адресу</option>
-                                <option value="pickup" selected>Самовывоз</option>
-                            </select>
-                        </div>
-                        <div id="address-field-business" class="form-floating my-3">
-                            <p>{{ business_form.address }}</p>
-                        </div>
-                        <div class="policy-text">
-                          ВЫ согл. на обработку персональных данных <a href="#">privacy policy</a>.
-                        </div>
-                        <button class="btn btn-primary btn-checkout" type="submit">Оформить заказ</button>
-                    </form>    
-                </div>
+<!--                <div id="business-form" style="display: none;">                    -->
+<!--                    <form action="{% url 'orders:order_create' %}" method="post" name="checkout-form">-->
+<!--                        {% csrf_token %}-->
+<!--                        <input type="hidden" name="customer_type" value="business">-->
+<!--                        <p>{{ business_form.company_name }} </p>   -->
+<!--                        <p>{{ business_form.unp }} </p>   -->
+<!--                        <p>{{ business_form.checking_account }} </p>   -->
+<!--                        <p>{{ business_form.bic }} </p>   -->
+<!--                        <p>{{ business_form.bank_name }} </p>   -->
+<!--                        <p>{{ business_form.legal_address }} </p>   -->
+<!--                        <p>{{ business_form.contact_person }} </p>                             -->
+<!--                        <p>{{ business_form.email }} </p>   -->
+<!--                        <p>{{ business_form.phone_number }} </p>   -->
+<!--                        <p>{{ business_form.description }} </p>                           -->
+<!--                        <div class="form-floating my-3">            -->
+<!--                            <select class="form-control" id="delivery-method-business" name="delivery_method">-->
+<!--                                <option value="delivery">Доставка по адресу</option>-->
+<!--                                <option value="pickup" selected>Самовывоз</option>-->
+<!--                            </select>-->
+<!--                        </div>-->
+<!--                        <div id="address-field-business" class="form-floating my-3">-->
+<!--                            <p>{{ business_form.address }}</p>-->
+<!--                        </div>-->
+<!--                        <div class="policy-text">-->
+<!--                          ВЫ согл. на обработку персональных данных <a href="#">privacy policy</a>.-->
+<!--                        </div>-->
+<!--                        <button class="btn btn-primary btn-checkout" type="submit">Оформить заказ</button>-->
+<!--                    </form>    -->
+<!--                </div>-->
                 
             </div>
           </div>
@@ -122,14 +124,14 @@
                 </table>
                 <table class="checkout-totals">
                   <tbody>
-                    <tr>
-                      <th>ИТОГО</th>
-                      <td align="right">{{ cart.get_total_price }} BYN</td>
-                    </tr>
-                    <tr>
-                      <th>ДОСТАВКА</th>
-                      <td align="right">Free shipping</td>
-                    </tr>
+<!--                    <tr>-->
+<!--                      <th>ИТОГО</th>-->
+<!--                      <td align="right">{{ cart.get_total_price }} BYN</td>-->
+<!--                    </tr>-->
+<!--                    <tr>-->
+<!--                      <th>ДОСТАВКА</th>-->
+<!--                      <td align="right">Free shipping</td>-->
+<!--                    </tr>-->
                     <tr>
                     {% if cart.coupon %}
                         <th>Скидка</th>
@@ -141,7 +143,7 @@
 
                     </tr>
                     <tr>
-                        <th>Итого к оплате</th>
+                            <th>ИТОГО К ОПЛАТЕ</th>
                         <td align="right">{{ cart.get_total_price_after_discount|floatformat:2 }} BYN</td>
                     </tr>
                     {% else %}
@@ -153,26 +155,26 @@
                   </tbody>
                 </table>
               </div>
-              <div class="checkout__payment-methods">
-                <div class="form-check">
-                  <input class="form-check-input form-check-input_fill" type="radio" name="checkout_payment_method" id="checkout_payment_method_3">
-                  <label class="form-check-label" for="checkout_payment_method_3">
-                    Самовывоз                  
-                  </label>
-                </div>
-                <div class="form-check">
-                  <input class="form-check-input form-check-input_fill" type="radio" name="checkout_payment_method" id="checkout_payment_method_4">
-                  <label class="form-check-label" for="checkout_payment_method_4">
-                    Доставка по адресу
-                    <p class="option-detail">
-                      <input class="form-check-input form-check-input_fill" type="text" name="checkout_payment_method" id="checkout_payment_method_4">
-                    </p>
-                  </label>
-                </div>
-                <div class="policy-text">
-                  ВЫ согл. на обработку персональных данных <a href="#">privacy policy</a>.
-                </div>
-              </div>              
+<!--              <div class="checkout__payment-methods">-->
+<!--                <div class="form-check">-->
+<!--                  <input class="form-check-input form-check-input_fill" type="radio" name="checkout_payment_method" id="checkout_payment_method_3">-->
+<!--                  <label class="form-check-label" for="checkout_payment_method_3">-->
+<!--                    Самовывоз                  -->
+<!--                  </label>-->
+<!--                </div>-->
+<!--                <div class="form-check">-->
+<!--                  <input class="form-check-input form-check-input_fill" type="radio" name="checkout_payment_method" id="checkout_payment_method_4">-->
+<!--                  <label class="form-check-label" for="checkout_payment_method_4">-->
+<!--                    Доставка по адресу-->
+<!--                    <p class="option-detail">-->
+<!--                      <input class="form-check-input form-check-input_fill" type="text" name="checkout_payment_method" id="checkout_payment_method_4">-->
+<!--                    </p>-->
+<!--                  </label>-->
+<!--                </div>-->
+<!--                <div class="policy-text">-->
+<!--                  ВЫ согл. на обработку персональных данных <a href="#">privacy policy</a>.-->
+<!--                </div>-->
+<!--              </div>              -->
             </div>
           </div>
         </div>

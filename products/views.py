@@ -31,6 +31,9 @@ def products(request, category_slug=None, page=1):
         'images': images,
         'cart_product_form': cart_product_form,
         'active_category_id': active_category_id,
+        'meta_keywords': 'купить электротовары по хорошим ценам',
+        'meta_description': 'Интернет магазин электротоваров',
+        'title': 'Каталог товаров',
         'category_types': {category.id: 'parent' if category.children.exists() else 'child' for category in categories},
         'title': 'Каталог товаров',
         }
@@ -51,19 +54,23 @@ def product_list(request):
 
 def product_detail(request, category_slug):
     categories = ProductCategory.objects.filter(parent=None)  # Получение корневых категорий
-    products = Product.objects.filter(slug=category_slug)
+    product = get_object_or_404(Product, slug=category_slug)
     images = ProductImage.objects.filter(product__slug=category_slug)
     contents = Content.objects.all()
     cart_product_form = CartAddProductForm()
     review_form = ReviewForm()
     reviews = Review.objects.filter(product__slug=category_slug)
-    context = {'products': products,
+    context = {'product': product,
                'top_categories': categories,
                'images': images,
                'cart_product_form': cart_product_form,
                'review_form': review_form,
                'reviews': reviews,
-               'contents': contents}
+               'contents': contents,
+               'meta_keywords': product.meta_keywords,
+               'meta_description': product.meta_description,
+               'title': product.name,
+               }
     return render(request, 'products/product_detail.html', context)
 
 
@@ -83,3 +90,18 @@ def quick_view(request, product_id):
     }
     # Возвращаем JsonResponse с данными о товаре
     return JsonResponse(data)
+
+def product_search(request):
+    query = request.GET.get('q')
+    if query:
+        products = Product.objects.filter(name__icontains=query)
+    else:
+        products = None
+    context = {
+        'products': products,
+        'meta_keywords': 'купить электротовары по хорошим ценам',
+        'meta_description': 'Интернет магазин электротоваров',
+        'title': 'Поиск товаров',
+
+    }
+    return render(request, 'products/search_results.html', context)

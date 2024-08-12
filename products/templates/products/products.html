@@ -21,7 +21,7 @@
        <div class="container_product">
             {% for category in top_categories %}
             <div class="box_product {% if category.id == active_category_id %}active{% endif %}" data-category-id="{{ category.id }}">
-                <div class="label_product" data-category-id="{{ category.id }}">{{ category.name }}</div>
+                <a href="{% url 'products:category' category.slug %}"><div class="label_product" data-category-id="{{ category.id }}">{{ category.name }}</div></a>
                 <div class="content_product" data-category-id="{{ category.id }}">
                     {% for child in category.children.all %}
                     <p><a href="{% url 'products:category' child.slug %}" class="menu-link py-1 {% if child.id == active_category_id %}active{% endif %}" data-category-id="{{ category.id }}">{{ child.name }}</a></p>
@@ -79,7 +79,7 @@
             <div class="product-card product-card_style9 border rounded-3 mb-3 mb-md-4 mb-xxl-5">
               <div class="position-relative pb-3">
                 <div class="pc__img-wrapper pc__img-wrapper_wide3">
-                  <a href="{% url 'products:product_detail' product.slug %}"><img loading="lazy" src="{{ product.image.url }}" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img"></a>
+                  <a href="{{ product.get_absolute_url }}"><img loading="lazy" src="{{ product.image.url }}" width="256" height="201" alt="Cropped Faux leather Jacket" class="pc__img"></a>
                 </div>
                 <div class="anim_appear-bottom position-absolute w-100 text-center">
                   <button class="btn btn-round btn-hover-red border-0 text-uppercase me-2 js-add-cart js-add-cart-cust js-open-aside " data-aside="cartDrawer" title="Add To Cart" data-product-id="{{ product.id }}">
@@ -97,7 +97,7 @@
 
               <div class="pc__info position-relative">
                 <p class="pc__category">{{ product.category.name }}</p>
-                <h6 class="pc__title"><a href="./product1_simple.html">{{ product.name }}</a></h6>
+                <h6 class="pc__title"><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h6>
                 <div class="product-card__review d-sm-flex align-items-center">
                   <div class="reviews-group d-flex">
                     <svg class="review-star" viewBox="0 0 9 9" xmlns="http://www.w3.org/2000/svg"><use href="#icon_star" /></svg>
@@ -130,22 +130,31 @@
         </div><!-- /.products-grid row -->
 
         <nav class="shop-pages d-flex justify-content-between mt-3" aria-label="Page navigation">
-          <a href="{% if products.has_previous %}{% url 'products:paginator' products.previous_page_number %}{% else %}#{% endif %}" class="btn-link d-inline-flex align-items-center">
-            <svg class="me-1" width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_prev_sm" /></svg>
-            <span class="fw-medium" {% if not products.has_previos %} disabled {% endif %}>Предыдущая</span>
-          </a>
-          <ul class="pagination mb-0">
-            {% for page in products.paginator.page_range %}              
-            <li class="page-item"><a class="btn-link px-1 mx-2" href="{% url 'products:paginator' page %}">{{ page }}</a></li>
-            {% endfor %}  
-{#            <li class="page-item"><a class="btn-link px-1 mx-2 btn-link_active" href="#">1</a></li>#}
-
-          </ul>
-          <a href="{% if products.has_next %}{% url 'products:paginator' products.next_page_number %}{% else %}#{% endif %}" class="btn-link d-inline-flex align-items-center">
-            <span class="fw-medium me-1" {% if not products.has_next %} disabled {% endif %}>Следующая</span>
-            <svg width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_next_sm" /></svg>
-          </a>
+            <a href="{% if products.has_previous %}{% url 'products:paginator' products.previous_page_number %}{% else %}#{% endif %}" class="btn-link d-inline-flex align-items-center">
+                <svg class="me-1" width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_prev_sm" /></svg>
+                <span class="fw-medium" {% if not products.has_previous %} disabled {% endif %}>Предыдущая</span>
+            </a>
+            <ul class="pagination mb-0">
+                {% for page in products.paginator.page_range %}
+                    {% if page <= 10 %}
+                        {% if page == products.number %}
+                            <li class="page-item active"><span> {{ page }}</span></li>
+                        {% else %}
+                            <li class="page-item"><a class="btn-link px-1 mx-2" href="{% url 'products:paginator' page %}">{{ page }}</a></li>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+                {% if products.paginator.num_pages > 10 %}
+                    <li class="page-item"><span>...</span></li>
+                    <li class="page-item"><a class="btn-link px-1 mx-2" href="{% url 'products:paginator' products.paginator.num_pages %}">{{ products.paginator.num_pages }}</a></li>
+                {% endif %}
+            </ul>
+            <a href="{% if products.has_next %}{% url 'products:paginator' products.next_page_number %}{% else %}#{% endif %}" class="btn-link d-inline-flex align-items-center">
+                <span class="fw-medium me-1" {% if not products.has_next %} disabled {% endif %}>Следующая</span>
+                <svg width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_next_sm" /></svg>
+            </a>
         </nav>
+
       </div>
     </section><!-- /.shop-main container -->
   </main>

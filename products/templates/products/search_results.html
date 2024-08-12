@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block content %}
+
+    <h3>Поиск товаров</h3>
+    <form method="get" action="{% url 'products:product_search' %}">
+        <input type="text" name="q" placeholder="Поиск товаров" value="{{ request.GET.q }}">
+        <button type="submit">Поиск товаров</button>
+    </form>
+
+    <ul>
+        {% for product in products %}
+        {% if product.available == True %}
+            <li>
+                <a href="{% url 'products:product_detail' product.slug %}"> {{ product.name }} </a>
+            </li>
+        {% endif %}
+        {% empty %}
+            <li>По данному запросу товаров не найдено</li>
+        {% endfor %}
+    </ul>
+{% endblock %}

@@ -94,69 +94,72 @@
                 {% csrf_token %}
                 {{ coupon_apply_form.code }}
               <input class="btn-link fw-medium position-absolute top-0 end-0 h-100 px-4" type="submit" value="ПРИМЕНИТЬ">
-            </form>            
-            <button form="update" type="submit" class="btn btn-light">ОБНОВИТЬ КОРЗИНУ</button>
+            </form>
+<!--            <button form="update" type="submit" class="btn btn-light">{{ cart.get_total_price }} BYN ОФОРМИТЬ</button>-->
+            <a href='{% url "orders:order_create" %}'>
+              <button class="btn btn-primary btn-checkout form-check " >Итого {{ cart.get_total_price }} BYN ОФОРМИТЬ ЗАКАЗ</button>
+            </a>
           </div>
         </div>
-        <div class="shopping-cart__totals-wrapper">
-          <div class="sticky-content">
-            <div class="shopping-cart__totals">
-              <h3>ИТОГОВАЯ СТОИМОСТЬ</h3>
-              <table class="cart-totals">
-                <tbody>
-                  <tr>
-                    <th>Итого</th>
-                    <td>{{ cart.get_total_price }}</td>
-                  </tr>
-                  <tr>
-                    <th>Доставка</th>
-                    <td>
-                      <div class="form-check">
-                        <input class="form-check-input form-check-input_fill" type="checkbox" value="" id="free_shipping" >
-                        <label class="form-check-label" for="free_shipping">Доставка по адресу</label>
-                      </div>
-                      <div class="form-check">
-                        <input class="form-check-input form-check-input_fill" type="checkbox" value="" id="flat_rate" >
-                        <label class="form-check-label" for="flat_rate">Самовывоз</label>
-                      </div>
-                      <div>Адрес доставки</div>
-                      <div>
-                        <a href="#" class="menu-link menu-link_us-s">Изменить</a>
-                      </div>
-                    </td>
-                  </tr>
-                  <tr>
-                    {% if cart.coupon %}
-                        <th>Скидка</th>
-                        <td>– {{ cart.get_discount|floatformat:2 }}</td>
-                  </tr>
-                  <tr>
-                        <th>"{{ cart.coupon.code }}" Промокод</th>
-                        <td>– {{ cart.coupon.discount }}% </td>
+<!--        <div class="shopping-cart__totals-wrapper">-->
+<!--          <div class="sticky-content">-->
+<!--            <div class="shopping-cart__totals">-->
+<!--              <h3>ИТОГОВАЯ СТОИМОСТЬ</h3>-->
+<!--              <table class="cart-totals">-->
+<!--                <tbody>-->
+<!--                  <tr>-->
+<!--                    <th>Итого</th>-->
+<!--                    <td>{{ cart.get_total_price }}</td>-->
+<!--                  </tr>-->
+<!--                  <tr>-->
+<!--                    <th>Доставка</th>-->
+<!--                    <td>-->
+<!--                      <div class="form-check">-->
+<!--                        <input class="form-check-input form-check-input_fill" type="checkbox" value="" id="free_shipping" >-->
+<!--                        <label class="form-check-label" for="free_shipping">Доставка по адресу</label>-->
+<!--                      </div>-->
+<!--                      <div class="form-check">-->
+<!--                        <input class="form-check-input form-check-input_fill" type="checkbox" value="" id="flat_rate" >-->
+<!--                        <label class="form-check-label" for="flat_rate">Самовывоз</label>-->
+<!--                      </div>-->
+<!--                      <div>Адрес доставки</div>-->
+<!--                      <div>-->
+<!--                        <a href="#" class="menu-link menu-link_us-s">Изменить</a>-->
+<!--                      </div>-->
+<!--                    </td>-->
+<!--                  </tr>-->
+<!--                  <tr>-->
+<!--                    {% if cart.coupon %}-->
+<!--                        <th>Скидка</th>-->
+<!--                        <td>– {{ cart.get_discount|floatformat:2 }}</td>-->
+<!--                  </tr>-->
+<!--                  <tr>-->
+<!--                        <th>"{{ cart.coupon.code }}" Промокод</th>-->
+<!--                        <td>– {{ cart.coupon.discount }}% </td>-->
 
-                  </tr>
-                    <th>Итого к оплате</th>
-                    <td>{{ cart.get_total_price_after_discount|floatformat:2 }}</td>
-                  </tr>
-                    {% else %}
-                  <tr>
-                    <th>Итого к оплате</th>
-                    <td>{{ cart.get_total_price }} BYN</td>
-                  </tr>
-                    {% endif %}
+<!--                  </tr>-->
+<!--                    <th>Итого к оплате</th>-->
+<!--                    <td>{{ cart.get_total_price_after_discount|floatformat:2 }}</td>-->
+<!--                  </tr>-->
+<!--                    {% else %}-->
+<!--                  <tr>-->
+<!--                    <th>Итого к оплате</th>-->
+<!--                    <td>{{ cart.get_total_price }} BYN</td>-->
+<!--                  </tr>-->
+<!--                    {% endif %}-->
 
-                </tbody>
-              </table>
-            </div>
-            <div class="mobile_fixed-btn_wrapper">
-              <div class="button-wrapper container">
-                <a href='{% url "orders:order_create" %}'>
-                  <button class="btn btn-primary btn-checkout form-check " >ОФОРМИТЬ ЗАКАЗ</button>
-                </a>  
-              </div>
-            </div>
-          </div>
-        </div>
+<!--                </tbody>-->
+<!--              </table>-->
+<!--            </div>-->
+<!--            <div class="mobile_fixed-btn_wrapper">-->
+<!--              <div class="button-wrapper container">-->
+<!--                <a href='{% url "orders:order_create" %}'>-->
+<!--                  <button class="btn btn-primary btn-checkout form-check " >ОФОРМИТЬ ЗАКАЗ</button>-->
+<!--                </a>  -->
+<!--              </div>-->
+<!--            </div>-->
+<!--          </div>-->
+<!--        </div>-->
       </div>
     </section>
   </main>

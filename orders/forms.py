@@ -20,10 +20,10 @@ from orders.models import Order
 
 class PersonalOrderForm(forms.ModelForm):
     contact_person = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'ФИО'}))
-    address = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Адрес доставки'}))
+    address = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Адрес доставки'}), required=False)
     email = forms.EmailField(widget=forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'you@example.com'}))
     phone_number = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': '+375(29)1112233'}))
-    description = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Примечание к заказу'}))
+    description = forms.CharField(widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Примечание к заказу'}), required=False)
 
 
 
