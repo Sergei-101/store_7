@@ -50,7 +50,7 @@
           </div>
           <div class="order-info__item">
             <label>Итого</label>
-            <span>${{ order.total_cost }}</span>
+            <span>{{ order.total_cost }} BYN</span>
           </div>
           <div class="order-info__item">
             <label>Метод оплаты</label>
@@ -59,7 +59,7 @@
         </div>
         <div class="checkout__totals-wrapper">
           <div class="checkout__totals">
-            <h3>Order Details</h3>
+            <h3>Детали заказа</h3>
             <table class="checkout-cart-items">
               <thead>
                 <tr>
@@ -74,7 +74,7 @@
                     {{ item.product }} x {{ item.quantity }}
                   </td>
                   <td align="right">
-                    $ {{ item.total }}
+                     {{ item.total }} BYN
                   </td>
                 </tr>
                 {% endfor %}
@@ -89,7 +89,7 @@
                 </tr>                
                 <tr>
                   <th>ИТОГО К ОПЛАТЕ</th>
-                  <td align="right">${{ order.total_cost }}</td>
+                  <td align="right">{{ order.total_cost }} BYN</td>
                 </tr>
               </tbody>
             </table>

@@ -32,6 +32,7 @@ def products(request, category_slug=None, page=1):
         'cart_product_form': cart_product_form,
         'active_category_id': active_category_id,
         'category_types': {category.id: 'parent' if category.children.exists() else 'child' for category in categories},
+        'title': 'Каталог товаров',
         }
     return render(request, 'products/products.html', context)
 

@@ -1,11 +1,13 @@
 {% extends 'base.html' %}
 {% load static %}
 
+{% block title %} {% for product in products %}{{ product.name }} {% endfor %}{% endblock  %}
+
 {% block content %}
 
 	  <main>
     <div class="mb-md-1 pb-md-3"></div>
-          
+         
     {% for product in products %}     
     <section class="product-single container">
       <div class="row">
