@@ -5,7 +5,8 @@ from django.urls import reverse
 
 def order_detail(obj):
     url = reverse('orders:admin_order_detail', args=[obj.id])
-    return mark_safe(f'<a href="{url}">View</a>')
+    return mark_safe(f'<a href="{url}">Детали</a>')
+    
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
