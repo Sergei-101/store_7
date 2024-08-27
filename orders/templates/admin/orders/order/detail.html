@@ -16,77 +16,74 @@
 
 {% block content %}
 <div class="module">
-  <h1>Order {{ order.id }}</h1>
+  <h1>Заказ {{ order.id }}</h1>
   <ul class="object-tools">
     <li>
       <a href="#" onclick="window.print();">
-        Print order
+        Распечатать заказ
       </a>
     </li>
   </ul>
   <table>
     <tr>
-      <th>Created</th>
+      <th>Дата заказа</th>
       <td>{{ order.created }}</td>
     </tr>
     <tr>
-      <th>Customer</th>
-      <td>{{ order.first_name }} {{ order.last_name }}</td>
+      <th>Клиент</th>
+      <td>{{ order.contact_person }}</td>
+    </tr>
+    <tr>
+      <th>Телефон</th>
+      <td>{{ order.phone_number }}</td>
     </tr>
     <tr>
       <th>E-mail</th>
       <td><a href="mailto:{{ order.email }}">{{ order.email }}</a></td>
     </tr>
     <tr>
-      <th>Address</th>
+      <th>Адрес доставки</th>
     <td>
       {{ order.address }},
       {{ order.postal_code }} {{ order.city }}
     </td>
     </tr>
     <tr>
-      <th>Total amount</th>
-      <td>${{ order.get_total_cost }}</td>
+      <th>Стоимость заказа</th>
+      <td>{{ order.total_cost }} BYN</td>
     </tr>
     <tr>
-      <th>Status</th>
-      <td>{% if order.paid %}Paid{% else %}Pending payment{% endif %}</td>
+      <th>Статус заказа</th>
+      <td>{{ order.status }}</td>
     </tr>
-    <tr>
-      <th>Stripe payment</th>
-      <td>
-        {% if order.stripe_id %}
-          <a href="{{ order.get_stripe_url }}" target="_blank">
-            {{ order.stripe_id }}
-          </a>
-        {% endif %}
-      </td>
-    </tr>
+    
   </table>
 </div>
 <div class="module">
-  <h2>Items bought</h2>
+  <h2>Купленные товары</h2>
   <table style="width:100%">
     <thead>
       <tr>
-        <th>Product</th>
-        <th>Price</th>
-        <th>Quantity</th>
-        <th>Total</th>
+        <th>Картинка</th>
+        <th>Товар</th>
+        <th>Цена</th>
+        <th>Кол-во</th>
+        <th>Итого</th>
       </tr>
     </thead>
     <tbody>
       {% for item in order.items.all %}
         <tr class="row{% cycle "1" "2" %}">
+          <td><img loading="lazy" src="{{ item.product.image.url }}" width="120" height="120" alt="" /></td>
           <td>{{ item.product.name }}</td>
-          <td class="num">${{ item.price }}</td>
+          <td class="num">{{ item.price }} BYN</td>
           <td class="num">{{ item.quantity }}</td>
-          <td class="num">${{ item.get_cost }}</td>
+          <td class="num">{{ item.get_cost }} BYN</td>
         </tr>
       {% endfor %}
       <tr class="total">
-        <td colspan="3">Total</td>
-        <td class="num">${{ order.get_total_cost }}</td>
+        <td colspan="4">Итого</td>
+        <td class="num">{{ order.total_cost }} BYN</td>
       </tr>
     </tbody>
   </table>
