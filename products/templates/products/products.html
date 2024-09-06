@@ -21,7 +21,7 @@
        <div class="container_product">
             {% for category in top_categories %}
             <div class="box_product {% if category.id == active_category_id %}active{% endif %}" data-category-id="{{ category.id }}">
-                <a href="{% url 'products:category' category.slug %}"><div class="label_product" data-category-id="{{ category.id }}">{{ category.name }}</div></a>
+                <a href=""><div class="label_product" data-category-id="{{ category.id }}">{{ category.name }}</div></a>
                 <div class="content_product" data-category-id="{{ category.id }}">
                     {% for child in category.children.all %}
                     <p><a href="{% url 'products:category' child.slug %}" class="menu-link py-1 {% if child.id == active_category_id %}active{% endif %}" data-category-id="{{ category.id }}">{{ child.name }}</a></p>
