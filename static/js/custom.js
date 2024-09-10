@@ -282,74 +282,52 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Аккордеон меню боковое
 // JavaScript
-document.addEventListener('DOMContentLoaded', function () {
-    // Восстанавливаем активные элементы из localStorage
-    var activeAccordionItems = localStorage.getItem('activeAccordionItems');
-    if (activeAccordionItems) {
-        activeAccordionItems = JSON.parse(activeAccordionItems);
-        activeAccordionItems.forEach(function (categoryId) {
-            var element = document.querySelector('.box_product[data-category-id="' + categoryId + '"]');
-            if (element) {
-                element.classList.add('active');
-                var content = element.querySelector('.content_product');
-                if (content) {
-                    content.style.maxHeight = content.scrollHeight + "px";
-                }
-            }
-        });
-    }
+// document.addEventListener('DOMContentLoaded', function () {
+//     var activeAccordionItems = localStorage.getItem('activeAccordionItems');
+//     if (activeAccordionItems) {
+//         activeAccordionItems = JSON.parse(activeAccordionItems);
+//         activeAccordionItems.forEach(function (categoryId) {
+//             var element = document.querySelector('.box_product[data-category-id="' + categoryId + '"]');
+//             if (element) {
+//                 element.classList.add('active');
+//                 var content = element.querySelector('.content_product');
+//                 content.style.maxHeight = content.scrollHeight + "px";
+//             }
+//         });
+//     }
+// });
 
-    const boxes = Array.from(document.querySelectorAll(".box_product"));
+// const boxes = Array.from(document.querySelectorAll(".box_product"));
 
-    boxes.forEach((box) => {
-        box.addEventListener("click", function(e) {
-            let currentBox = e.currentTarget;
-            let currentContent = currentBox.querySelector(".content_product");
-            let currentCategoryId = currentBox.getAttribute('data-category-id');
-            let currentCategoryType = currentBox.getAttribute('data-category-type');
+// boxes.forEach((box) => {
+//     box.addEventListener("click", boxHandler);
+// });
 
-            // Для родительской категории скрываем другие аккордеоны
-            if (currentCategoryType === 'parent') {
-                boxes.forEach((otherBox) => {
-                    if (otherBox !== currentBox) {
-                        otherBox.classList.remove('active');
-                        let otherContent = otherBox.querySelector('.content_product');
-                        if (otherContent) {
-                            otherContent.style.maxHeight = null;
-                        }
-                    }
-                });
-            }
+// function boxHandler(e) {
+//     let currentBox = e.currentTarget;
+//     let currentContent = currentBox.querySelector(".content_product");
+//     let currentCategoryId = currentBox.getAttribute('data-category-id');
+//     let currentCategoryType = currentBox.getAttribute('data-category-type');
 
-            // Переключаем активный класс
-            currentBox.classList.toggle("active");
+//     if (currentCategoryType === 'parent') {
+//         // Если категория родительская, скрываем все аккордеоны, кроме текущего
+//         boxes.forEach((otherBox) => {
+//             if (otherBox !== currentBox) {
+//                 otherBox.classList.remove('active');
+//                 otherBox.querySelector('.content_product').style.maxHeight = null;
+//             }
+//         });
+//     }
 
-            // Управление высотой контента
-            if (currentBox.classList.contains("active")) {
-                currentContent.style.maxHeight = currentContent.scrollHeight + "px";
-            } else {
-                currentContent.style.maxHeight = 0;
-            }
+//     currentBox.classList.toggle("active");
 
-            // Обновляем состояние активных категорий в localStorage
-            let activeCategories = Array.from(document.querySelectorAll('.box_product.active')).map(box => box.getAttribute('data-category-id'));
-            localStorage.setItem('activeAccordionItems', JSON.stringify(activeCategories));
-        });
-    });
+//     if (currentBox.classList.contains("active")) {
+//         currentContent.style.maxHeight = currentContent.scrollHeight + "px";
+//     } else {
+//         currentContent.style.maxHeight = 0;
+//     }
 
-    // Подсвечиваем активную дочернюю категорию
-    var activeLink = document.querySelector('.menu-link.active');
-    if (activeLink) {
-        // Подсвечиваем родительскую категорию, если есть активная дочерняя
-        var parentBox = activeLink.closest('.box_product');
-        if (parentBox) {
-            parentBox.classList.add('active');
-            var parentContent = parentBox.querySelector('.content_product');
-            if (parentContent) {
-                parentContent.style.maxHeight = parentContent.scrollHeight + "px";
-            }
-        }
-    }
-});
-
-
+//     // Сохраняем состояние активных категорий в localStorage
+//     let activeCategories = Array.from(document.querySelectorAll('.box_product.active')).map(box => box.getAttribute('data-category-id'));
+//     localStorage.setItem('activeAccordionItems', JSON.stringify(activeCategories));
+// }

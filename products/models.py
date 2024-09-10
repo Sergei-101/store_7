@@ -19,6 +19,12 @@ class ProductCategory(models.Model):
 
     def get_absolute_url(self):
         return reverse('products:category', kwargs={'category_slug':self.slug})
+    
+    def has_children(self):
+        return self.children.exists()  # Возвращает True, если есть дочерние категории
+    
+    def get_sorted_children(self):
+        return self.children.all().order_by('name')  # сортировка по имени
 
     def __str__(self):
         return self.name
@@ -91,6 +97,7 @@ class Product(models.Model):
     slug = models.SlugField(max_length=255, unique=True)
     image = models.ImageField(upload_to='product_images', blank=True, null=True, verbose_name="Изображение")
     description = models.TextField(blank=True,null=True,verbose_name="Описание")
+    description_2 = models.TextField(blank=True,null=True,verbose_name="Характеристики")
     quantity = models.IntegerField(default=0, verbose_name="Кол-во") # Активный товар
     unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True,blank=True ,verbose_name="Еденица измерения")
     weight = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, verbose_name="Вес")

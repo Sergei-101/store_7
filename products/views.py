@@ -16,25 +16,24 @@ from slugify import slugify
 
 
 def products(request, category_slug=None, page=1):
-    categories = ProductCategory.objects.filter(parent=None)  # Получение корневых категорий
+    categories = ProductCategory.objects.filter(parent=None).order_by('name')  # Получение корневых категорий, сортировка по алфавиту
     products = Product.objects.filter(category__slug=category_slug, available=True) if category_slug else Product.objects.filter(available=True)
     per_page = 25
     paginator = Paginator(products, per_page)
     products_paginator = paginator.page(page)
     images = ProductImage.objects.all()
-    cart_product_form = CartAddProductForm()
-    # Получаем ID активной категории из URL
-    active_category_id = request.resolver_match.kwargs.get('category_id')
+    cart_product_form = CartAddProductForm()    
+    
+    
     context = {
         'products': products_paginator,
         'top_categories': categories,
         'images': images,
-        'cart_product_form': cart_product_form,
-        'active_category_id': active_category_id,
+        'cart_product_form': cart_product_form,        
         'meta_keywords': 'купить электротовары по хорошим ценам',
         'meta_description': 'Интернет магазин электротоваров',
         'title': 'Каталог товаров',
-        'category_types': {category.id: 'parent' if category.children.exists() else 'child' for category in categories},
+        'current_slug': category_slug,               
         }
     return render(request, 'products/products.html', context)
 

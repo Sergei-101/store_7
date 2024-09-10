@@ -1,4 +1,5 @@
 import csv
+from decimal import Decimal
 from django.contrib import admin
 from django.http import HttpResponse
 from products.models import Product, ProductCategory, ProductImage, Promotion, CSVFile, Supplier, Unit, Characteristic, CharacteristicCategory
@@ -6,7 +7,9 @@ from slugify import slugify
 from products.forms import ProductForm
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.db import models
-from django.forms import SelectMultiple
+from django.forms import DecimalField, SelectMultiple
+
+
 
 admin.site.register(Supplier)
 admin.site.register(Promotion)
@@ -58,6 +61,7 @@ class ProductCategoryAdmin(admin.ModelAdmin):
     prepopulated_fields = {'slug': ('name',)}
 
 
+
 class CSVFileAdmin(admin.ModelAdmin):
     actions = ['handle_uploaded_csv']
 
@@ -72,32 +76,29 @@ class CSVFileAdmin(admin.ModelAdmin):
             for row in reader:
                 categories = row[4].split(',')
                 parent_category = None
-
-                # Создание иерархии категорий с проверкой уникальности name и slug
+                
+                # Создание иерархии категорий
                 for category_name in categories:
                     category_name = category_name.strip()
-                    slug = slugify(category_name)
-
-                    # Ищем категорию с тем же именем и slug, если она существует
-                    category, created = ProductCategory.objects.get_or_create(
+                    parent_category, created = ProductCategory.objects.get_or_create(
                         name=category_name,
-                        slug=slug,
+                        slug=slugify(category_name),
                         parent=parent_category
                     )
+                
 
-                    parent_category = category  # Обновляем parent для следующей итерации
-
-                # Данные для создания продукта
+                
                 name = row[0]
-                base_price = 15
+                # base_price = row[1].replace(',', '.').strip()  # Заменяем запятую на точку
+                base_price = 10
                 description = row[2]
                 description_2 = row[3]
                 slug = slugify(name)
                 product_link = row[5]
                 image = row[6]
                 quantity = 10
-
-                # Проверка уникальности slug для продукта
+                print(f'{name} ----- price {base_price}-----тип {type(base_price)}')
+                # Проверка уникальности slug
                 original_slug = slug
                 counter = 1
                 while Product.objects.filter(slug=slug).exists():
