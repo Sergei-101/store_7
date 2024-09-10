@@ -65,45 +65,65 @@ class CSVFileAdmin(admin.ModelAdmin):
         for csv_file in queryset:
             decoded_file = csv_file.file.read().decode('utf-8').splitlines()
             reader = csv.reader(decoded_file, delimiter=';')
-            for row in reader:
-                categories = row[3].split(',')  # Разделение категорий через запятую
-                parent_category_name = categories[0].strip()  # Первая категория как родительская
-                parent_category, created = ProductCategory.objects.get_or_create(name=parent_category_name,
-                                                                                 slug=slugify(parent_category_name))
-                # Создание дочерних категорий, если указаны
-                for category_name in categories[1:]:
-                    category_name = category_name.strip()
-                    category, created = ProductCategory.objects.get_or_create(name=category_name,
-                                                                              slug=slugify(category_name),
-                                                                              parent=parent_category)
-                name = row[0]
-                base_price = row[1]
-                description = row[2]
-                slug = slugify(name)
-                quantity = row[4]
-                image = row[5]
 
+            # Пропускаем первую строку (заголовки)
+            next(reader)
+
+            for row in reader:
+                categories = row[4].split(',')
+                parent_category = None
+
+                # Создание иерархии категорий с проверкой уникальности name и slug
+                for category_name in categories:
+                    category_name = category_name.strip()
+                    slug = slugify(category_name)
+
+                    # Ищем категорию с тем же именем и slug, если она существует
+                    category, created = ProductCategory.objects.get_or_create(
+                        name=category_name,
+                        slug=slug,
+                        parent=parent_category
+                    )
+
+                    parent_category = category  # Обновляем parent для следующей итерации
+
+                # Данные для создания продукта
+                name = row[0]
+                base_price = 15
+                description = row[2]
+                description_2 = row[3]
+                slug = slugify(name)
+                product_link = row[5]
+                image = row[6]
+                quantity = 10
+
+                # Проверка уникальности slug для продукта
+                original_slug = slug
+                counter = 1
+                while Product.objects.filter(slug=slug).exists():
+                    slug = f'{original_slug}-{counter}'
+                    counter += 1
+
+                # Создание или обновление продукта
                 product, created = Product.objects.get_or_create(
                     name=name,
                     base_price=base_price,
                     description=description,
+                    description_2=description_2,
                     category=parent_category,
                     slug=slug,
                     quantity=quantity,
-                    image=image
+                    image=image,
+                    product_link=product_link
                 )
-                # images_paths = row[5].split(',') if row[5] else []
-                # for image_path in images_paths:
-                #     if image_path:
-                #         product_image = ProductImage(product=product, image=image_path.strip())
-                #         product_image.save()
 
-            # Пометить файл как обработанный
+            # Пометка файла как обработанного
             csv_file.processed = True
             csv_file.save()
 
         self.message_user(request, f"{queryset.count()} CSV файлов успешно обработаны.")
     handle_uploaded_csv.short_description = "Обработать выбранные CSV файлы"
+
 
 
 admin.site.register(CSVFile, CSVFileAdmin)
