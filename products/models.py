@@ -19,6 +19,12 @@ class ProductCategory(models.Model):
 
     def get_absolute_url(self):
         return reverse('products:category', kwargs={'category_slug':self.slug})
+    
+    def has_children(self):
+        return self.children.exists()  # Возвращает True, если есть дочерние категории
+    
+    def get_sorted_children(self):
+        return self.children.all().order_by('name')  # сортировка по имени
 
     def __str__(self):
         return self.name
