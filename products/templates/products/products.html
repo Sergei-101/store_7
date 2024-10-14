@@ -20,18 +20,31 @@
       {% for cat in top_categories %}
           <div class="accordion-item">
               <h2 class="accordion-header" id="heading{{ cat.id }}">
-                  <button class="accordion-button {% if cat.slug == current_slug %}active{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ cat.id }}" aria-expanded="{% if cat.slug == current_slug %}true{% else %}false{% endif %}">
-                      {% if cat.has_children %}{{ cat.name }}{% else %} <a href="{% url 'products:category' cat.slug %}">{{ cat.name }}</a> {% endif %}
+                  <button 
+                      class="accordion-button {% if cat.slug == current_slug or cat.id in ancestor_ids %}active-category{% endif %}" 
+                      type="button" 
+                      data-bs-toggle="collapse" 
+                      data-bs-target="#collapse{{ cat.id }}" 
+                      aria-expanded="{% if cat.slug == current_slug or cat.id in ancestor_ids %}true{% else %}false{% endif %}">
+                      {% if cat.has_children %}
+                          {{ cat.name }}
+                      {% else %}
+                          <a href="{% url 'products:category' cat.slug %}">{{ cat.name }}</a>
+                      {% endif %}
                   </button>
               </h2>
-              <div id="collapse{{ cat.id }}" class="accordion-collapse collapse {% if cat.slug == current_slug %}show{% endif %}" aria-labelledby="heading{{ cat.id }}">
+              <div id="collapse{{ cat.id }}" 
+                   class="accordion-collapse collapse {% if cat.slug == current_slug or cat.id in ancestor_ids %}show{% endif %}" 
+                   aria-labelledby="heading{{ cat.id }}">
                   <div class="accordion-body">
-                      {% include "products/category_recursive.html" with categories=cat.get_sorted_children current_slug=current_slug active_category_id=active_category_id %}
+                      {% include "products/category_recursive.html" with categories=cat.get_sorted_children current_slug=current_slug active_category_id=active_category_id ancestor_ids=ancestor_ids %}
                   </div>
               </div>
           </div>
       {% endfor %}
     </div>
+  
+  
   
     <div class="pt-2 pt-lg-0"></div>
        <!-- <div class="container_product">

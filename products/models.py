@@ -25,6 +25,18 @@ class ProductCategory(models.Model):
     
     def get_sorted_children(self):
         return self.children.all().order_by('name')  # сортировка по имени
+    
+    def get_ancestors(self):
+        """
+        Возвращает список всех родительских категорий, включая самого себя.
+        """
+        ancestors = []
+        category = self
+        while category.parent is not None:
+            ancestors.append(category.parent)
+            category = category.parent
+        return ancestors
+
 
     def __str__(self):
         return self.name

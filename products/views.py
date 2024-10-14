@@ -16,25 +16,45 @@ from slugify import slugify
 
 
 def products(request, category_slug=None, page=1):
-    categories = ProductCategory.objects.filter(parent=None).order_by('name')  # Получение корневых категорий, сортировка по алфавиту
+    # Получение всех корневых категорий (сортировка по алфавиту)
+    categories = ProductCategory.objects.filter(parent=None).order_by('name')
+    
+    # Получение выбранной категории, если передан её slug
+    selected_category = None
+    ancestors = []
+    
+    if category_slug:
+        selected_category = get_object_or_404(ProductCategory, slug=category_slug)
+        ancestors = selected_category.get_ancestors()  # Получение предков выбранной категории
+    
+    # Получение списка продуктов
     products = Product.objects.filter(category__slug=category_slug, available=True) if category_slug else Product.objects.filter(available=True)
+    
+    # Пагинация продуктов
     per_page = 25
     paginator = Paginator(products, per_page)
     products_paginator = paginator.page(page)
+    
+    # Получение всех изображений
     images = ProductImage.objects.all()
-    cart_product_form = CartAddProductForm()    
     
+    # Форма для добавления товара в корзину
+    cart_product_form = CartAddProductForm()
     
+    # Передача данных в контекст
     context = {
         'products': products_paginator,
         'top_categories': categories,
         'images': images,
-        'cart_product_form': cart_product_form,        
+        'cart_product_form': cart_product_form,
         'meta_keywords': 'купить электротовары по хорошим ценам',
         'meta_description': 'Интернет магазин электротоваров',
         'title': 'Каталог товаров',
-        'current_slug': category_slug,               
-        }
+        'current_slug': category_slug,
+        'ancestor_ids': [ancestor.id for ancestor in ancestors],  # Список предков для отображения в шаблоне
+        'selected_category': selected_category,  # Выбранная категория для использования в шаблоне
+    }
+    
     return render(request, 'products/products.html', context)
 
 def product_list(request):
