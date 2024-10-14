@@ -6,7 +6,7 @@
 
 {% block content %}
 <main>
-    <section class="swiper-container js-swiper-slider slideshow type3 slideshow-navigation-white-sm"
+      <section class="swiper-container js-swiper-slider slideshow type3 slideshow-navigation-white-sm"
       data-settings='{
         "autoplay": {
           "delay": 5000
@@ -25,26 +25,61 @@
         "loop": true
       }'>
       <div class="swiper-wrapper">
-        {% for slider in sliders %}
         <div class="swiper-slide">
           <div class="overflow-hidden position-relative h-100">
             <div class="slideshow-bg" style="background-color: #f5e6e0;">
-              <img loading="lazy" src="{{ slider.image.url }}" width="1903" height="560" alt="Pattern" class="slideshow-bg__img object-fit-cover">
+              <img loading="lazy" src="https://uomo-html.flexkitux.com/images/home/demo12/slideshow-pattern.png" width="1903" height="560" alt="Pattern" class="slideshow-bg__img object-fit-cover">
             </div>
             <div class="position-absolute left-0 right-0 bottom-0 top-0 container">
               <div class="slideshow-character position-absolute position-right-center mx-xl-5">
-                <img loading="lazy" src="#" width="518" height="329" alt="Woman Fashion 1" class="slideshow-character__img animate animate_fade animate_btt animate_delay-9 w-auto h-auto">
+                <img loading="lazy" src="../images/home/demo12/slideshow-character1.png" width="518" height="329" alt="Woman Fashion 1" class="slideshow-character__img animate animate_fade animate_btt animate_delay-9 w-auto h-auto">
               </div>
             </div>
             <div class="slideshow-text container position-absolute start-50 top-50 translate-middle">
-              <h6 class="text_dash text-uppercase fs-base fw-medium animate animate_fade animate_btt animate_delay-3 theme-color">{{ slider.text_1 }}</h6>
-              <h2 class="fs-50 fw-bold mb-2 mb-lg-3 animate animate_fade animate_btt animate_delay-5 lh-1 text-shadow-white theme-color-secondary">{{ slider.text_2 }}</h2>
-              <h2 class="fs-50 fw-bold mb-2 mb-lg-4 animate animate_fade animate_btt animate_delay-5 lh-1 text-shadow-white theme-color">{{ slider.text_3 }}</h2>
-              <a href="#" class="btn-link btn-link_lg default-underline fw-medium text-uppercase animate animate_fade animate_btt animate_delay-7">Подробнее</a>
+              <h6 class="text_dash text-uppercase fs-base fw-medium animate animate_fade animate_btt animate_delay-3 theme-color">Shop Our Freshest</h6>
+              <h2 class="fs-50 fw-bold mb-2 mb-lg-3 animate animate_fade animate_btt animate_delay-5 lh-1 text-shadow-white theme-color-secondary">Fresh Hand-Picked Vegetables</h2>
+              <h2 class="fs-50 fw-bold mb-2 mb-lg-4 animate animate_fade animate_btt animate_delay-5 lh-1 text-shadow-white theme-color">Everyday</h2>
+              <a href="./shop1.html" class="btn-link btn-link_lg default-underline fw-medium text-uppercase animate animate_fade animate_btt animate_delay-7">Discover More</a>
             </div>
           </div>
         </div><!-- /.slideshow-item -->
-        {% endfor %}
+        <div class="swiper-slide">
+          <div class="overflow-hidden position-relative h-100">
+            <div class="slideshow-bg" style="background-color: #f5e6e0;">
+              <img loading="lazy" src="../images/home/demo12/slideshow-pattern.png" width="1903" height="560" alt="Pattern" class="slideshow-bg__img object-fit-cover">
+            </div>
+            <div class="position-absolute left-0 right-0 bottom-0 top-0 container">
+              <div class="slideshow-character position-absolute position-right-center mx-xl-5">
+                <img loading="lazy" src="../images/home/demo12/slideshow-character1.png" width="518" height="329" alt="Woman Fashion 1" class="slideshow-character__img animate animate_fade animate_btt animate_delay-9 w-auto h-auto">
+              </div>
+            </div>
+            <div class="slideshow-text container position-absolute start-50 top-50 translate-middle">
+              <h6 class="text_dash text-uppercase fs-base fw-medium animate animate_fade animate_btt animate_delay-3 theme-color">Shop Our Freshest</h6>
+              <h2 class="fs-50 fw-bold mb-2 mb-lg-3 animate animate_fade animate_btt animate_delay-5 lh-1 text-shadow-white theme-color-secondary">Fresh Hand-Picked Vegetables</h2>
+              <h2 class="fs-50 fw-bold mb-2 mb-lg-4 animate animate_fade animate_btt animate_delay-5 lh-1 text-shadow-white theme-color">Everyday</h2>
+              <a href="./shop1.html" class="btn-link btn-link_lg default-underline fw-medium text-uppercase animate animate_fade animate_btt animate_delay-7">Discover More</a>
+            </div>
+          </div>
+        </div><!-- /.slideshow-item -->
+        <div class="swiper-slide">
+          <div class="overflow-hidden position-relative h-100">
+            <div class="slideshow-bg" style="background-color: #f5e6e0;">
+              <img loading="lazy" src="../images/home/demo12/slideshow-pattern.png" width="1903" height="560" alt="Pattern" class="slideshow-bg__img object-fit-cover">
+            </div>
+            <div class="position-absolute left-0 right-0 bottom-0 top-0 container">
+              <div class="slideshow-character position-absolute position-right-center mx-xl-5">
+                <img loading="lazy" src="../images/home/demo12/slideshow-character1.png" width="518" height="329" alt="Woman Fashion 1" class="slideshow-character__img animate animate_fade animate_btt animate_delay-9 w-auto h-auto">
+              </div>
+            </div>
+            <div class="slideshow-text container position-absolute start-50 top-50 translate-middle">
+              <h6 class="text_dash text-uppercase fs-base fw-medium animate animate_fade animate_btt animate_delay-3 theme-color">Shop Our Freshest</h6>
+              <h2 class="fs-50 fw-bold mb-2 mb-lg-3 animate animate_fade animate_btt animate_delay-5 lh-1 text-shadow-white theme-color-secondary">Fresh Hand-Picked Vegetables</h2>
+              <h2 class="fs-50 fw-bold mb-2 mb-lg-4 animate animate_fade animate_btt animate_delay-5 lh-1 text-shadow-white theme-color">Everyday</h2>
+              <a href="./shop1.html" class="btn-link btn-link_lg default-underline fw-medium text-uppercase animate animate_fade animate_btt animate_delay-7">Discover More</a>
+            </div>
+          </div>
+        </div><!-- /.slideshow-item -->
+        <div class="swiper-slide">
           <div class="overflow-hidden position-relative h-100">
             <div class="slideshow-bg" style="background-color: #f5e6e0;">
               <img loading="lazy" src="../images/home/demo12/slideshow-pattern.png" width="1903" height="560" alt="Pattern" class="slideshow-bg__img object-fit-cover">
@@ -81,23 +116,53 @@
       <div class="container">
         <div class="pb-2"></div>
         <div class="row">
-          {% for servis in servis_promotion %}
           <div class="col-md-6 col-xl-3 mb-5 mb-md-0 d-flex align-items-center justify-content-center gap-3">
             <div class="service-promotion__icon">
-              <svg class="theme-color" width="45" height="45" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="{{ servis.text_icon }}" /></svg>
+              <svg class="theme-color" width="45" height="45" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_shipping" /></svg>
             </div>
             <div class="service-promotion__content-wrap">
-              <h3 class="service-promotion__title h6 text-uppercase mb-1">{{ servis.name }}</h3>
-              <p class="service-promotion__content text-secondary mb-0">{{ servis.text_1 }}</p>
+              <h3 class="service-promotion__title h6 text-uppercase mb-1">Быстрая и бесплатная доствака</h3>
+              <p class="service-promotion__content text-secondary mb-0">Бесплатная доставка от 100 рублей</p>
             </div>
           </div><!-- /.col-md-6.col-xl-3 -->
-          {% endfor %}
+
+          <div class="col-md-6 col-xl-3 mb-5 mb-md-0 d-flex align-items-center justify-content-center gap-3">
+            <div class="service-promotion__icon">
+              <svg class="theme-color" width="45" height="45" viewBox="0 0 53 52" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_headphone" /></svg>
+            </div>
+            <div class="service-promotion__content-wrap">
+              <h3 class="service-promotion__title h6 text-uppercase mb-1">24/7 Поддержка</h3>
+              <p class="service-promotion__content text-secondary mb-0">Круглосуточная поддержка клиентов</p>
+            </div>
+          </div><!-- /.col-md-6.col-xl-3 -->
+
+          <div class="col-md-6 col-xl-3 mb-5 mb-md-0 d-flex align-items-center justify-content-center gap-3">
+            <div class="service-promotion__icon">
+              <svg class="theme-color" width="45" height="45" viewBox="0 0 52 52" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_shield" /></svg>
+            </div>
+            <div class="service-promotion__content-wrap">
+              <h3 class="service-promotion__title h6 text-uppercase mb-1">Гарантия возврата денег</h3>
+              <p class="service-promotion__content text-secondary mb-0">Вернем деньги в течении 30 дней</p>
+            </div>
+          </div><!-- /.col-md-6.col-xl-3 -->
+
+          <div class="col-md-6 col-xl-3 mb-5 mb-md-0 d-flex align-items-center justify-content-center gap-3">
+            <div class="service-promotion__icon">
+              <svg class="theme-color" width="45" height="45" viewBox="0 0 45 45" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_gift" /></svg>
+            </div>
+            <div class="service-promotion__content-wrap">
+              <h3 class="service-promotion__title h6 text-uppercase mb-1">Акции свои клиентам</h3>
+              <p class="service-promotion__content text-secondary mb-0">Акции каждую неделю</p>
+            </div>
+          </div><!-- /.col-md-6.col-xl-3 -->
         </div><!-- /.row -->
         <div class="pb-2"></div>
       </div>
     </section><!-- /.service-promotion container -->
 
     <div class="mb-3 mb-xl-5 pb-3 pt-1 pb-xl-5"></div>
+
+    
 
     <section class="products-grid">
       <div class="container">
