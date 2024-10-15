@@ -8,6 +8,10 @@ from products.forms import ProductForm
 from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.db import models
 from django.forms import DecimalField, SelectMultiple
+from icrawler.builtin import GoogleImageCrawler
+import os
+from django.conf import settings
+import shutil
 
 
 
@@ -28,14 +32,15 @@ class CharacteristicInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'base_price', 'quantity', 'category', 'id','available') # отоброжать поля
+    list_display = ('name', 'base_price', 'quantity', 'category', 'id', 'available')
     search_fields = ['name', 'category__name']
     prepopulated_fields = {'slug': ('name',)}
     inlines = [CharacteristicInline, ProductImageInline]
-    actions = ['export_to_csv']
+    actions = ['export_to_csv', 'download_images_for_products']
     form = ProductForm
 
-    def export_to_csv(modeladmin, request, queryset):
+    # Действие для экспорта в CSV
+    def export_to_csv(self, request, queryset):
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="products.csv"'
 
@@ -46,8 +51,45 @@ class ProductAdmin(admin.ModelAdmin):
             writer.writerow([product.name, product.slug, product.base_price, product.is_active, product.description, product.category])
 
         return response
-
     export_to_csv.short_description = "Выгрузить CSV"
+
+    # Действие для загрузки изображений
+    def download_images_for_products(self, request, queryset):
+        save_dir = os.path.join(settings.MEDIA_ROOT, 'products/')
+        if not os.path.exists(save_dir):
+            os.makedirs(save_dir)
+
+        # Обрабатываем каждый продукт
+        for product in queryset:
+            if not product.image:  # Если картинка не установлена вручную
+                # Временная папка для скачивания изображений
+                temp_dir = os.path.join(settings.MEDIA_ROOT, 'temp_images')
+                if not os.path.exists(temp_dir):
+                    os.makedirs(temp_dir)
+
+                # Скачиваем изображение по названию товара
+                google_crawler = GoogleImageCrawler(storage={'root_dir': temp_dir})
+                google_crawler.crawl(keyword=product.name, max_num=1)
+
+                # Переименовываем и перемещаем изображение в папку продуктов
+                for index, filename in enumerate(os.listdir(temp_dir)):
+                    if filename.endswith(('.jpg', '.png', '.jpeg')):
+                        new_filename = f"{product.name.replace(' ', '_')}_{index + 1}.jpg"
+                        src_path = os.path.join(temp_dir, filename)
+                        dst_path = os.path.join(save_dir, new_filename)
+                        shutil.move(src_path, dst_path)
+
+                        # Сохраняем путь к изображению в поле image
+                        product.image = f'products/{new_filename}'
+                        product.save()  # Сохраняем изменения в продукте
+                        break
+
+                # Удаляем временную папку
+                shutil.rmtree(temp_dir)
+
+        self.message_user(request, f"Изображения для {queryset.count()} товаров были успешно загружены.")
+    
+    download_images_for_products.short_description = "Загрузить изображения для выбранных товаров"
 
     
 
