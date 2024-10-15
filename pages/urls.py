@@ -1,10 +1,10 @@
 from django.urls import path
-from pages.views import index, contact
+from pages.views import index, static_page
 
 app_name = 'pages'
 
 urlpatterns = [
     path('', index, name='index'),
-    path('contact/', contact, name='contact')
+    path('<slug:slug>/', static_page, name='slug'),  # Путь для статических страниц
 
 ]

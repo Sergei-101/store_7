@@ -1,8 +1,8 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render,redirect
 from products.models import Product, ProductCategory, ProductImage, Characteristic
-from pages.models import Content
 from cart.forms import CartAddProductForm
+from pages.models import StaticPage
 from reviews.forms import ReviewForm
 from reviews.models import Review
 from django.core.paginator import Paginator
@@ -73,21 +73,21 @@ def product_list(request):
 def product_detail(request, category_slug):
     categories = ProductCategory.objects.filter(parent=None)  # Получение корневых категорий
     product = get_object_or_404(Product, slug=category_slug)
-    images = ProductImage.objects.filter(product__slug=category_slug)
-    contents = Content.objects.all()
+    images = ProductImage.objects.filter(product__slug=category_slug)    
     cart_product_form = CartAddProductForm()
     review_form = ReviewForm()
     reviews = Review.objects.filter(product__slug=category_slug)
+    
     context = {'product': product,
                'top_categories': categories,
                'images': images,
                'cart_product_form': cart_product_form,
                'review_form': review_form,
-               'reviews': reviews,
-               'contents': contents,
+               'reviews': reviews,               
                'meta_keywords': product.meta_keywords,
                'meta_description': product.meta_description,
                'title': product.name,
+            
                }
     return render(request, 'products/product_detail.html', context)
 

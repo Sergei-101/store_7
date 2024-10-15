@@ -12,7 +12,9 @@ from icrawler.builtin import GoogleImageCrawler
 import os
 from django.conf import settings
 import shutil
-
+# pip install openai
+# Установите ваш API ключ
+# openai.api_key = settings.OPENAI_API_KEY
 
 
 admin.site.register(Supplier)
@@ -36,22 +38,43 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ['name', 'category__name']
     prepopulated_fields = {'slug': ('name',)}
     inlines = [CharacteristicInline, ProductImageInline]
-    actions = ['export_to_csv', 'download_images_for_products']
+    actions = ['export_to_csv', 'download_images_for_products', 'generate_description_for_products']
     form = ProductForm
 
     # Действие для экспорта в CSV
     def export_to_csv(self, request, queryset):
         response = HttpResponse(content_type='text/csv')
         response['Content-Disposition'] = 'attachment; filename="products.csv"'
-
+        
         writer = csv.writer(response)
-        writer.writerow(['Name', 'base_price', 'Description'])  # Заголовки столбцов
+        writer.writerow(['Name', 'base_price', 'Description'])
 
         for product in queryset:
             writer.writerow([product.name, product.slug, product.base_price, product.is_active, product.description, product.category])
 
         return response
     export_to_csv.short_description = "Выгрузить CSV"
+
+    # # Функция для генерации описания с использованием OpenAI
+    # def generate_description_ai(self, product_name):
+    #     prompt = f"Напишите привлекательное описание для товара: {product_name}."
+    #     response = openai.ChatCompletion.create(
+    #         model="gpt-3.5-turbo",
+    #         messages=[{"role": "user", "content": prompt}],
+    #         max_tokens=100  # Максимальное количество токенов в ответе
+    #     )
+    #     return response['choices'][0]['message']['content']
+
+    # # Действие для генерации описания для выбранных товаров
+    # def generate_description_for_products(self, request, queryset):
+    #     for product in queryset:
+    #         if not product.description:  # Если описание не установлено
+    #             product.description = self.generate_description_ai(product.name)
+    #             product.save()  # Сохраняем изменения
+
+    #     self.message_user(request, f"Описание для {queryset.count()} товаров успешно сгенерировано.")
+    
+    # generate_description_for_products.short_description = "Сгенерировать описание для выбранных товаров"
 
     # Действие для загрузки изображений
     def download_images_for_products(self, request, queryset):

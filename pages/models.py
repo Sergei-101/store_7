@@ -1,31 +1,14 @@
 from django.db import models
 
 
-class Section(models.Model):
-    name = models.CharField(max_length=255, verbose_name="Название")
-    slug = models.SlugField()
-    description = models.TextField(blank=True,null=True,verbose_name="Контент")
-
-    class Meta:
-        verbose_name = 'Секции'
-        verbose_name_plural = 'Секция'
-
-    def __str__(self):
-        return self.name
-
-class Content(models.Model):
-    section = models.ForeignKey(Section, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Сецкия")
-    name = models.CharField(max_length=255, verbose_name="Название")
-    text_1 = models.CharField(max_length=255,blank=True,null=True, verbose_name="Текст")
-    text_2 = models.CharField(max_length=255,blank=True,null=True, verbose_name="Текст_2")
-    text_3 = models.CharField(max_length=255,blank=True,null=True, verbose_name="Текст_3")
-    text_icon = models.CharField(max_length=255,blank=True,null=True, verbose_name="Иконка")
-    image = models.ImageField(upload_to='other_images', blank=True, null=True, verbose_name="Изображение")
-    description = models.TextField(blank=True,null=True,verbose_name="Контент")
-
-    class Meta:
-        verbose_name = 'Контент'
-        verbose_name_plural = 'Контент'
+class StaticPage(models.Model):
+    title = models.CharField(max_length=200, verbose_name="Заголовок")
+    slug = models.SlugField(unique=True)
+    content = models.TextField(verbose_name="Полное описание")
+    content_little = models.TextField(blank=True,null=True,verbose_name="Короткое описание")
+    meta_keywords = models.CharField(max_length=200, verbose_name="Ключевые слова")
+    meta_description = models.CharField(max_length=200, verbose_name="Описание для Seo")
+    
 
     def __str__(self):
-        return self.name
+        return self.title
