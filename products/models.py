@@ -110,9 +110,7 @@ class Product(models.Model):
     image = models.ImageField(upload_to='product_images', blank=True, null=True, verbose_name="Изображение")
     description = models.TextField(blank=True,null=True,verbose_name="Описание")
     description_2 = models.TextField(blank=True,null=True,verbose_name="Характеристики")
-    quantity = models.IntegerField(default=0, verbose_name="Кол-во") # Активный товар
-    unit = models.ForeignKey(Unit, on_delete=models.SET_NULL, null=True,blank=True ,verbose_name="Еденица измерения")
-    weight = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, verbose_name="Вес")
+    quantity = models.IntegerField(default=0, verbose_name="Кол-во") # Активный товар        
     base_price = models.DecimalField(max_digits=6, decimal_places=2, verbose_name="Базовая цена") # Базовая цена товара без наценок и ндс
     markup_percentage = models.DecimalField(max_digits=6, decimal_places=2, default=25, verbose_name="Процент к товару") # Процент наценки на цену без ндс
     vat_price = models.DecimalField(max_digits=6, decimal_places=2, default=0, verbose_name="НДС") # НДС на цену
@@ -210,28 +208,21 @@ def apply_discount_to_supplier_on_promotion_save(sender, instance, action, **kwa
         products.update(promotion=instance)
 
 
-class CharacteristicCategory(models.Model):
-    name = models.CharField(max_length=255, verbose_name="Характеристика")
+# Модель характеристики товара
+class Feature(models.Model):
+    name = models.CharField(max_length=100)
 
     def __str__(self):
         return self.name
-
-    class Meta:
-        verbose_name = 'Категория'
-        verbose_name_plural = 'Категории'
-
-class Characteristic(models.Model):
-    name = models.ForeignKey(CharacteristicCategory, on_delete=models.CASCADE, related_name='characteristics', verbose_name='Каталог характ')
-    value = models.CharField(max_length=255, verbose_name="Значение")
-    product = models.ForeignKey(Product, on_delete=models.CASCADE,  verbose_name="Товар")
-
-
-    class Meta:
-        verbose_name = 'Характеристика'
-        verbose_name_plural = 'Характеристики'
+    
+# Связующая модель для значений характеристик товара
+class ProductFeatureValue(models.Model):
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    feature = models.ForeignKey(Feature, on_delete=models.CASCADE)
+    value = models.CharField(max_length=100)
 
     def __str__(self):
-        return f"{self.product} - {self.name}: {self.value}"
+        return f"{self.product.name} - {self.feature.name}: {self.value}"
 
 class ProductImage(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')

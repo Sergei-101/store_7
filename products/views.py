@@ -1,6 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.shortcuts import render,redirect
-from products.models import Product, ProductCategory, ProductImage, Characteristic
+from products.models import Product, ProductCategory, ProductImage
 from cart.forms import CartAddProductForm
 from pages.models import StaticPage
 from reviews.forms import ReviewForm
@@ -57,18 +57,6 @@ def products(request, category_slug=None, page=1):
     
     return render(request, 'products/products.html', context)
 
-def product_list(request):
-    products = Product.objects.all()
-
-    # Получение всех доступных характеристик
-    available_characteristics = Characteristic.objects.values('value').distinct()
-
-    # Фильтрация по характеристикам
-    characteristics = request.GET.getlist('characteristics')
-    for characteristic in characteristics:
-        products = products.filter(characteristics__value=characteristic)
-
-    return render(request, 'products/product_list.html', {'products': products, 'available_characteristics': available_characteristics})
 
 def product_detail(request, category_slug):
     categories = ProductCategory.objects.filter(parent=None)  # Получение корневых категорий
