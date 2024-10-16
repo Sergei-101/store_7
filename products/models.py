@@ -110,7 +110,8 @@ class Product(models.Model):
     image = models.ImageField(upload_to='product_images', blank=True, null=True, verbose_name="Изображение")
     description = models.TextField(blank=True,null=True,verbose_name="Описание")
     description_2 = models.TextField(blank=True,null=True,verbose_name="Характеристики")
-    quantity = models.IntegerField(default=0, verbose_name="Кол-во") # Активный товар        
+    quantity = models.IntegerField(default=0, verbose_name="Кол-во") # Активный товар
+    unit =  models.ForeignKey(Unit, on_delete=models.CASCADE, related_name='unit', blank=True,null=True, verbose_name="ед. изм.")         
     base_price = models.DecimalField(max_digits=6, decimal_places=2, verbose_name="Базовая цена") # Базовая цена товара без наценок и ндс
     markup_percentage = models.DecimalField(max_digits=6, decimal_places=2, default=25, verbose_name="Процент к товару") # Процент наценки на цену без ндс
     vat_price = models.DecimalField(max_digits=6, decimal_places=2, default=0, verbose_name="НДС") # НДС на цену

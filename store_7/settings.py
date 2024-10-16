@@ -176,3 +176,19 @@ CKEDITOR_UPLOAD_PATH = 'uploads/'
 
 # Убедитесь, что у вас есть переменная окружения для хранения API-ключа
 # OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')  # Или просто: 'ваш_api_ключ'
+
+# Брокер сообщений (Redis)
+CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+
+
+# Отправка писем
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.example.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'your-email@example.com'
+EMAIL_HOST_PASSWORD = 'your-password'
+DEFAULT_FROM_EMAIL = 'your-email@example.com'
