@@ -34,16 +34,14 @@ def order_create(request):
                 form.instance.customer_type = 'business'
             else:
                 form.instance.customer_type = 'personal'
-            order = form.save()
-            weight = 0
+            order = form.save()            
             for item in cart:
                 product = get_object_or_404(Product, pk=item['product'].id)
                 product.quantity -= item['quantity']
                 if product.quantity <= 0:
                     product.available = False
                 product.save()
-                if product.weight:
-                    weight += product.weight
+                
                 OrderItem.objects.create(order=order,
                                          product=item['product'],
                                          price=item['price'],
@@ -53,7 +51,7 @@ def order_create(request):
             cart.clear()
 
             basket_history = OrderItem.objects.filter(order=order)
-            return render(request, 'orders/complete.html', {'title': 'Оформление заказа','order': order, 'basket_history': basket_history, 'weight': weight})
+            return render(request, 'orders/complete.html', {'title': 'Оформление заказа','order': order, 'basket_history': basket_history, })
 
     return render(request, 'orders/create.html', {'title': 'Оформление заказа','cart': cart, 'personal_form': personal_form, 'business_form': business_form})
 

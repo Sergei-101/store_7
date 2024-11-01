@@ -2,11 +2,11 @@ import csv
 from decimal import Decimal
 from django.contrib import admin
 from django.http import HttpResponse
-from products.models import Product, ProductCategory, ProductImage, Promotion, CSVFile, Supplier, Unit, Feature, ProductFeatureValue
+from products.models import Manufacturer, Product, ProductCategory, ProductImage, Promotion, CSVFile, Supplier, Unit, Feature, ProductFeatureValue
 from slugify import slugify
 from products.forms import ProductForm
 from django.contrib.admin.widgets import FilteredSelectMultiple
-from django.db import models
+from django.db import models, IntegrityError
 from django.forms import DecimalField, SelectMultiple
 from icrawler.builtin import GoogleImageCrawler
 from fuzzywuzzy import process  # Импортируем fuzzywuzzy для сравнения строк
@@ -15,6 +15,7 @@ from django.conf import settings
 import shutil
 from django.http import HttpResponseRedirect
 from bs4 import BeautifulSoup
+
 # pip install openai
 # Установите ваш API ключ
 # openai.api_key = settings.OPENAI_API_KEY
@@ -178,10 +179,11 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(ProductCategory)
 class ProductCategoryAdmin(admin.ModelAdmin):
-    list_display = ('parent', 'name')
+    list_display = ('parent', 'name', 'slug')
     list_filter = ('parent',)
     search_fields = ('name',)
     prepopulated_fields = {'slug': ('name',)}
+
 
 
 
@@ -195,51 +197,81 @@ class CSVFileAdmin(admin.ModelAdmin):
 
             # Пропускаем первую строку (заголовки)
             next(reader)
-
+            zagr_count = 1
             for row in reader:
                 categories = row[4].split(',')
                 parent_category = None
-                
-                # Создание иерархии категорий
+
+                # Создание иерархии категорий с уникальным `slug`
                 for category_name in categories:
                     category_name = category_name.strip()
-                    parent_category, created = ProductCategory.objects.get_or_create(
-                        name=category_name,
-                        slug=slugify(category_name),
-                        parent=parent_category
-                    )
-                
+                    original_slug = slugify(category_name)
+                    slug = original_slug
+                    counter = 1
 
-                
+                    # Проверка уникальности `slug` и `name` для категории
+                    while ProductCategory.objects.filter(slug=slug).exists():
+                        slug = f"{original_slug}-{counter}"
+                        counter += 1
+
+                    # Пытаемся получить существующую категорию по имени
+                    category, created = ProductCategory.objects.get_or_create(
+                        name=category_name,
+                        defaults={'slug': slug, 'parent': parent_category}
+                    )
+
+                    parent_category = category
+
+                # Создание продукта
                 name = row[0]
-                # base_price = row[1].replace(',', '.').strip()  # Заменяем запятую на точку
-                base_price = 10
+                base_price = row[1].replace(',', '.').strip()
                 description = row[2]
                 description_2 = row[3]
                 slug = slugify(name)
                 product_link = row[5]
-                image = row[6]
-                quantity = 10
-                print(f'{name} ----- price {base_price}-----тип {type(base_price)}')
-                # Проверка уникальности slug
+                image = row[6] if row[6] else 'product_images/1-klavishnij_prohodnoj_viklyuchatel_10A_250V_CHINT.jpg'
+                quantity = row[7]
+                unit = row[8]
+                manufacturer = row[9]
+                supplier = row[10]
+                vat_price = row[11]
+                markup_percentage = 15
+
+                unit, _ = Unit.objects.get_or_create(name=unit)
+                manufacturer, _ = Manufacturer.objects.get_or_create(name=manufacturer)
+                supplier, _ = Supplier.objects.get_or_create(supplier=supplier)
+
+                # Проверка уникальности `slug` для продукта
                 original_slug = slug
                 counter = 1
                 while Product.objects.filter(slug=slug).exists():
-                    slug = f'{original_slug}-{counter}'
+                    slug = f"{original_slug}-{counter}"
                     counter += 1
 
                 # Создание или обновление продукта
-                product, created = Product.objects.get_or_create(
-                    name=name,
-                    base_price=base_price,
-                    description=description,
-                    description_2=description_2,
-                    category=parent_category,
-                    slug=slug,
-                    quantity=quantity,
-                    image=image,
-                    product_link=product_link
-                )
+                try:
+                    product, created = Product.objects.get_or_create(
+                        name=name,
+                        defaults={
+                            'base_price': base_price,
+                            'description': description,
+                            'description_2': description_2,
+                            'category': parent_category,
+                            'slug': slug,
+                            'quantity': quantity,
+                            'image': image,
+                            'product_link': product_link,
+                            'unit': unit,
+                            'manufacturer': manufacturer,
+                            'supplier': supplier,
+                            'vat_price': vat_price,
+                            'markup_percentage': markup_percentage,
+                        }
+                    )
+                    print(f'{zagr_count}) {name}')
+                    zagr_count += 1
+                except IntegrityError:
+                    print("Ошибка при создании продукта.")
 
             # Пометка файла как обработанного
             csv_file.processed = True
@@ -248,6 +280,5 @@ class CSVFileAdmin(admin.ModelAdmin):
         self.message_user(request, f"{queryset.count()} CSV файлов успешно обработаны.")
     handle_uploaded_csv.short_description = "Обработать выбранные CSV файлы"
 
-
-
 admin.site.register(CSVFile, CSVFileAdmin)
+
