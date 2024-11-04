@@ -55,6 +55,8 @@ INSTALLED_APPS = [
     'ckeditor',
     'phonenumber_field',
     'django.contrib.sitemaps',
+    'telegram_bot_store7',
+    
 
 ]
 
@@ -192,3 +194,8 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'your-email@example.com'
 EMAIL_HOST_PASSWORD = 'your-password'
 DEFAULT_FROM_EMAIL = 'your-email@example.com'
+
+
+#Telegram
+TELEGRAM_BOT_TOKEN = '1710178446:AAEAK5FQ_kdI-H2PSdOmF6xOuLFJw4I_xFU'
+TELEGRAM_ADMIN_ID = '588474818'

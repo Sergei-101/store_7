@@ -233,10 +233,10 @@ class CSVFileAdmin(admin.ModelAdmin):
                             parent=parent_category,
                             defaults={'slug': slug}
                         )
-                        if created:
-                            print(f"Создана {'главная' if parent_category is None else 'под'} категория: {category_name}")
-                        else:
-                            print(f"Категория уже существует: {category_name}")
+                        # if created:
+                        #     print(f"Создана {'главная' if parent_category is None else 'под'} категория: {category_name}")
+                        # else:
+                        #     print(f"Категория уже существует: {category_name}")
 
                         # Обновляем родительскую категорию для следующего уровня
                         parent_category = category
