@@ -15,6 +15,7 @@ from django.conf import settings
 import shutil
 from django.http import HttpResponseRedirect
 from bs4 import BeautifulSoup
+import re
 
 # pip install openai
 # Установите ваш API ключ
@@ -40,7 +41,8 @@ class ProductFeatureValueInline(admin.TabularInline):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'base_price', 'quantity', 'category', 'id', 'available')
+    list_display = ('name', 'base_price', 'quantity', 'category', 'id', 'available', 'image_down_auto',)
+    list_filter = ('supplier',)
     search_fields = ['name', 'category__name']
     prepopulated_fields = {'slug': ('name',)}
     inlines = [ProductImageInline, ProductFeatureValueInline]
@@ -90,12 +92,14 @@ class ProductAdmin(admin.ModelAdmin):
 
         # Обрабатываем каждый продукт
         for product in queryset:
-            if not product.image:  # Если картинка не установлена вручную
-                # Временная папка для скачивания изображений
+            # if not product.image:  # Только если изображение не установлено вручную
                 temp_dir = os.path.join(settings.MEDIA_ROOT, 'temp_images')
                 if not os.path.exists(temp_dir):
                     os.makedirs(temp_dir)
 
+                # Очищаем название продукта, убирая недопустимые символы для имени файла
+                sanitized_name = re.sub(r'[<>:"/\\|?*]', '', product.name)
+                
                 # Скачиваем изображение по названию товара
                 google_crawler = GoogleImageCrawler(storage={'root_dir': temp_dir})
                 google_crawler.crawl(keyword=product.name, max_num=1)
@@ -103,13 +107,14 @@ class ProductAdmin(admin.ModelAdmin):
                 # Переименовываем и перемещаем изображение в папку продуктов
                 for index, filename in enumerate(os.listdir(temp_dir)):
                     if filename.endswith(('.jpg', '.png', '.jpeg')):
-                        new_filename = f"{product.name.replace(' ', '_')}_{index + 1}.jpg"
+                        new_filename = f"{sanitized_name.replace(' ', '_')}_{index + 1}.jpg"
                         src_path = os.path.join(temp_dir, filename)
                         dst_path = os.path.join(save_dir, new_filename)
                         shutil.move(src_path, dst_path)
 
                         # Сохраняем путь к изображению в поле image
                         product.image = f'products/{new_filename}'
+                        product.image_down_auto = True
                         product.save()  # Сохраняем изменения в продукте
                         break
 
@@ -209,20 +214,38 @@ class CSVFileAdmin(admin.ModelAdmin):
                     slug = original_slug
                     counter = 1
 
-                    # Проверка уникальности `slug` и `name` для категории
-                    while ProductCategory.objects.filter(slug=slug).exists():
-                        slug = f"{original_slug}-{counter}"
-                        counter += 1
+                    # Определяем, является ли категория главной или подкатегорией
+                    if parent_category is None:
+                        # Для главных категорий проверяем уникальность `slug` среди главных категорий
+                        while ProductCategory.objects.filter(slug=slug, parent=None).exists():
+                            slug = f"{original_slug}-{counter}"
+                            counter += 1
+                    else:
+                        # Для подкатегорий проверяем уникальность `slug` внутри родительской категории
+                        while ProductCategory.objects.filter(slug=slug, parent=parent_category).exists():
+                            slug = f"{original_slug}-{counter}"
+                            counter += 1
 
-                    # Пытаемся получить существующую категорию по имени
-                    category, created = ProductCategory.objects.get_or_create(
-                        name=category_name,
-                        defaults={'slug': slug, 'parent': parent_category}
-                    )
+                    try:
+                        # Создание или получение категории
+                        category, created = ProductCategory.objects.get_or_create(
+                            name=category_name,
+                            parent=parent_category,
+                            defaults={'slug': slug}
+                        )
+                        if created:
+                            print(f"Создана {'главная' if parent_category is None else 'под'} категория: {category_name}")
+                        else:
+                            print(f"Категория уже существует: {category_name}")
 
-                    parent_category = category
+                        # Обновляем родительскую категорию для следующего уровня
+                        parent_category = category
 
-                # Создание продукта
+                    except IntegrityError as e:
+                        print(f"Ошибка целостности данных при создании категории '{category_name}': {e}")
+                        continue  # Переходим к следующей категории
+
+                # Создание продукта (оставьте ваш существующий код здесь)
                 name = row[0]
                 base_price = row[1].replace(',', '.').strip()
                 description = row[2]
@@ -248,7 +271,6 @@ class CSVFileAdmin(admin.ModelAdmin):
                     slug = f"{original_slug}-{counter}"
                     counter += 1
 
-                # Создание или обновление продукта
                 try:
                     product, created = Product.objects.get_or_create(
                         name=name,

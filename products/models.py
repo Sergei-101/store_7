@@ -120,6 +120,7 @@ class Product(models.Model):
     promotion = models.ForeignKey(Promotion, on_delete=models.SET_NULL, blank=True, null=True, verbose_name="Акция")
     article = models.CharField(max_length=100, blank=True, verbose_name="Артикул")  # Поле для артикула товара
     available = models.BooleanField(default=True, verbose_name='Видимость')
+    image_down_auto = models.BooleanField(default=False, verbose_name='Картинка скачана автоматический')
     meta_keywords = models.CharField(max_length=255,blank=True,null=True,verbose_name="Ключевые слова (для Seo)")
     meta_description = models.TextField(blank=True,null=True,verbose_name="Описание (для Seo)")
     updated_at = models.DateTimeField(auto_now=True)
