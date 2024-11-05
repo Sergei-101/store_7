@@ -11,51 +11,48 @@ from django.shortcuts import get_object_or_404
 from products.forms import CSVUploadForm
 import csv
 from slugify import slugify
+from django.views.decorators.cache import cache_page
 
 
-
-
+@cache_page(60 * 15)  # Кеширование на 15 минут
 def products(request, category_slug=None, page=1):
-    # Получение всех корневых категорий (сортировка по алфавиту)
     categories = ProductCategory.objects.filter(parent=None).order_by('name')
     
-    # Получение выбранной категории, если передан её slug
     selected_category = None
     ancestors = []
     
     if category_slug:
         selected_category = get_object_or_404(ProductCategory, slug=category_slug)
-        ancestors = selected_category.get_ancestors()  # Получение предков выбранной категории
+        ancestors = selected_category.get_ancestors()
     
-    # Получение списка продуктов
-    products = Product.objects.filter(category__slug=category_slug, available=True) if category_slug else Product.objects.filter(available=True)
+    # Предварительная загрузка изображений, связанных с продуктами
+    products = Product.objects.filter(
+        category__slug=category_slug, available=True
+    ).prefetch_related('images') if category_slug else Product.objects.filter(
+        available=True
+    ).prefetch_related('images')
     
-    # Пагинация продуктов
-    per_page = 25
+    # Пагинация
+    per_page = 16
     paginator = Paginator(products, per_page)
     products_paginator = paginator.page(page)
     
-    # Получение всех изображений
-    images = ProductImage.objects.all()
-    
-    # Форма для добавления товара в корзину
     cart_product_form = CartAddProductForm()
     
-    # Передача данных в контекст
     context = {
         'products': products_paginator,
         'top_categories': categories,
-        'images': images,
         'cart_product_form': cart_product_form,
         'meta_keywords': 'купить электротовары по хорошим ценам',
         'meta_description': 'Интернет магазин электротоваров',
         'title': 'Каталог товаров',
         'current_slug': category_slug,
-        'ancestor_ids': [ancestor.id for ancestor in ancestors],  # Список предков для отображения в шаблоне
-        'selected_category': selected_category,  # Выбранная категория для использования в шаблоне
+        'ancestor_ids': [ancestor.id for ancestor in ancestors],
+        'selected_category': selected_category,
     }
     
     return render(request, 'products/products.html', context)
+
 
 
 def product_detail(request, category_slug):

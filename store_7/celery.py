@@ -1,6 +1,4 @@
-# celery.py
-
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 import os
 from celery import Celery
 
@@ -9,8 +7,13 @@ os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'store_7.settings')
 
 app = Celery('store_7')
 
-# Читаем конфигурации Celery из настроек Django, используя префикс 'CELERY'
+# Задаем настройки, указывая Redis как брокера
 app.config_from_object('django.conf:settings', namespace='CELERY')
+app.conf.broker_url = 'redis://localhost:6379/0'
 
-# Автоматическое обнаружение и загрузка задач из всех приложений Django
+# Автоматическое обнаружение тасков в приложениях Django
 app.autodiscover_tasks()
+
+@app.task(bind=True)
+def debug_task(self):
+    print(f'Request: {self.request!r}')
