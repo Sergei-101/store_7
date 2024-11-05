@@ -2,9 +2,11 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
 import aiohttp
 from django.conf import settings
-import asyncio
 from datetime import datetime
 from asgiref.sync import sync_to_async
+import asyncio
+
+
 
 # Инициализация бота и диспетчера
 bot = Bot(token=settings.TELEGRAM_BOT_TOKEN)
@@ -22,7 +24,6 @@ async def send_welcome(message: types.Message):
 
 # Функция для отправки уведомления о заказе только администратору
 async def send_order_notification(order_details):
-    # Убедимся, что это уведомление отправляется только администратору
     async with aiohttp.ClientSession() as session:
         async with session.post(
             f'https://api.telegram.org/bot{settings.TELEGRAM_BOT_TOKEN}/sendMessage',
@@ -39,27 +40,49 @@ async def cmd_today_orders(message: types.Message):
         await message.answer("У вас нет прав для доступа к этой команде.")
         return
 
-    from orders.models import Order  # Переместили импорт сюда
+    from orders.models import Order  # Импортируем модель здесь
+    
 
     # Получаем сегодняшнюю дату
     today = datetime.today().date()
     
     # Используем sync_to_async для выполнения запроса к базе данных
-    orders_today = await sync_to_async(Order.objects.filter)(created__date=today)  # Заменили created_at на created
+    orders_today = await sync_to_async(Order.objects.filter)(created__date=today)
 
     # Выполняем запрос к базе данных асинхронно
     orders_today_list = await sync_to_async(list)(orders_today)  # Преобразуем QuerySet в список асинхронно
 
     if orders_today_list:
-        # Формируем сообщение с заказами
-        order_list = "\n".join([f"Заказ ID: {order.id}, Клиент: {order.contact_person}, Сумма: {order.total_cost}" 
-                                 for order in orders_today_list])
-        await message.answer(f"Заказы за сегодня:\n{order_list}")
+        # Создаем клавиатуру с кнопками для каждого заказа
+        keyboard = types.InlineKeyboardMarkup(inline_keyboard=[
+            [types.InlineKeyboardButton(text=f"Заказ ID: {order.id} (Клиент: {order.contact_person})", callback_data=f"order_{order.id}")]
+             for order in orders_today_list]
+        )
 
-        # Отправляем уведомление администратору
-        await send_order_notification(f"Новые заказы за сегодня:\n{order_list}")
-    else:
-        await message.answer("За сегодня заказов нет.")
+        await message.answer("Выберите заказ для просмотра деталей:", reply_markup=keyboard)
+        
+        
+
+@dp.callback_query(lambda callback: callback.data.startswith("order_"))
+async def process_order(callback: types.CallbackQuery):
+    # Вывод информации о колбек-данных
+    print(f"Callback data: {callback.data}")  # Отладочный вывод в консоль
+    # Проверяем, является ли пользователь администратором
+    if not is_admin(callback.from_user.id):
+        await callback.answer("У вас нет прав для доступа к этой команде.")
+        return
+    print('Admin')
+    order_id = callback.data.split("_")[1]
+    
+    from orders.models import Order  # Импортируем модель здесь    
+    order = await sync_to_async(Order.objects.get)(id=order_id)    
+    # Формируем сообщение с деталями заказа
+    order_details = f"Детали заказа ID: {order.id}\n" \
+                    f"Клиент: {order.contact_person}\n" \
+                    f"Сумма: {order.total_cost}\n" \
+                    # f"Товары: {', '.join([f'{item.product.name} (кол-во: {item.quantity})' for item in order.items.all])}"                   
+                    
+    await callback.message.answer(order_details)
 
 # Основная функция запуска бота
 async def start_bot():
@@ -68,5 +91,5 @@ async def start_bot():
     await dp.start_polling(bot)
 
 # Функция запуска бота в отдельном асинхронном процессе
-def run_bot():
+def run_bot():    
     asyncio.run(start_bot())
