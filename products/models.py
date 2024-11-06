@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.db import models
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill
@@ -159,9 +160,13 @@ class Product(models.Model):
         super().save(*args, **kwargs)
     
     def price_with_markup_and_vat(self):
-        price_with_markup = self.base_price * (1 + self.markup_percentage / 100)
-        price_with_vat = price_with_markup * (1 + self.vat_price / 100)
-        return round(price_with_vat, 2)
+        base_price = Decimal(self.base_price)  # Преобразуем base_price в Decimal
+        markup_percentage = Decimal(self.markup_percentage)  # Преобразуем markup_percentage в Decimal
+        vat_price = Decimal(self.vat_price)  # Преобразуем vat_price в Decimal
+
+        price_with_markup = base_price * (1 + markup_percentage / 100)
+        price_with_vat = price_with_markup * (1 + vat_price / 100)
+        return round(price_with_vat, 2)  # Округляем до двух знаков после запятой
 
     def apply_discount_to_category(self, category, discount_percentage):
         products_in_category = Product.objects.filter(category=category)

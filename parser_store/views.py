@@ -43,7 +43,7 @@ def update_price(product_id):
     try:
         page_pars = soup.find_all('div', class_=parser.page_pars)
         print(f"Найдено {len(page_pars)} элементов для парсинга.")
-        print(f'Ищем элементы с параметрами: "div", class_="{parser.page_pars}"')        
+        print(f'Ищем элементы с параметрами: "div", class_="{parser.page_pars}"')
 
         for i in page_pars:
             name_from_site = i.find('h1')
@@ -73,15 +73,16 @@ def update_price(product_id):
                 # Очистка цены от ненужных символов
                 clean_price = re.sub(r"[^\d,\.]", "", price_text).rstrip(',')  # Убираем все символы, кроме цифр, запятой и точки
                 clean_price = clean_price.replace(" ", "").replace(",", ".")  # Убираем пробелы и заменяем точку на запятую
-                clean_price = clean_price.rstrip('.')  # Убираем запятую в конце, если она есть               
-                
+                clean_price = clean_price.rstrip('.')  # Убираем запятую в конце, если она есть
+
                 print(f"Очистенная цена: '{clean_price}'")
 
                 # Проверяем, если результат пустой или не является числом
-                if not clean_price or not clean_price.replace(',', '.', 1).replace('.', '', 1).isdigit():
+                if not clean_price or not clean_price.replace('.', '', 1).isdigit():
                     print(f"Ошибка: некорректная цена на сайте. Строка с ценой: {price_text}")
                     return {"error": "Некорректная цена на сайте"}
 
+                # Преобразуем цену в число
                 new_price = float(clean_price)
                 print(f"Новая цена с сайта: {new_price}")
             else:
@@ -89,18 +90,21 @@ def update_price(product_id):
                 return {"error": "Цена не найдена на сайте"}
 
             unit_element = i.find("div", class_=parser.unit_pars)
-            unit = unit_element.text.strip() if unit_element else "N/A"            
+            unit = unit_element.text.strip() if unit_element else "N/A"
             print(f"Единица измерения с сайта: {unit}")
+            
+            # Если в единице измерения указано "км", переводим цену
             if "км" in unit:
-                new_price = new_price/1000
-            new_price_bez_nds = new_price-(new_price*20/120)
-
+                new_price = new_price / 1000
+            new_price = round(new_price, 2)
+            # Расчет цены без НДС (20%)
+            new_price_bez_nds = round(new_price / 1.20, 2)  # Цена без НДС
 
             is_price_updated = product.base_price == new_price_bez_nds
             if not is_price_updated:
                 product.base_price = new_price_bez_nds  # Обновляем цену как число
                 product.save()
-                print(f"Цена обновлена для продукта '{product.name}': новая цена {new_price}.")
+                print(f"Цена обновлена для продукта '{product.name}': новая цена {new_price_bez_nds}.")
             else:
                 print(f"Цена актуальна для продукта '{product.name}'.")
 
