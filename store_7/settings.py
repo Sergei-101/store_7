@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'phonenumber_field',
     'django.contrib.sitemaps',
     'telegram_bot_store7',
+    'parser_store',
     
 
 ]
