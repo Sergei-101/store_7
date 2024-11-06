@@ -89,12 +89,16 @@ def update_price(product_id):
                 return {"error": "Цена не найдена на сайте"}
 
             unit_element = i.find("div", class_=parser.unit_pars)
-            unit = unit_element.text.strip() if unit_element else "N/A"
+            unit = unit_element.text.strip() if unit_element else "N/A"            
             print(f"Единица измерения с сайта: {unit}")
+            if "км" in unit:
+                new_price = new_price/1000
+            new_price_bez_nds = new_price-(new_price*20/120)
 
-            is_price_updated = product.base_price == new_price
+
+            is_price_updated = product.base_price == new_price_bez_nds
             if not is_price_updated:
-                product.base_price = new_price  # Обновляем цену как число
+                product.base_price = new_price_bez_nds  # Обновляем цену как число
                 product.save()
                 print(f"Цена обновлена для продукта '{product.name}': новая цена {new_price}.")
             else:
@@ -102,7 +106,7 @@ def update_price(product_id):
 
             return {
                 "name": name_from_site,
-                "current_price": product.base_price,
+                "current_price": product.final_price(),
                 "new_price": new_price,
                 "is_price_updated": is_price_updated,
                 "unit": unit,
