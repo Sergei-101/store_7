@@ -1,22 +1,51 @@
 # utils.py
+from django.utils import timezone
 import re
 import requests
 from bs4 import BeautifulSoup
-from .models import ParserStore, Product
+from .models import ParserStore, PriceCheck, Product
 from bs4 import BeautifulSoup
 import requests
 
 
 def update_price(product_id):
     print(f"Начало обновления цены для продукта с ID {product_id}...")
-
     product = Product.objects.get(id=product_id)
+    today = timezone.now().date()
+
+    # Проверяем, была ли проверка сегодня
+    last_check = PriceCheck.objects.filter(product=product, check_date=today).first()
+    
+    if last_check:
+        print(f"Цена уже проверялась сегодня для продукта '{product.name}'.")
+        return {
+            "name": product.name,
+            "current_price": last_check.current_price,
+            "new_price": last_check.new_price,
+            "unit": last_check.unit,
+            "status": "Цена актуальна" if last_check.current_price == last_check.new_price else "Цена изменилась",
+            'markup_percentage':product.markup_percentage
+        }
+    
+
     supplier = product.supplier
     print(f"Получен продукт '{product.name}' от поставщика '{supplier}'.")
 
     try:
         parser = ParserStore.objects.get(supplier=supplier)
         print(f"Найден парсер для поставщика '{supplier}'.")
+        if not parser.page_pars:
+            print(f"Не заполнены поля для парсинга '{parser.page_pars}'.")
+            return {
+            "name": product.name,
+            "current_price": product.final_price(),
+            "new_price": "N/A",
+            "is_price_updated": False,
+            "unit": "N/A",
+            "status": "Нет данных для парсинга",
+            'markup_percentage':product.markup_percentage
+            }
+            
     except ParserStore.DoesNotExist:
         print(f"Нет настроек парсинга для поставщика '{supplier}'.")
         return {
@@ -25,8 +54,10 @@ def update_price(product_id):
             "new_price": "N/A",
             "is_price_updated": False,
             "unit": "N/A",
-            "status": "Нет данных для парсинга"
+            "status": "Нет данных для парсинга",
+            'markup_percentage':product.markup_percentage
         }
+    
 
     headers = {"User-Agent": parser.headers}
     url = product.product_link
@@ -62,7 +93,8 @@ def update_price(product_id):
                     "new_price": "Не проверено",
                     "is_price_updated": False,
                     "unit": "Не проверено",
-                    "status": "Название не совпадает"
+                    "status": "Название не совпадает",
+                    'markup_percentage':product.markup_percentage
                 }
 
             new_price_element = i.find('span', class_=parser.price_pars)
@@ -108,13 +140,23 @@ def update_price(product_id):
             else:
                 print(f"Цена актуальна для продукта '{product.name}'.")
 
+            # Сохранение данных проверки в PriceCheck
+            PriceCheck.objects.create(
+                product=product,
+                check_date=today,
+                current_price=product.final_price(),
+                new_price=new_price,
+                unit=unit
+            )
+
             return {
                 "name": name_from_site,
                 "current_price": product.final_price(),
                 "new_price": new_price,
                 "is_price_updated": is_price_updated,
                 "unit": unit,
-                "status": "Цена обновлена" if not is_price_updated else "Цена актуальна"
+                "status": "Цена обновлена" if not is_price_updated else "Цена актуальна",
+                'markup_percentage':product.markup_percentage
             }
 
     except AttributeError as e:

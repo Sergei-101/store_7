@@ -11,8 +11,8 @@
         <th>Цена поставщика</th>
         <th>Единица измерения</th>
         <th>Количество</th>
-        <th>Разница в цене</th>
-        <th>Потенциальная прибыль</th>
+        <th>Проверенная разница в цене</th>
+        <th>Потенциальная разница в цене</th>
         <th>Статус</th>
       </tr>
     </thead>
@@ -25,15 +25,16 @@
           <td>{{ check.unit }}</td>
           <td>{{ check.quantity }}</td>
           <td>{{ check.price_difference }}</td>
-          <td>{{ check.potential_profit }}</td>
+          <td>{{ check.potential_difference }}</td>
           <td>{{ check.status }}</td>
         </tr>
       {% endfor %}
     </tbody>
   </table>
 
-  <h3>Общая разница в цене: {{ total_difference }}</h3>
-  <h3>Общая потенциальная прибыль: {{ total_profit }}</h3>
+  <h3>Общая проверенная разница: {{ total_verified_difference }}</h3>
+  <h3>Общая потенциальная разница (если проверенная отсутствует): {{ total_potential_difference }}</h3>
+  <h3>Себестоимость (базовые цены): {{ total_cost_price }}</h3>
 
   <a href="{% url 'admin:orders_order_changelist' %}" class="button">Вернуться к заказам</a>
 {% endblock %}

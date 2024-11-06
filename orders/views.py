@@ -91,8 +91,9 @@ def admin_order_detail(request, order_id):
 def check_prices(request, order_id):
     order = get_object_or_404(Order, id=order_id)
     price_checks = []
-    total_difference = 0
-    total_profit = 0
+    total_verified_difference = 0
+    total_potential_difference = 0
+    total_cost_price = 0
 
     # Проверяем цены для каждого товара в заказе
     for item in order.items.all():
@@ -100,37 +101,35 @@ def check_prices(request, order_id):
 
         if price_data:
             try:
-                # Получаем текущую цену (цена на сайте) и новую цену (цена поставщика)
                 current_cost = float(price_data.get('current_price', 0))
-                new_cost = price_data.get('new_price', "N/A")
-
+                new_cost = price_data.get('new_price', None)
+                markup_percentage = float(price_data.get('markup_percentage', 0))
+                
+                # Если нет цены от поставщика, рассчитываем потенциальную прибыль
                 if new_cost == "N/A" or new_cost == 0:
-                    # Если новая цена недоступна
-                    new_cost = "Не учитывается"
-                    price_difference = "Не учитывается"
-                    potential_profit = "Не учитывается"
+                    price_difference = round((current_cost * (markup_percentage / 100)) * item.quantity, 2)
+                    verified_difference = 0  # Нет проверенной разницы
+                    total_potential_difference += price_difference
                 else:
-                    # Если новая цена есть, вычисляем разницу в цене и прибыль
                     new_cost = float(new_cost)
-                    price_difference = round((current_cost - new_cost) * item.quantity, 2)
-                    potential_profit = round((current_cost - new_cost) * item.quantity, 2)
+                    verified_difference = round((current_cost - new_cost) * item.quantity, 2)
+                    price_difference = verified_difference
+                    total_verified_difference += verified_difference
 
-                    # Обновляем общую разницу и прибыль
-                    total_difference += price_difference
-                    total_profit += potential_profit
-
+                potential_profit = round((current_cost * (markup_percentage / 100)) * item.quantity, 2)
+                total_cost_price += item.product.base_price * item.quantity  # Сумма себестоимости (базовой цены)
+                
                 price_checks.append({
                     'name': price_data.get('name', 'Неизвестно'),
                     'current_cost': round(current_cost, 2),
-                    'new_cost': new_cost,
+                    'new_cost': new_cost if new_cost != "N/A" else "Не учитывается",
                     'unit': price_data.get('unit', 'Неизвестно'),
                     'quantity': item.quantity,
-                    'price_difference': price_difference,
-                    'potential_profit': potential_profit,
+                    'price_difference': verified_difference if verified_difference else "Не проверено",
+                    'potential_difference': price_difference if not verified_difference else "N/A",
                     'status': 'Цена изменилась' if current_cost != new_cost else 'Цена актуальна'
                 })
             except ValueError as e:
-                # Обработка ошибки преобразования типа
                 price_checks.append({
                     'name': item.product.name,
                     'current_cost': 'Ошибка',
@@ -138,11 +137,10 @@ def check_prices(request, order_id):
                     'unit': 'Неизвестно',
                     'quantity': item.quantity,
                     'price_difference': 'Ошибка',
-                    'potential_profit': 'Ошибка',
+                    'potential_difference': 'Ошибка',
                     'status': f'Ошибка преобразования данных: {e}'
                 })
         else:
-            # Обработка случая, когда данные цены отсутствуют
             price_checks.append({
                 'name': item.product.name,
                 'current_cost': 'Неизвестно',
@@ -150,17 +148,18 @@ def check_prices(request, order_id):
                 'unit': 'Неизвестно',
                 'quantity': item.quantity,
                 'price_difference': 'Ошибка',
-                'potential_profit': 'Ошибка',
+                'potential_difference': 'Ошибка',
                 'status': 'Ошибка при обновлении цены'
             })
 
-    # Рендеринг шаблона с результатами проверки цен
     return render(request, 'admin/orders/order/check_prices.html', {
         'price_checks': price_checks,
         'order': order,
-        'total_difference': round(total_difference, 2),
-        'total_profit': round(total_profit, 2)
+        'total_verified_difference': round(total_verified_difference, 2),
+        'total_potential_difference': round(total_potential_difference, 2),
+        'total_cost_price': round(total_cost_price, 2),
     })
+
 
 
 
