@@ -69,3 +69,15 @@ class OrderItem(models.Model):
 
     def get_cost(self):
         return self.price * self.quantity
+
+class StoreDetails(models.Model):
+    name = models.CharField(max_length=255, verbose_name="Название магазина")
+    address = models.CharField(max_length=255, verbose_name="Адрес")
+    phone = models.CharField(max_length=20, verbose_name="Телефон")
+    email = models.EmailField(verbose_name="Email")
+    inn = models.CharField(max_length=12, verbose_name="ИНН")
+    kpp = models.CharField(max_length=9, verbose_name="КПП")
+    bank_details = models.TextField(verbose_name="Банковские реквизиты")
+    
+    def __str__(self):
+        return self.name

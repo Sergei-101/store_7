@@ -5,7 +5,7 @@ from django.urls import reverse
 
 def order_detail(obj):
     url = reverse('orders:admin_order_detail', args=[obj.id])
-    return mark_safe(f'<a href="{url}">Детали</a>')
+    return mark_safe(f'<a href="{url}">Счёт</a>')
 
 def check_prices_link(obj):
     url = reverse('orders:check_prices', args=[obj.id])

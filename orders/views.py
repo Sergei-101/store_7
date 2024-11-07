@@ -10,12 +10,15 @@ from orders.tasks import send_order_notification_task, send_order_confirmation_e
 from parser_store.views import update_price
 from telegram_bot_store7.telegram_bot import send_order_notification
 from .forms import PersonalOrderForm, BusinessOrderForm
-from .models import OrderItem, Order
+from .models import OrderItem, Order, StoreDetails
 from django.contrib.admin.views.decorators import staff_member_required
 import threading
 from asgiref.sync import async_to_sync
 from django.core.mail import send_mail
 from django.conf import settings
+
+
+
  # Импортируйте функцию отправки уведомлений
 
 def order_create(request):
@@ -79,13 +82,17 @@ def order_create(request):
 
     return render(request, 'orders/create.html', {'title': 'Оформление заказа', 'cart': cart, 'personal_form': personal_form, 'business_form': business_form})
 
-
-
-
 @staff_member_required
 def admin_order_detail(request, order_id):
     order = get_object_or_404(Order, id=order_id)
-    return render(request, 'admin/orders/order/detail.html', {'order': order})
+    seller_details = StoreDetails.objects.first()  # Получаем реквизиты магазина
+    
+    return render(request, 'admin/orders/order/invoice.html', {
+        'order': order,
+        'seller_details': seller_details,
+    })
+
+
 
 @staff_member_required
 def check_prices(request, order_id):

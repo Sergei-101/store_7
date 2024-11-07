@@ -1,0 +1,114 @@
+{% extends "admin/base_site.html" %}
+
+{% block title %}Счет на оплату №{{ order.id }}{% endblock %}
+
+{% block content %}
+<div style="width: 700px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;">
+  <div style="text-align: center; font-weight: bold;">
+    <h2>СЧЕТ НА ОПЛАТУ № {{ order.id }}</h2>
+    <p>от {{ order.created|date:"d.m.Y" }}</p>
+  </div>
+
+  <div style="margin-bottom: 20px;">
+    <strong>Продавец:</strong> {{ seller_details.name }}<br>
+    <strong>Адрес:</strong> {{ seller_details.address }}<br>
+    <strong>Телефон:</strong> {{ seller_details.phone }}<br>
+    <strong>Email:</strong> {{ seller_details.email }}<br>
+    <strong>ИНН:</strong> {{ seller_details.inn }}<br>
+    <strong>КПП:</strong> {{ seller_details.kpp }}<br>
+    <strong>Банковские реквизиты:</strong> {{ seller_details.bank_details }}<br>
+  </div>
+
+  <div style="margin-bottom: 20px;">
+    <strong>Покупатель:</strong> {{ order.contact_person }}<br>
+    <strong>Телефон:</strong> {{ order.phone_number }}<br>
+    <strong>Email:</strong> {{ order.email }}<br>
+  </div>
+
+  <table style="width: 100%; border-collapse: collapse;">
+    <thead>
+      <tr style="background-color: #f0f0f0;">
+        <th>Наименование товара</th>
+        <th>Цена без НДС</th>
+        <th>Ед. изм.</th>
+        <th>Кол-во</th>
+        <th>Сумма без НДС</th>
+        <th>НДС, %</th>
+        <th>НДС</th>
+        <th>Сумма с НДС</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in order.items.all %}
+        <tr>
+          <td>{{ item.product.name }}</td>
+          <td>{{ item.price }}</td>
+          <td>шт.</td>
+          <td>{{ item.quantity }}</td>
+          <td>{{ item.price|floatformat:2 }}</td>
+          <td>{{ item.product.vat_rate }}</td>
+          <td>{{ item.price }}</td>
+          <td>{{ item.price }}</td>
+        </tr>
+      {% endfor %}
+      <tr style="font-weight: bold;">
+        <td colspan="4" style="text-align: right;">Итого</td>
+        <td>{{ order.total_cost|floatformat:2 }}</td>
+        <td colspan="2"></td>
+        <td>{{ order.total_with_vat|floatformat:2 }}</td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div style="margin-top: 20px;">
+    <strong>Срок поставки:</strong> 7 рабочих дней с момента оплаты.
+  </div>
+
+  <div style="margin-top: 50px;">
+    <table style="width: 100%;">
+      <tr>
+        <td style="width: 50%; text-align: center;">
+          ______________________<br>
+          Подпись и печать продавца
+        </td>
+        <td style="width: 50%; text-align: center;">
+          ______________________<br>
+          Подпись покупателя
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="no-print" style="text-align: right; margin-top: 20px;">
+    <a href="#" onclick="window.print();" class="button">Скачать в PDF</a>
+  </div>
+</div>
+
+<style>
+  /* Шрифты */
+  @font-face {
+      font-family: 'DejaVu Sans';
+      src: url('/path/to/font/DejaVuSans.ttf') format('truetype');
+  }
+  body {
+      font-family: 'DejaVu Sans', sans-serif;
+  }
+
+  /* Стили печати */
+  @media print {
+      /* Скрываем шапку админки, кнопку для печати и навигацию */
+      #header, .no-print, .module, #user-tools, .breadcrumbs, .nav-sidebar {
+          display: none !important;
+      }
+      /* Скрываем любые элементы навигации, если они есть */
+      nav, aside, .navbar, .main-header, .sidebar {
+          display: none !important;
+      }
+      /* Увеличиваем ширину основного содержимого */
+      #content {
+          margin: 0;
+          width: 100%;
+      }
+  }
+</style>
+{% endblock %}
