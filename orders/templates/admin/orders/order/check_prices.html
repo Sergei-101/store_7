@@ -37,5 +37,5 @@
   <h3>Себестоимость (базовые цены): {{ total_cost_price }}</h3>
 
   <a href="{% url 'admin:orders_order_changelist' %}" class="button">Вернуться к заказам</a>
-  <a href="{% url 'orders:admin_order_detail' order_id=order.id %}" class="button">Счёт</a>
+  <a href="{% url 'orders:admin_order_detail' order_id=order.id %}" class="button">Счёт</a>  
 {% endblock %}

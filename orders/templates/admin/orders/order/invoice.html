@@ -81,6 +81,8 @@
 
   <div class="no-print" style="text-align: right; margin-top: 20px;">
     <a href="#" onclick="window.print();" class="button">Скачать в PDF</a>
+    <a href="{% url 'orders:check_prices' order_id=order.id %}" class="button">Проверить цены</a>
+    <a href="{% url 'admin:orders_order_changelist' %}" class="button">Вернуться к заказам</a>    
   </div>
 </div>
 

@@ -7,12 +7,7 @@ def order_detail(obj):
     url = reverse('orders:admin_order_detail', args=[obj.id])
     return mark_safe(f'<a href="{url}">Счёт</a>')
 
-def check_prices_link(obj):
-    url = reverse('orders:check_prices', args=[obj.id])
-    return mark_safe(f'<a href="{url}">Проверить цены</a>')
-
-check_prices_link.short_description = 'Проверка цен'
-    
+   
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
@@ -26,7 +21,7 @@ class OrderItemAdmin(admin.ModelAdmin):
 admin.site.register(OrderItem, OrderItemAdmin)
 
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['id', 'get_customer_name', 'status', 'total_cost', 'created', order_detail, check_prices_link]
+    list_display = ['id', 'get_customer_name', 'status', 'total_cost', 'created', order_detail]
     list_filter = ['status', 'customer_type']
     search_fields = ['id', 'company_name', 'contact_person', 'email', 'phone_number']
     inlines = [OrderItemInline]
