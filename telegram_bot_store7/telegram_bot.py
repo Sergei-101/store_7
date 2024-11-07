@@ -5,6 +5,7 @@ from django.conf import settings
 from datetime import datetime
 from asgiref.sync import sync_to_async
 import asyncio
+import logging
 
 
 
@@ -12,27 +13,67 @@ import asyncio
 bot = Bot(token=settings.TELEGRAM_BOT_TOKEN)
 dp = Dispatcher()
 
+# Настройка логирования
+logger = logging.getLogger(__name__)
+
 # Функция для проверки, является ли пользователь администратором
 def is_admin(user_id):
-    return user_id == int(settings.TELEGRAM_ADMIN_ID)
+    from telegram_bot_store7.models import UserProfile  # Импорт модели внутри функции
+    try:
+        user_profile = UserProfile.objects.get(user_id=user_id)
+        return user_profile.role == 'admin'
+    except UserProfile.DoesNotExist:
+        return False
 
 @dp.message(Command(commands=["start"]))
 async def send_welcome(message: types.Message):
     user_id = message.from_user.id
-    admin_status = "Вы являетесь администратором." if is_admin(user_id) else "Вы не являетесь администратором."
+    chat_id = message.chat.id
+    username = message.from_user.username
+    from telegram_bot_store7.models import UserProfile
+    # Создание профиля пользователя или обновление существующего
+    user_profile, created = await sync_to_async(UserProfile.objects.get_or_create)(
+        user_id=user_id,
+        defaults={
+            'chat_id': chat_id,
+            'username': username,
+            'role': 'client',  # Назначаем "клиент" по умолчанию
+        }
+    )
+
+    if not created:
+        # Если профиль существует, обновляем его данные
+        user_profile.chat_id = chat_id
+        user_profile.username = username
+        await sync_to_async(user_profile.save)()
+
+    admin_status = "Вы являетесь администратором." if user_profile.role == 'admin' else "Вы не являетесь администратором."
     await message.answer(f"Ваш Telegram ID: {user_id}. {admin_status}")
 
-# Функция для отправки уведомления о заказе только администратору
-async def send_order_notification(order_details):
-    async with aiohttp.ClientSession() as session:
-        async with session.post(
-            f'https://api.telegram.org/bot{settings.TELEGRAM_BOT_TOKEN}/sendMessage',
-            json={
-                "chat_id": settings.TELEGRAM_ADMIN_ID,  # ID админа
-                "text": order_details,
-            }
-        ) as response:
-            return await response.json()
+async def send_order_notification(user_id, order_details):
+    # Проверка, является ли пользователь администратором
+    if not is_admin(user_id):
+        logger.warning(f"User {user_id} is not an admin, notification will not be sent.")
+        return None
+
+    try:
+        async with aiohttp.ClientSession() as session:
+            async with session.post(
+                f'https://api.telegram.org/bot{settings.TELEGRAM_BOT_TOKEN}/sendMessage',
+                json={
+                    "chat_id": settings.TELEGRAM_ADMIN_ID,  # ID админа
+                    "text": order_details,
+                }
+            ) as response:
+                # Проверяем статус ответа
+                response_data = await response.json()
+                if response.status != 200:
+                    logger.error(f"Failed to send message: {response_data}")
+                    return None
+                return response_data
+    except Exception as e:
+        logger.error(f"Error sending order notification: {e}")
+        return None
 
 @dp.message(Command(commands=["today_orders"]))
 async def cmd_today_orders(message: types.Message):

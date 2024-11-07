@@ -16,6 +16,7 @@ import shutil
 from django.http import HttpResponseRedirect
 from bs4 import BeautifulSoup
 import re
+from django.utils.safestring import mark_safe
 
 # pip install openai
 # Установите ваш API ключ
@@ -48,13 +49,18 @@ def update_markup_percentage_from_supplier(modeladmin, request, queryset):
 
 @admin.register(Product)
 class ProductAdmin(admin.ModelAdmin):
-    list_display = ('name', 'base_price', 'quantity', 'category', 'id', 'available', 'image_down_auto',)
+    list_display = ('get_image','name', 'base_price', 'quantity', 'category', 'id', 'available', 'image_down_auto',)
     list_filter = ('supplier',)
     search_fields = ['name', 'category__name']
     prepopulated_fields = {'slug': ('name',)}
     inlines = [ProductImageInline, ProductFeatureValueInline]
-    actions = ['export_to_csv', 'download_images_for_products', 'generate_description_for_products', 'parse_features',update_markup_percentage_from_supplier]
+    actions = ['export_to_csv', 'download_images_for_products', 'generate_description_for_products', 'parse_features',update_markup_percentage_from_supplier,]
     form = ProductForm
+
+    def get_image(self, obj):
+        return mark_safe(f'<img src={obj.image.url} width="100" height="110"')
+
+    get_image.short_description = "Изображение"
 
     # Действие для экспорта в CSV
     def export_to_csv(self, request, queryset):
