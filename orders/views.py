@@ -111,6 +111,7 @@ def check_prices(request, order_id):
                 current_cost = float(price_data.get('current_price', 0))
                 new_cost = price_data.get('new_price', None)
                 markup_percentage = float(price_data.get('markup_percentage', 0))
+                supplier = price_data.get('supplier', None)
                 
                 # Если нет цены от поставщика, рассчитываем потенциальную прибыль
                 if new_cost == "N/A" or new_cost == 0:
@@ -165,6 +166,8 @@ def check_prices(request, order_id):
         'total_verified_difference': round(total_verified_difference, 2),
         'total_potential_difference': round(total_potential_difference, 2),
         'total_cost_price': round(total_cost_price, 2),
+        'supplier':supplier
+
     })
 
 

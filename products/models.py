@@ -15,8 +15,9 @@ class ProductCategory(models.Model):
     slug = models.SlugField(max_length=255, unique=True, db_index=True)
     parent = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='children', verbose_name="Родительская категория")
     image = models.ImageField(upload_to='other_images', blank=True, null=True, verbose_name="Изображение")
-    text_icon = models.CharField(max_length=255, blank=True, null=True, verbose_name="Иконка")
+    text_icon = models.CharField(max_length=255, blank=True, null=True, verbose_name="Иконка")    
     updated_at = models.DateTimeField(auto_now=True)
+    
 
     def get_absolute_url(self):
         return reverse('products:category', kwargs={'category_slug':self.slug})
@@ -51,6 +52,7 @@ class ProductCategory(models.Model):
 class Supplier(models.Model):
     supplier = models.CharField(max_length=255, blank=True, null=True, verbose_name="Поставщик") # Поставщик товара
     link_supplier = models.CharField(max_length=500,blank=True,null=True, verbose_name="Ссылка на поставщика")
+    markup_percentage = models.DecimalField(max_digits=6, decimal_places=2, blank=True, null=True, verbose_name="Процент к товару") # Процент наценки на цену без ндс
 
     def __str__(self):
         return self.supplier

@@ -37,6 +37,13 @@ class ProductFeatureValueInline(admin.TabularInline):
     model = ProductFeatureValue
     extra = 1  # Количество пустых форм для добавления новых значений
 
+@admin.action(description="Обновить наценку для товаров по данным поставщика")
+def update_markup_percentage_from_supplier(modeladmin, request, queryset):
+    for product in queryset:
+        if product.supplier and product.supplier.markup_percentage is not None:
+            product.markup_percentage = product.supplier.markup_percentage
+            product.save()
+
 
 
 @admin.register(Product)
@@ -46,7 +53,7 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ['name', 'category__name']
     prepopulated_fields = {'slug': ('name',)}
     inlines = [ProductImageInline, ProductFeatureValueInline]
-    actions = ['export_to_csv', 'download_images_for_products', 'generate_description_for_products', 'parse_features']
+    actions = ['export_to_csv', 'download_images_for_products', 'generate_description_for_products', 'parse_features',update_markup_percentage_from_supplier]
     form = ProductForm
 
     # Действие для экспорта в CSV
@@ -63,26 +70,7 @@ class ProductAdmin(admin.ModelAdmin):
         return response
     export_to_csv.short_description = "Выгрузить CSV"
 
-    # # Функция для генерации описания с использованием OpenAI
-    # def generate_description_ai(self, product_name):
-    #     prompt = f"Напишите привлекательное описание для товара: {product_name}."
-    #     response = openai.ChatCompletion.create(
-    #         model="gpt-3.5-turbo",
-    #         messages=[{"role": "user", "content": prompt}],
-    #         max_tokens=100  # Максимальное количество токенов в ответе
-    #     )
-    #     return response['choices'][0]['message']['content']
-
-    # # Действие для генерации описания для выбранных товаров
-    # def generate_description_for_products(self, request, queryset):
-    #     for product in queryset:
-    #         if not product.description:  # Если описание не установлено
-    #             product.description = self.generate_description_ai(product.name)
-    #             product.save()  # Сохраняем изменения
-
-    #     self.message_user(request, f"Описание для {queryset.count()} товаров успешно сгенерировано.")
-    
-    # generate_description_for_products.short_description = "Сгенерировать описание для выбранных товаров"
+  
 
     # Действие для загрузки изображений
     def download_images_for_products(self, request, queryset):

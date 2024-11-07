@@ -24,7 +24,8 @@ def update_price(product_id):
             "new_price": last_check.new_price,
             "unit": last_check.unit,
             "status": "Цена актуальна" if last_check.current_price == last_check.new_price else "Цена изменилась",
-            'markup_percentage':product.markup_percentage
+            'markup_percentage':product.markup_percentage,
+            'supplier':product.supplier
         }
     
 
@@ -43,7 +44,8 @@ def update_price(product_id):
             "is_price_updated": False,
             "unit": "N/A",
             "status": "Нет данных для парсинга",
-            'markup_percentage':product.markup_percentage
+            'markup_percentage':product.markup_percentage,
+            'supplier':product.supplier
             }
             
     except ParserStore.DoesNotExist:
@@ -55,7 +57,8 @@ def update_price(product_id):
             "is_price_updated": False,
             "unit": "N/A",
             "status": "Нет данных для парсинга",
-            'markup_percentage':product.markup_percentage
+            'markup_percentage':product.markup_percentage,
+            'supplier':product.supplier
         }
     
 
@@ -94,7 +97,8 @@ def update_price(product_id):
                     "is_price_updated": False,
                     "unit": "Не проверено",
                     "status": "Название не совпадает",
-                    'markup_percentage':product.markup_percentage
+                    'markup_percentage':product.markup_percentage,
+                    'supplier':product.supplier
                 }
 
             new_price_element = i.find('span', class_=parser.price_pars)
@@ -156,7 +160,8 @@ def update_price(product_id):
                 "is_price_updated": is_price_updated,
                 "unit": unit,
                 "status": "Цена обновлена" if not is_price_updated else "Цена актуальна",
-                'markup_percentage':product.markup_percentage
+                'markup_percentage':product.markup_percentage,
+                'supplier':product.supplier
             }
 
     except AttributeError as e:
