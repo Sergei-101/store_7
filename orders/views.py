@@ -125,7 +125,7 @@ def check_prices(request, order_id):
                     total_verified_difference += verified_difference
 
                 potential_profit = round((current_cost * (markup_percentage / 100)) * item.quantity, 2)
-                total_cost_price += item.product.base_price * item.quantity  # Сумма себестоимости (базовой цены)
+                total_cost_price += current_cost * item.quantity  # Сумма себестоимости 
                 
                 price_checks.append({
                     'name': price_data.get('name', 'Неизвестно'),

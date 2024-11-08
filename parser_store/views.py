@@ -92,7 +92,7 @@ def update_price(product_id):
                 print("Название продукта не совпадает с названием на сайте.")
                 return {
                     "name": name_from_site,
-                    "current_price": product.base_price,
+                    "current_price": product.final_price(),
                     "new_price": "Не проверено",
                     "is_price_updated": False,
                     "unit": "Не проверено",
