@@ -232,15 +232,9 @@
               
             </li>
 
-            <li class="navigation__item">
-              <a href="#" class="navigation__link js-nav-right d-flex align-items-center">Статьи<svg class="ms-auto" width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_next_sm" /></svg></a>
-                             
-            </li>
-
-            <li class="navigation__item">
-              <a href="#" class="navigation__link js-nav-right d-flex align-items-center">Контакты<svg class="ms-auto" width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_next_sm" /></svg></a>
-              
-            </li>
+            {% for page in menu_pages %}
+                <li><a href="{% url 'pages:static_page' page.slug %}" class="navigation__link js-nav-right d-flex align-items-center">{{ page.title }}<svg class="ms-auto" width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_next_sm" /></svg></a></li>
+            {% endfor %}
 
           </ul><!-- /.navigation__list -->
         </div><!-- /.overflow-hidden -->
@@ -369,14 +363,10 @@
               <li class="navigation__item">
                 <a href="{% url "products:products" %}" class="navigation__link">Каталог</a>
               </li>
-              <li class="navigation__item">
-                <a href="{% url 'posts:index' %}" class="navigation__link">Статьи</a>
-                
-              </li>
+              {% for page in menu_pages %}
+                <li><a href="{% url 'pages:static_page' page.slug %}" class="navigation__link">{{ page.title }}</a></li>
+              {% endfor %}
               
-              <li class="navigation__item">
-                <a href="{% url 'pages:slug' slug='kontakty' %}" class="navigation__link">Контакты</a>
-              </li>
             </ul><!-- /.navigation__list -->
           </nav><!-- /.navigation -->
         </div>

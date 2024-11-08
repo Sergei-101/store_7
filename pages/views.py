@@ -2,7 +2,7 @@ from django.shortcuts import render, get_object_or_404
 from django.db.models import Avg
 from products.models import Product, ProductCategory
 from posts.models import Post
-from pages.models import StaticPage
+from pages.models import StaticPage, Guarantee, SliderItem
 
 
 def static_page(request, slug):
@@ -14,7 +14,9 @@ def index(request):
     promotional_items = Product.objects.filter(promotion__isnull=False)[:10]
     products = Product.objects.order_by('?')[:15]
     posts =  Post.objects.all()
-    categories = ProductCategory.objects.filter(parent=None)  # Получение корневых категорий    
+    categories = ProductCategory.objects.filter(parent=None)  # Получение корневых категорий   
+    tabs = Guarantee.objects.all() 
+    slides = SliderItem.objects.all()
     context = {'products': products,
                'promotional_items': promotional_items,
                'top_rated_products':top_rated_products,
@@ -23,6 +25,8 @@ def index(request):
                'meta_keywords': 'Интернет магазин электротоваров',
                'meta_description': 'Интернет магазин электротоваров',
                'title': 'Интернет магазин электротоваров',
+               'tabs': tabs,
+               'slides': slides,
     }
     return render(request, 'pages/index.html', context)
 

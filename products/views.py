@@ -2,7 +2,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render,redirect
 from products.models import Product, ProductCategory, ProductImage
 from cart.forms import CartAddProductForm
-from pages.models import StaticPage
+from pages.models import StaticPage, Tab
 from reviews.forms import ReviewForm
 from reviews.models import Review
 from django.core.paginator import Paginator
@@ -62,6 +62,7 @@ def product_detail(request, category_slug):
     cart_product_form = CartAddProductForm()
     review_form = ReviewForm()
     reviews = Review.objects.filter(product__slug=category_slug)
+    content_smal = Tab.objects.all()
     
     context = {'product': product,
                'top_categories': categories,
@@ -72,6 +73,7 @@ def product_detail(request, category_slug):
                'meta_keywords': product.meta_keywords,
                'meta_description': product.meta_description,
                'title': product.name,
+               'content_smal':content_smal,
             
                }
     return render(request, 'products/product_detail.html', context)
