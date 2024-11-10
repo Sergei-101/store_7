@@ -64,21 +64,7 @@ class OrderItem(models.Model):
     quantity = models.PositiveIntegerField(default=1)
     total = models.DecimalField(max_digits=10, decimal_places=2)
     product_data = models.JSONField(blank=True, null=True, verbose_name="Данные о товаре")  # Новое поле
-
-    def save(self, *args, **kwargs):
-        # Заполнение `product_data` информацией о продукте при создании записи
-        if not self.product_data:
-            self.product_data = {
-                "name": self.product.name,                
-                "quantity": self.product.quantity,
-                "unit": str(self.product.unit) if self.product.unit else None,
-                "base_price": float(self.product.base_price),
-                "markup_percentage": float(self.product.markup_percentage),
-                "vat_price": float(self.product.vat_price),                
-                "manufacturer": self.product.manufacturer.name if self.product.manufacturer else None,
-                "promotion": self.product.promotion.name if self.product.promotion else None,
-            }
-        super().save(*args, **kwargs)
+    
 
     def __str__(self):
         return str(self.id)
@@ -94,6 +80,7 @@ class StoreDetails(models.Model):
     inn = models.CharField(max_length=12, verbose_name="ИНН")
     kpp = models.CharField(max_length=9, verbose_name="КПП")
     bank_details = models.TextField(verbose_name="Банковские реквизиты")
+    is_nds = models.BooleanField(default=False, verbose_name='Работаем с НДС')  
     
     def __str__(self):
         return self.name

@@ -57,8 +57,10 @@ class ProductAdmin(admin.ModelAdmin):
     actions = ['export_to_csv', 'download_images_for_products', 'generate_description_for_products', 'parse_features',update_markup_percentage_from_supplier,]
     form = ProductForm
 
-    def get_image(self, obj):
-        return mark_safe(f'<img src={obj.image.url} width="100" height="110"')
+    def get_image(self, obj):        
+        if obj.image and obj.image.url:  # Проверяем, есть ли файл у поля image
+            return mark_safe(f'<img src="{obj.image.url}" width="100" height="110">')
+        return "Изображение отсутствует"
 
     get_image.short_description = "Изображение"
 

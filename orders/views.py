@@ -1,4 +1,5 @@
 import asyncio
+from decimal import Decimal
 import json
 from django.shortcuts import render, get_object_or_404
 from orders.models import OrderItem
@@ -62,10 +63,21 @@ def order_create(request):
 
                 OrderItem.objects.create(
                     order=order,
-                    product=item['product'],
+                    product=product,
                     price=item['price'],
                     quantity=item['quantity'],
-                    total=item['price'] * item['quantity']
+                    total=item['price'] * item['quantity'],
+                    product_data={
+                        "name": product.name,
+                        "quantity": product.quantity,
+                        "unit": product.unit,
+                        "base_price": float(product.base_price) if isinstance(product.base_price, Decimal) else product.base_price,
+                        "markup_percentage": float(product.markup_percentage) if isinstance(product.markup_percentage, Decimal) else product.markup_percentage,
+                        "vat_price": float(product.vat_price) if isinstance(product.vat_price, Decimal) else product.vat_price,
+                        "manufacturer": product.manufacturer.name if product.manufacturer else None,
+                        "supplier": product.supplier.supplier if product.supplier else None,
+                        "promotion": product.promotion.name if product.promotion else None,
+                    }
                 )
 
                 order_details += f"- {item['product'].name} (кол-во: {item['quantity']}, цена: {item['price']})\n"
