@@ -149,9 +149,9 @@ def admin_order_detail(request, order_id):
         'order': order,
         'seller_details': seller_details,
         'shop_in_vat': shop_in_vat,
-        'total_summ_not_vat': total_summ_not_vat,
-        'total_vat': total_vat,
-        'total_sum_in_vat': total_sum_in_vat,
+        'total_summ_not_vat': round(total_summ_not_vat,2),
+        'total_vat': round(total_vat,2),
+        'total_sum_in_vat': round(total_sum_in_vat,2),
         
         
     })
@@ -189,12 +189,14 @@ def check_prices(request, order_id):
                 else:
                     new_cost = float(new_cost)
                     #остановился тут
-                    verified_difference = round((current_cost - new_cost) * item.quantity, 2)
-                    price_difference = verified_difference
-                    total_verified_difference += verified_difference
-
-                potential_profit = round((current_cost * (markup_percentage / 100)) * item.quantity, 2)
-                total_cost_price += current_cost * item.quantity  # Сумма себестоимости 
+                    price_difference_sebest = round(new_cost  * item.quantity, 2)
+                    price_difference_pribil = round(((current_cost * (markup_percentage / 100))) * item.quantity, 2)
+                    price_difference_in_chet = round(new_cost * item.quantity, 2)
+                    
+                    total_sebestoimost += price_difference_sebest
+                    total_pribil += price_difference_pribil
+                    total_in_chet += price_difference_in_chet               
+                 
                 
                 price_checks.append({
                     'name': price_data.get('name', 'Неизвестно'),
@@ -202,9 +204,10 @@ def check_prices(request, order_id):
                     'new_cost': new_cost if new_cost != "N/A" else "Не учитывается",
                     'unit': price_data.get('unit', 'Неизвестно'),
                     'quantity': item.quantity,
-                    'price_difference': verified_difference if verified_difference else "Не проверено",
-                    'potential_difference': price_difference if not verified_difference else "N/A",
-                    'status': 'Цена изменилась' if current_cost != new_cost else 'Цена актуальна'
+                    'total_sebestoimost': total_sebestoimost ,
+                    'total_pribil': total_pribil,
+                    'total_in_chet':total_in_chet,
+                    'status': 'Цена актуальна' if current_cost != new_cost else 'Цена изменилась'
                 })
             except ValueError as e:
                 price_checks.append({
@@ -232,9 +235,9 @@ def check_prices(request, order_id):
     return render(request, 'admin/orders/order/check_prices.html', {
         'price_checks': price_checks,
         'order': order,
-        'total_verified_difference': round(total_verified_difference, 2),
-        'total_potential_difference': round(total_potential_difference, 2),
-        'total_cost_price': round(total_cost_price, 2),
+        'total_sebestoimost': round(total_sebestoimost, 2),
+        'total_pribil': round(total_pribil, 2),
+        'total_in_chet': round(total_in_chet, 2),
         'supplier':supplier
 
     })

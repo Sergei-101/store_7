@@ -122,10 +122,12 @@ def update_price(product_id):
             unit = unit_element.text.strip() if unit_element else "N/A"
             print(f"Единица измерения с сайта: {unit}")
             
-            # Если в единице измерения указано "км", переводим цену
-            if "км" in unit:
+            
+            current_price = float(product.final_price())               
+            if new_price - current_price > 300:
                 new_price = new_price / 1000
             new_price = round(new_price, 2)
+
             # Расчет цены без НДС (20%)
             new_price_bez_nds = round(new_price / 1.20, 2)  # Цена без НДС
 
@@ -141,7 +143,7 @@ def update_price(product_id):
             PriceCheck.objects.create(
                 product=product,
                 check_date=today,
-                current_price=product.final_price(),
+                current_price=current_price,
                 new_price=new_price,                
             )
 
