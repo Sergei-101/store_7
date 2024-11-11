@@ -45,7 +45,13 @@ def order_create(request):
             if request.user.is_authenticated:
                 form.instance.initiator = request.user
 
-            form.instance.customer_type = customer_type
+            form.instance.customer_type = customer_type            
+            store_detail = StoreDetails.objects.first()
+            if store_detail:
+                form.instance.store_details = store_detail
+            else:
+                # Обработайте случай, когда нет данных в StoreDetails, например:
+                raise ValueError("Нет доступных записей в StoreDetails.")
             order = form.save()
 
             # Формируем детали заказа для отправки
@@ -67,18 +73,42 @@ def order_create(request):
                     price=item['price'],
                     quantity=item['quantity'],
                     total=item['price'] * item['quantity'],
-                    product_data={
+                    product_data = {
                         "name": product.name,
                         "quantity": product.quantity,
-                        "unit": product.unit,
+                        "unit": product.unit.name if product.unit else "Unknown",
                         "base_price": float(product.base_price) if isinstance(product.base_price, Decimal) else product.base_price,
                         "markup_percentage": float(product.markup_percentage) if isinstance(product.markup_percentage, Decimal) else product.markup_percentage,
                         "vat_price": float(product.vat_price) if isinstance(product.vat_price, Decimal) else product.vat_price,
                         "manufacturer": product.manufacturer.name if product.manufacturer else None,
                         "supplier": product.supplier.supplier if product.supplier else None,
                         "promotion": product.promotion.name if product.promotion else None,
+                        "what_shop": {
+                            "shop_in_VAT": {
+                                "name": product.name,
+                                "base_price": float(product.price_with_markup()) if isinstance(product.price_with_markup(), (float, Decimal)) else float(product.price_with_markup()),
+                                "unit": str(product.unit.name) if product.unit else "Unknown",
+                                "quantity": item['quantity'],
+                                "total": round(float(product.price_with_markup()) * item['quantity'], 2) if isinstance(product.price_with_markup(), (float, Decimal)) else round(product.price_with_markup() * item['quantity'], 2),
+                                "vat_price": float(product.vat_price) if isinstance(product.vat_price, Decimal) else product.vat_price,
+                                "vat_in_price": round((float(product.price_with_markup()) * item['quantity']) * 20 / 100, 2) if isinstance(product.price_with_markup(), Decimal) else round((product.price_with_markup() * item['quantity']) * 20 / 120, 2),
+                                "sum_in_vat": float(product.final_price()) * item['quantity'] if isinstance(product.final_price(), (float, Decimal)) else float(product.final_price()) * item['quantity'],
+                            },
+                            "shop_not_VAT": {
+                                "name": product.name,
+                                "base_price": float(product.final_price()) if isinstance(product.final_price(), (float, Decimal)) else float(product.final_price()),
+                                "unit": str(product.unit.name) if product.unit else "Unknown",
+                                "quantity": item['quantity'],
+                                "total": round(float(product.final_price()) * item['quantity'], 2) if isinstance(product.final_price(), Decimal) else round(product.final_price() * item['quantity'], 2),
+                                "vat_price": "без НДС",
+                                "vat_in_price": 0,
+                                "sum_in_vat": float(product.final_price()) * item['quantity'] if isinstance(product.final_price(), (float, Decimal)) else float(product.final_price()) * item['quantity'],
+                            }
+                        }
                     }
+
                 )
+
 
                 order_details += f"- {item['product'].name} (кол-во: {item['quantity']}, цена: {item['price']})\n"
 
@@ -98,10 +128,32 @@ def order_create(request):
 def admin_order_detail(request, order_id):
     order = get_object_or_404(Order, id=order_id)
     seller_details = StoreDetails.objects.first()  # Получаем реквизиты магазина
+    shop_in_vat = seller_details.is_nds # Проверяем, работает ли магазин с НДС
+    total_summ_not_vat = 0
+    total_vat = 0
+    total_sum_in_vat = 0
+    for item in order.items.all():
+        product_data = item.product_data
+        if shop_in_vat:
+            shop_vat_data = product_data.get("what_shop", {}).get("shop_in_VAT", {})
+            total_summ_not_vat += shop_vat_data.get("total", 0)
+            total_vat += shop_vat_data.get("vat_in_price", 0)
+            total_sum_in_vat += shop_vat_data.get("sum_in_vat", 0)
+        else:
+            shop_vat_datas = product_data.get("what_shop", {}).get("shop_not_VAT", {})
+            total_summ_not_vat += shop_vat_datas.get("total", 0)            
+            total_sum_in_vat += shop_vat_datas.get("sum_in_vat", 0)
+
     
     return render(request, 'admin/orders/order/invoice.html', {
         'order': order,
         'seller_details': seller_details,
+        'shop_in_vat': shop_in_vat,
+        'total_summ_not_vat': total_summ_not_vat,
+        'total_vat': total_vat,
+        'total_sum_in_vat': total_sum_in_vat,
+        
+        
     })
 
 

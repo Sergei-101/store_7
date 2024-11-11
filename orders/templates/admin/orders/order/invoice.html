@@ -43,21 +43,25 @@
         {% for item in order.items.all %}
           <tr>
             <td>{{ item.product.name }}</td>
-            <td>{{ item.price|price_exclude_vat:item.product.vat_price }}</td>
-            <td>шт.</td>
-            <td>{{ item.quantity }}</td>
-            <td>{{ item.price|price_exclude_vat:item.product.vat_price|floatformat:2 }}</td>
-            <td>{{ item.product.vat_price }}</td>
-            <td>{{ item.price|floatformat:2 }}</td>
-            <td>{{ item.price|floatformat:2 }}</td>
+            <td>{% if shop_in_vat %}{{ item.product_data.what_shop.shop_in_VAT.base_price }}{% else %}{{ item.product_data.what_shop.shop_not_VAT.base_price }}{% endif %}</td>
+            <td>{% if shop_in_vat %}{{ item.product_data.what_shop.shop_in_VAT.unit }}{% else %}{{ item.product_data.what_shop.shop_not_VAT.unit }}{% endif %}</td>
+            <td>{% if shop_in_vat %}{{ item.product_data.what_shop.shop_in_VAT.quantity }}{% else %}{{ item.product_data.what_shop.shop_not_VAT.quantity }}{% endif %}</td>
+            <td>{% if shop_in_vat %}{{ item.product_data.what_shop.shop_in_VAT.total }}{% else %}{{ item.product_data.what_shop.shop_not_VAT.total }}{% endif %}</td>
+            <td>{% if shop_in_vat %}{{ item.product_data.what_shop.shop_in_VAT.vat_price }}{% else %}{{ item.product_data.what_shop.shop_not_VAT.vat_price }}{% endif %}</td>
+            <td>{% if shop_in_vat %}{{ item.product_data.what_shop.shop_in_VAT.vat_in_price }}{% else %}{{ item.product_data.what_shop.shop_not_VAT.vat_in_price }}{% endif %}</td>
+            <td>{% if shop_in_vat %}{{ item.product_data.what_shop.shop_in_VAT.sum_in_vat }}{% else %}{{ item.product_data.what_shop.shop_not_VAT.sum_in_vat }}{% endif %}</td>
           </tr>
         {% endfor %}
-        <tr style="font-weight: bold;">
-          <td colspan="4" style="text-align: right;">Итого</td>
-          <td>{{ order.total_cost|floatformat:2 }}</td>
-          <td colspan="2"></td>
-          <td>{{ order.total_with_vat|floatformat:2 }}</td>
-        </tr>
+          <tr style="font-weight: bold;">
+            <td>Итого</td>
+            <td>x</td>
+            <td>x</td>
+            <td>x</td>
+            <td>{{ total_summ_not_vat }}</td>
+            <td>x</td>
+            <td>{{ total_vat }}</td>
+            <td>{{ total_sum_in_vat }}</td>
+          </tr>       
       </tbody>
     </table>
 
@@ -89,7 +93,16 @@
 
 
   <style>
-    /* Шрифты */
+      /* Выровнять по центру все ячейки <td> внутри <tbody> */
+    tbody td {
+      text-align: center;
+    }
+
+    /* Оставить первую ячейку <td> выровненной по левому краю */
+    tbody td:first-child {
+      text-align: left;
+    }
+      /* Шрифты */
     @font-face {
         font-family: 'DejaVu Sans';
         src: url('/path/to/font/DejaVuSans.ttf') format('truetype');

@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.utils.safestring import mark_safe
-from orders.models import Order, OrderItem
+from orders.models import Order, OrderItem, StoreDetails
 from django.urls import reverse
 
 def order_detail(obj):
@@ -36,3 +36,4 @@ class OrderAdmin(admin.ModelAdmin):
     get_customer_name.short_description = 'Customer Name'
 
 admin.site.register(Order, OrderAdmin)
+admin.site.register(StoreDetails)

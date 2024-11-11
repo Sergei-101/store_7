@@ -169,6 +169,15 @@ class Product(models.Model):
         price_with_markup = base_price * (1 + markup_percentage / 100)
         price_with_vat = price_with_markup * (1 + vat_price / 100)
         return round(price_with_vat, 2)  # Округляем до двух знаков после запятой
+    
+    def price_with_markup(self):
+        base_price = Decimal(self.base_price)  # Преобразуем base_price в Decimal
+        markup_percentage = Decimal(self.markup_percentage)  # Преобразуем markup_percentage в Decimal
+        price_with_markup = base_price * (1 + markup_percentage / 100)
+        if self.promotion and self.promotion.discount_percentage:    
+            price_with_markup_in_skidka = price_with_markup - (price_with_markup * self.promotion.discount_percentage / 100)
+            return round(price_with_markup_in_skidka, 2)  # Округляем до двух знаков после запятой        
+        return round(price_with_markup, 2)  # Округляем до двух знаков после запятой
 
     def apply_discount_to_category(self, category, discount_percentage):
         products_in_category = Product.objects.filter(category=category)

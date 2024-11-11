@@ -5,6 +5,22 @@ from products.models import Product
 
 
 
+class StoreDetails(models.Model):
+    name = models.CharField(max_length=255, verbose_name="Название магазина")
+    address = models.CharField(max_length=255, verbose_name="Адрес")
+    check = models.CharField(max_length=12, verbose_name="Расчётный счёт")
+    bank = models.CharField(max_length=12, verbose_name="Банк")
+    address_bank = models.CharField(max_length=12, verbose_name="Адрес Банка")
+    big_bank = models.CharField(max_length=12, verbose_name="Код банка")
+    ynp = models.CharField(max_length=12, verbose_name="УНП")
+    phone = models.CharField(max_length=20, verbose_name="Телефон")
+    email = models.EmailField(verbose_name="Email")    
+    is_nds = models.BooleanField(default=False, verbose_name='Работаем с НДС')  
+    
+    def __str__(self):
+        return self.name
+
+
 class Order(models.Model):
     CREATED = 0
     PAID = 1
@@ -44,6 +60,7 @@ class Order(models.Model):
     total_cost = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Общая стоимость')
     initiator = models.ForeignKey(to=User, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Инициатор')
     customer_type = models.CharField(max_length=10, choices=CUSTOMER_TYPE_CHOICES, verbose_name='Тип заказчика')
+    store_details = models.ForeignKey(StoreDetails, related_name='store_details', on_delete=models.CASCADE)
 
 
     class Meta:
@@ -72,15 +89,3 @@ class OrderItem(models.Model):
     def get_cost(self):
         return self.price * self.quantity
 
-class StoreDetails(models.Model):
-    name = models.CharField(max_length=255, verbose_name="Название магазина")
-    address = models.CharField(max_length=255, verbose_name="Адрес")
-    phone = models.CharField(max_length=20, verbose_name="Телефон")
-    email = models.EmailField(verbose_name="Email")
-    inn = models.CharField(max_length=12, verbose_name="ИНН")
-    kpp = models.CharField(max_length=9, verbose_name="КПП")
-    bank_details = models.TextField(verbose_name="Банковские реквизиты")
-    is_nds = models.BooleanField(default=False, verbose_name='Работаем с НДС')  
-    
-    def __str__(self):
-        return self.name
