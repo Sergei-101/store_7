@@ -162,9 +162,9 @@ def admin_order_detail(request, order_id):
 def check_prices(request, order_id):
     order = get_object_or_404(Order, id=order_id)
     price_checks = []
-    total_verified_difference = 0
-    total_potential_difference = 0
-    total_cost_price = 0
+    total_sebestoimost = 0
+    total_pribil = 0
+    total_in_chet = 0
 
     # Проверяем цены для каждого товара в заказе
     for item in order.items.all():
@@ -179,11 +179,16 @@ def check_prices(request, order_id):
                 
                 # Если нет цены от поставщика, рассчитываем потенциальную прибыль
                 if new_cost == "N/A" or new_cost == 0:
-                    price_difference = round((current_cost * (markup_percentage / 100)) * item.quantity, 2)
-                    verified_difference = 0  # Нет проверенной разницы
-                    total_potential_difference += price_difference
+                    price_difference_sebest = round((current_cost-(current_cost * (markup_percentage / 100))) * item.quantity, 2)
+                    price_difference_pribil = round(((current_cost * (markup_percentage / 100))) * item.quantity, 2)
+                    price_difference_in_chet = round(current_cost * item.quantity, 2)
+                    
+                    total_sebestoimost += price_difference_sebest
+                    total_pribil += price_difference_pribil
+                    total_in_chet += price_difference_in_chet
                 else:
                     new_cost = float(new_cost)
+                    #остановился тут
                     verified_difference = round((current_cost - new_cost) * item.quantity, 2)
                     price_difference = verified_difference
                     total_verified_difference += verified_difference

@@ -23,8 +23,7 @@ class ParserStore(models.Model):
 class PriceCheck(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='price_checks')
     current_price = models.FloatField(null=True, blank=True, verbose_name="Цена на сайте")
-    new_price = models.FloatField(null=True, blank=True, verbose_name="Цена поставщика")
-    unit = models.CharField(max_length=50, default="N/A", verbose_name="ед. изм.")
+    new_price = models.FloatField(null=True, blank=True, verbose_name="Цена поставщика")    
     check_date = models.DateField(auto_now_add=True)
 
     def __str__(self):

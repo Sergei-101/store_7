@@ -22,10 +22,9 @@ def update_price(product_id):
             "name": product.name,
             "current_price": last_check.current_price,
             "new_price": last_check.new_price,
-            "unit": last_check.unit,
-            "status": "Цена актуальна" if last_check.current_price == last_check.new_price else "Цена изменилась",
-            'markup_percentage':product.markup_percentage,
-            'supplier':product.supplier
+            "unit": str(product.unit.name),            
+            "markup_percentage":product.markup_percentage,
+            "supplier":product.supplier.supplier
         }
     
 
@@ -40,12 +39,10 @@ def update_price(product_id):
             return {
             "name": product.name,
             "current_price": product.final_price(),
-            "new_price": "N/A",
-            "is_price_updated": False,
-            "unit": "N/A",
-            "status": "Нет данных для парсинга",
-            'markup_percentage':product.markup_percentage,
-            'supplier':product.supplier
+            "new_price": "N/A",            
+            "unit": str(product.unit.name),            
+            "markup_percentage":product.markup_percentage,
+            "supplier":product.supplier.supplier
             }
             
     except ParserStore.DoesNotExist:
@@ -54,11 +51,9 @@ def update_price(product_id):
             "name": product.name,
             "current_price": product.final_price(),
             "new_price": "N/A",
-            "is_price_updated": False,
-            "unit": "N/A",
-            "status": "Нет данных для парсинга",
-            'markup_percentage':product.markup_percentage,
-            'supplier':product.supplier
+            "unit": str(product.unit.name),
+            "markup_percentage":product.markup_percentage,
+            "supplier":product.supplier.supplier
         }
     
 
@@ -91,14 +86,12 @@ def update_price(product_id):
             if product.name.lower() != name_from_site.lower():
                 print("Название продукта не совпадает с названием на сайте.")
                 return {
-                    "name": name_from_site,
+                    "name": product.name,
                     "current_price": product.final_price(),
-                    "new_price": "Не проверено",
-                    "is_price_updated": False,
-                    "unit": "Не проверено",
-                    "status": "Название не совпадает",
-                    'markup_percentage':product.markup_percentage,
-                    'supplier':product.supplier
+                    "new_price": "N/A",
+                    "unit": str(product.unit.name),
+                    "markup_percentage":product.markup_percentage,
+                    "supplier":product.supplier.supplier
                 }
 
             new_price_element = i.find('span', class_=parser.price_pars)
@@ -149,19 +142,18 @@ def update_price(product_id):
                 product=product,
                 check_date=today,
                 current_price=product.final_price(),
-                new_price=new_price,
-                unit=unit
+                new_price=new_price,                
             )
 
             return {
-                "name": name_from_site,
+                "name": product.name,
                 "current_price": product.final_price(),
                 "new_price": new_price,
                 "is_price_updated": is_price_updated,
-                "unit": unit,
-                "status": "Цена обновлена" if not is_price_updated else "Цена актуальна",
-                'markup_percentage':product.markup_percentage,
-                'supplier':product.supplier
+                "unit": str(product.unit.name),
+                # "status": "Цена обновлена" if not is_price_updated else "Цена актуальна",
+                "markup_percentage":product.markup_percentage,
+                "supplier":product.supplier.supplier
             }
 
     except AttributeError as e:

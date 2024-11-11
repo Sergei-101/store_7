@@ -5,21 +5,22 @@
 
 {% block content %}
   <div style="width: 700px; margin: 0 auto; padding: 20px; font-family: Arial, sans-serif;">
-    <div style="text-align: center; font-weight: bold;">
+    <div style="margin-bottom: 20px; text-align: center;">
+      <p>
+          <strong style="font-size: 32px; font-weight: bold;">{{ seller_details.name }}</strong><br>
+          <br>
+          {{ seller_details.address }}<br>
+          Р/с {{ seller_details.bank_check }} в {{ seller_details.bank }}, {{ seller_details.address_bank }}, код {{ seller_details.big_bank }}, УНП {{ seller_details.ynp }}<br>
+          тел.: {{ seller_details.phone }}<br>
+          email.: {{ seller_details.email }}<br>
+      </p>
+    </div>
+    <div style="text-align: center; font-weight: bold; margin-top: 30px;">
       <h2>СЧЕТ НА ОПЛАТУ № {{ order.id }}</h2>
       <p>от {{ order.created|date:"d.m.Y" }}</p>
     </div>
 
-    <div style="margin-bottom: 20px;">
-      <strong>Продавец:</strong> {{ seller_details.name }}<br>
-      <strong>Адрес:</strong> {{ seller_details.address }}<br>
-      <strong>Телефон:</strong> {{ seller_details.phone }}<br>
-      <strong>Email:</strong> {{ seller_details.email }}<br>
-      <strong>ИНН:</strong> {{ seller_details.inn }}<br>
-      <strong>КПП:</strong> {{ seller_details.kpp }}<br>
-      <strong>Банковские реквизиты:</strong> {{ seller_details.bank_details }}<br>
-    </div>
-
+    
     <div style="margin-bottom: 20px;">
       <strong>Покупатель:</strong> {{ order.contact_person }}<br>
       <strong>Телефон:</strong> {{ order.phone_number }}<br>
@@ -65,8 +66,13 @@
       </tbody>
     </table>
 
+    
     <div style="margin-top: 20px;">
-      <strong>Срок поставки:</strong> 7 рабочих дней с момента оплаты.
+        {% if seller_details.description and seller_details.description.chet_valid %}
+            <strong>Счёт действителен:</strong> {{ seller_details.description.chet_valid }}
+        {% else %}
+            <strong>Счёт действителен: 1 день</strong> 
+        {% endif %}
     </div>
 
     <div style="margin-top: 50px;">

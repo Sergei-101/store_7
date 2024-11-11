@@ -7,14 +7,15 @@ from products.models import Product
 
 class StoreDetails(models.Model):
     name = models.CharField(max_length=255, verbose_name="Название магазина")
-    address = models.CharField(max_length=255, verbose_name="Адрес")
-    check = models.CharField(max_length=12, verbose_name="Расчётный счёт")
-    bank = models.CharField(max_length=12, verbose_name="Банк")
-    address_bank = models.CharField(max_length=12, verbose_name="Адрес Банка")
-    big_bank = models.CharField(max_length=12, verbose_name="Код банка")
-    ynp = models.CharField(max_length=12, verbose_name="УНП")
-    phone = models.CharField(max_length=20, verbose_name="Телефон")
-    email = models.EmailField(verbose_name="Email")    
+    address = models.CharField(max_length=500, verbose_name="Адрес")
+    bank_check = models.CharField(max_length=50, verbose_name="Расчётный счёт")
+    bank = models.CharField(max_length=255, verbose_name="Банк")
+    address_bank = models.CharField(max_length=255, verbose_name="Адрес Банка")
+    big_bank = models.CharField(max_length=8, verbose_name="Код банка")
+    ynp = models.CharField(max_length=9, verbose_name="УНП")
+    phone = models.CharField(max_length=255, verbose_name="Телефон")
+    email = models.EmailField(verbose_name="Email")
+    description = models.JSONField(blank=True, null=True, verbose_name="Дополнительно в Json")  
     is_nds = models.BooleanField(default=False, verbose_name='Работаем с НДС')  
     
     def __str__(self):
