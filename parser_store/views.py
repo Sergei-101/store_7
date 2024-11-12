@@ -10,7 +10,7 @@ import requests
 
 def update_price(product_id):
     print(f"Начало обновления цены для продукта с ID {product_id}...")
-    product = Product.objects.get(id=product_id)
+    product = Product.objects.get(id=product_id)    
     today = timezone.now().date()
 
     # Проверяем, была ли проверка сегодня
@@ -24,7 +24,8 @@ def update_price(product_id):
             "new_price": last_check.new_price,
             "unit": str(product.unit.name),            
             "markup_percentage":product.markup_percentage,
-            "supplier":product.supplier.supplier
+            "supplier":product.supplier.supplier,
+            "product_link":product.product_link,
         }
     
 
@@ -42,7 +43,8 @@ def update_price(product_id):
             "new_price": "N/A",            
             "unit": str(product.unit.name),            
             "markup_percentage":product.markup_percentage,
-            "supplier":product.supplier.supplier
+            "supplier":product.supplier.supplier,
+            "product_link":product.product_link,
             }
             
     except ParserStore.DoesNotExist:
@@ -53,7 +55,8 @@ def update_price(product_id):
             "new_price": "N/A",
             "unit": str(product.unit.name),
             "markup_percentage":product.markup_percentage,
-            "supplier":product.supplier.supplier
+            "supplier":product.supplier.supplier,
+            "product_link":product.product_link,
         }
     
 
@@ -91,7 +94,8 @@ def update_price(product_id):
                     "new_price": "N/A",
                     "unit": str(product.unit.name),
                     "markup_percentage":product.markup_percentage,
-                    "supplier":product.supplier.supplier
+                    "supplier":product.supplier.supplier,
+                    "product_link":product.product_link,
                 }
 
             new_price_element = i.find('span', class_=parser.price_pars)
@@ -117,14 +121,17 @@ def update_price(product_id):
             else:
                 print("Ошибка: цена не найдена на сайте.")
                 return {"error": "Цена не найдена на сайте"}
-
-            unit_element = i.find("div", class_=parser.unit_pars)
-            unit = unit_element.text.strip() if unit_element else "N/A"
-            print(f"Единица измерения с сайта: {unit}")
+            
+            if parser.unit_pars:
+                unit_element = i.find("div", class_=parser.unit_pars)
+                unit = unit_element.text.strip() if unit_element else "N/A"
+                print(f"Единица измерения с сайта: {unit}")
+            else:
+                unit = "N/A"  # Устанавливаем значение по умолчанию, если элемент не найден
             
             
             current_price = float(product.final_price())               
-            if new_price - current_price > 300:
+            if new_price - current_price > 100:
                 new_price = new_price / 1000
             new_price = round(new_price, 2)
 
@@ -152,10 +159,11 @@ def update_price(product_id):
                 "current_price": product.final_price(),
                 "new_price": new_price,
                 "is_price_updated": is_price_updated,
-                "unit": str(product.unit.name),
+                "unit": unit,
                 # "status": "Цена обновлена" if not is_price_updated else "Цена актуальна",
                 "markup_percentage":product.markup_percentage,
-                "supplier":product.supplier.supplier
+                "supplier":product.supplier.supplier,
+                "product_link":product.product_link,
             }
 
     except AttributeError as e:

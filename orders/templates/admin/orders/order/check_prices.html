@@ -9,9 +9,12 @@
         <th>Название товара</th>
         <th>Цена на сайте</th>
         <th>Цена поставщика</th>
+        <th>Разница в цене</th>
         <th>Единица измерения</th>
-        <th>Количество</th>        
+        <th>Количество</th>
+        <th>Поставщик</th>        
         <th>Статус</th>
+        <th>Ссылка</th>
       </tr>
     </thead>
     <tbody>
@@ -19,10 +22,13 @@
         <tr>
           <td>{{ check.name }}</td>
           <td>{{ check.current_cost }}</td>
-          <td>{{ check.new_cost }}</td>
+          <td class="{% if check.new_cost < check.current_cost %}green{% else %}normal{% endif %}">{{ check.new_cost }}</td>
+          <td>{{ check.difference_supplier_and_site }} %</td>
           <td>{{ check.unit }}</td>
-          <td>{{ check.quantity }}</td>  
+          <td>{{ check.quantity }}</td>
+          <td>{{ check.supplier }}</td>   
           <td>{{ check.status }}</td>
+          <td><a href="{{ check.product_link }}">ссылка</a></td>
         </tr>
       {% endfor %}
     </tbody>
@@ -33,5 +39,18 @@
   <h3>Всего по счёту: {{ total_in_chet }}</h3>
 
   <a href="{% url 'admin:orders_order_changelist' %}" class="button">Вернуться к заказам</a>
-  <a href="{% url 'orders:admin_order_detail' order_id=order.id %}" class="button">Счёт</a>  
+  <a href="{% url 'orders:admin_order_detail' order_id=order.id %}" class="button">Счёт</a>
+  
+  <style>
+    .green {
+      background-color: green;
+      color: white;  /* чтобы текст был читаем на зеленом фоне */
+    }
+  
+    .normal {
+      background-color: transparent;  /* обычный фон, если условие не выполнено */
+    }
+  </style>
 {% endblock %}
+
+

@@ -91,7 +91,7 @@ def order_create(request):
                                 "quantity": item['quantity'],
                                 "total": round(float(product.price_with_markup()) * item['quantity'], 2) if isinstance(product.price_with_markup(), (float, Decimal)) else round(product.price_with_markup() * item['quantity'], 2),
                                 "vat_price": float(product.vat_price) if isinstance(product.vat_price, Decimal) else product.vat_price,
-                                "vat_in_price": round((float(product.price_with_markup()) * item['quantity']) * 20 / 100, 2) if isinstance(product.price_with_markup(), Decimal) else round((product.price_with_markup() * item['quantity']) * 20 / 120, 2),
+                                "vat_in_price": 0 if product.vat_price == 0 else round((float(product.price_with_markup()) * item['quantity']) * 20 / 100, 2) if isinstance(product.price_with_markup(), Decimal) else round((product.price_with_markup() * item['quantity']) * 20 / 120, 2),
                                 "sum_in_vat": float(product.final_price()) * item['quantity'] if isinstance(product.final_price(), (float, Decimal)) else float(product.final_price()) * item['quantity'],
                             },
                             "shop_not_VAT": {
@@ -161,10 +161,10 @@ def admin_order_detail(request, order_id):
 @staff_member_required
 def check_prices(request, order_id):
     order = get_object_or_404(Order, id=order_id)
-    price_checks = []
-    total_sebestoimost = 0
-    total_pribil = 0
+    price_checks = []    
+    total_sebestoimost = 0 
     total_in_chet = 0
+    difference_supplier_and_site = None
 
     # Проверяем цены для каждого товара в заказе
     for item in order.items.all():
@@ -176,27 +176,20 @@ def check_prices(request, order_id):
                 new_cost = price_data.get('new_price', None)
                 markup_percentage = float(price_data.get('markup_percentage', 0))
                 supplier = price_data.get('supplier', None)
+                product_link = price_data.get('product_link', None)
                 
                 # Если нет цены от поставщика, рассчитываем потенциальную прибыль
                 if new_cost == "N/A" or new_cost == 0:
-                    price_difference_sebest = round((current_cost-(current_cost * (markup_percentage / 100))) * item.quantity, 2)
-                    price_difference_pribil = round(((current_cost * (markup_percentage / 100))) * item.quantity, 2)
-                    price_difference_in_chet = round(current_cost * item.quantity, 2)
+                    price_difference_sebest = round((current_cost-(current_cost * (markup_percentage / 100))) * item.quantity, 2)  
+                    difference_supplier_and_site = 0
                     
-                    total_sebestoimost += price_difference_sebest
-                    total_pribil += price_difference_pribil
-                    total_in_chet += price_difference_in_chet
                 else:
-                    new_cost = float(new_cost)
-                    #остановился тут
-                    price_difference_sebest = round(new_cost  * item.quantity, 2)
-                    price_difference_pribil = round(((current_cost * (markup_percentage / 100))) * item.quantity, 2)
-                    price_difference_in_chet = round(new_cost * item.quantity, 2)
-                    
-                    total_sebestoimost += price_difference_sebest
-                    total_pribil += price_difference_pribil
-                    total_in_chet += price_difference_in_chet               
-                 
+                    new_cost = float(new_cost)                    
+                    price_difference_sebest = round(new_cost  * item.quantity, 2)   
+                    difference_supplier_and_site = round((100 - ((new_cost * 100) / current_cost)),2)
+                                   
+                total_sebestoimost += price_difference_sebest                    
+                total_in_chet += round(current_cost * item.quantity, 2)
                 
                 price_checks.append({
                     'name': price_data.get('name', 'Неизвестно'),
@@ -204,10 +197,10 @@ def check_prices(request, order_id):
                     'new_cost': new_cost if new_cost != "N/A" else "Не учитывается",
                     'unit': price_data.get('unit', 'Неизвестно'),
                     'quantity': item.quantity,
-                    'total_sebestoimost': total_sebestoimost ,
-                    'total_pribil': total_pribil,
-                    'total_in_chet':total_in_chet,
-                    'status': 'Цена актуальна' if current_cost != new_cost else 'Цена изменилась'
+                    'difference_supplier_and_site':difference_supplier_and_site if difference_supplier_and_site else "N/A",
+                    'supplier':supplier,
+                    'product_link': product_link,
+                    'status': 'Актуальна' if current_cost != new_cost else 'Изменилась'
                 })
             except ValueError as e:
                 price_checks.append({
@@ -236,7 +229,7 @@ def check_prices(request, order_id):
         'price_checks': price_checks,
         'order': order,
         'total_sebestoimost': round(total_sebestoimost, 2),
-        'total_pribil': round(total_pribil, 2),
+        'total_pribil': round(total_in_chet - total_sebestoimost, 2),
         'total_in_chet': round(total_in_chet, 2),
         'supplier':supplier
 
