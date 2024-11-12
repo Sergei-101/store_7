@@ -5,7 +5,8 @@ class StaticPage(models.Model):
     title = models.CharField(max_length=200, verbose_name="Заголовок")
     slug = models.SlugField(unique=True)
     content = models.TextField(verbose_name="Полное описание")
-    in_menu = models.BooleanField(default=True, help_text="Отображать в меню")    
+    in_menu = models.BooleanField(default=True, help_text="Отображать в меню")
+    menu_position = models.PositiveIntegerField(default=0, verbose_name="Позиция в меню")    
     meta_keywords = models.CharField(max_length=200, verbose_name="Ключевые слова")
     meta_description = models.CharField(max_length=200, verbose_name="Описание для Seo")
     
