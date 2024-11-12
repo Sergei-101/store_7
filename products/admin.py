@@ -254,7 +254,7 @@ class CSVFileAdmin(admin.ModelAdmin):
                 manufacturer = row[9]
                 supplier = row[10]
                 vat_price = row[11]
-                markup_percentage = 15
+                markup_percentage = row[12]
 
                 unit, _ = Unit.objects.get_or_create(name=unit)
                 manufacturer, _ = Manufacturer.objects.get_or_create(name=manufacturer)

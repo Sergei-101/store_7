@@ -14,6 +14,12 @@ class StaticPage(models.Model):
     def __str__(self):
         return self.title
     
+    class Meta:        
+        verbose_name = 'Статическая страница'
+        verbose_name_plural = 'Статические страницы'
+    
+    
+    
 class Guarantee(models.Model):
     title = models.CharField(max_length=100, default='Быстрая и бесплатная доствака')
     content = models.CharField(max_length=100, default='Бесплатная доставка от 100 рублей')
@@ -21,6 +27,10 @@ class Guarantee(models.Model):
 
     def __str__(self):
         return self.title
+    
+    class Meta:        
+        verbose_name = 'Блок Преимущечтва'
+        verbose_name_plural = 'Блок Преимущечтва'
     
 
 class SliderItem(models.Model):
@@ -32,6 +42,8 @@ class SliderItem(models.Model):
 
     class Meta:
         ordering = ['order']
+        verbose_name = 'Слайдер'
+        verbose_name_plural = 'Слайдер'
 
     def __str__(self):
         return self.text_1
@@ -48,4 +60,8 @@ class Tab(models.Model):
 
     def __str__(self):
         return self.title
+    
+    class Meta:        
+        verbose_name = 'Блоки в деталях товара'
+        verbose_name_plural = 'Блоки в деталях товара'
 

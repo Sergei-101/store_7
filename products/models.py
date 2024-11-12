@@ -233,6 +233,10 @@ class Feature(models.Model):
     def __str__(self):
         return self.name
     
+    class Meta:        
+        verbose_name = 'Характиристики товара'
+        verbose_name_plural = 'Характиристики товара'
+    
 # Связующая модель для значений характеристик товара
 class ProductFeatureValue(models.Model):
     product = models.ForeignKey(Product, on_delete=models.CASCADE)

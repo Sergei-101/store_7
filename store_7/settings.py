@@ -11,7 +11,11 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
-# import os
+import os
+from dotenv import load_dotenv
+
+# Загружаем переменные окружения из .env
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,12 +25,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-(ec)ib+-kwdw&)*&@fr+u2%6!tk1h$ch^z&nl=l2(hr^7&_=&r'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS', '').split(',')
 
 INTERNAL_IPS = [
 '127.0.0.1',
@@ -105,8 +109,12 @@ WSGI_APPLICATION = 'store_7.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME', 'your_db_name'),  # имя базы данных
+        'USER': os.getenv('DB_USER', 'your_db_user'),  # имя пользователя
+        'PASSWORD': os.getenv('DB_PASSWORD', 'your_db_password'),  # пароль
+        'HOST': os.getenv('DB_HOST', 'localhost'),  # хост (обычно localhost)
+        'PORT': os.getenv('DB_PORT', '5432'),  # порт PostgreSQL (обычно 5432)
     }
 }
 
@@ -178,27 +186,26 @@ CKEDITOR_CONFIGS = {
 
 CKEDITOR_UPLOAD_PATH = 'uploads/'
 
-# Убедитесь, что у вас есть переменная окружения для хранения API-ключа
-# OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')  # Или просто: 'ваш_api_ключ'
+
 
 # Настройка брокера для Celery
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
-CELERY_RESULT_BACKEND = 'redis://localhost:6379/0'
-CELERY_WORKER_CONCURRENCY = 1
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
+CELERY_RESULT_BACKEND = os.getenv('CELERY_BROKER_URL')
+CELERY_WORKER_CONCURRENCY = 1  # по умолчанию можно оставить
 
 
 
 # Отправка писем
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-# EMAIL_HOST = 'smtp.example.com'
-# EMAIL_PORT = 587
-# EMAIL_USE_TLS = True
-# EMAIL_HOST_USER = 'your-email@example.com'
-# EMAIL_HOST_PASSWORD = 'your-password'
-# DEFAULT_FROM_EMAIL = 'your-email@example.com'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT', 587)
+EMAIL_USE_TLS = os.getenv('EMAIL_USE_TLS', 'True') == 'True'
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 
 
 #Telegram
-TELEGRAM_BOT_TOKEN = '1710178446:AAEAK5FQ_kdI-H2PSdOmF6xOuLFJw4I_xFU'
-TELEGRAM_ADMIN_ID = '588474818'
+TELEGRAM_BOT_TOKEN = os.getenv('TELEGRAM_BOT_TOKEN')
+

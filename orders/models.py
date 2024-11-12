@@ -20,6 +20,10 @@ class StoreDetails(models.Model):
     
     def __str__(self):
         return self.name
+    
+    class Meta:        
+        verbose_name = 'Store'
+        verbose_name_plural = 'Store'
 
 
 class Order(models.Model):
@@ -89,4 +93,8 @@ class OrderItem(models.Model):
 
     def get_cost(self):
         return self.price * self.quantity
+    
+    class Meta:        
+        verbose_name = 'Детали ордера'
+        verbose_name_plural = 'Детали ордеров'
 

@@ -28,3 +28,7 @@ class PriceCheck(models.Model):
 
     def __str__(self):
         return f"Проверка цены для {self.product.name} от {self.check_date}"
+    
+    class Meta:        
+        verbose_name = 'База сохр товаров'
+        verbose_name_plural = 'База сохр товаров'

@@ -15,3 +15,7 @@ class UserProfile(models.Model):
 
     def __str__(self):
         return f"{self.username or self.user_id} ({self.role})"
+    
+    class Meta:        
+        verbose_name = 'База пользователей бота'
+        verbose_name_plural = 'База пользователей бота'
