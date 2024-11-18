@@ -9,7 +9,6 @@ from django.contrib.admin.widgets import FilteredSelectMultiple
 from django.db import models, IntegrityError
 from django.forms import DecimalField, SelectMultiple
 from icrawler.builtin import GoogleImageCrawler
-from fuzzywuzzy import process  # Импортируем fuzzywuzzy для сравнения строк
 import os
 from django.conf import settings
 import shutil
@@ -18,9 +17,7 @@ from bs4 import BeautifulSoup
 import re
 from django.utils.safestring import mark_safe
 
-# pip install openai
-# Установите ваш API ключ
-# openai.api_key = settings.OPENAI_API_KEY
+
 
 
 admin.site.register(Supplier)
@@ -121,62 +118,7 @@ class ProductAdmin(admin.ModelAdmin):
     
     download_images_for_products.short_description = "Загрузить изображения для выбранных товаров"
 
-    def parse_features(self, request, queryset):
-        for product in queryset:
-            if product.description_2:
-                features_data = self.parse_table(product.description_2)
-                self.message_user(request, f"Парсенные данные: {features_data}")  # Отладочное сообщение
-
-                for feature_name, feature_value in features_data.items():
-                    # Поиск существующих характеристик
-                    existing_features = Feature.objects.values_list('name', flat=True)
-                    match_result = process.extractOne(feature_name, existing_features)
-
-                    if match_result:
-                        match, score = match_result
-                        if score >= 80:  # Если название похоже
-                            # Обновление значения характеристики
-                            product_feature = ProductFeatureValue.objects.filter(product=product, feature__name=match).first()
-                            if product_feature:
-                                product_feature.value = feature_value
-                                product_feature.save()  # Сохраняем обновленное значение
-                                self.message_user(request, f"Обновлено: {match} = {feature_value}")  # Отладочное сообщение
-                        else:
-                            # Если схожесть недостаточна, создаем новую характеристику
-                            feature, created = Feature.objects.get_or_create(name=feature_name)
-                            ProductFeatureValue.objects.create(product=product, feature=feature, value=feature_value)
-                            self.message_user(request, f"Создано: {feature_name} = {feature_value}")  # Отладочное сообщение
-                    else:
-                        # Если нет похожих характеристик, создаем новую
-                        feature, created = Feature.objects.get_or_create(name=feature_name)
-                        ProductFeatureValue.objects.create(product=product, feature=feature, value=feature_value)
-                        self.message_user(request, f"Создано: {feature_name} = {feature_value}")  # Отладочное сообщение
-
-                self.message_user(request, f"Характеристики для '{product.name}' успешно обновлены.")
-            else:
-                self.message_user(request, f"У товара '{product.name}' нет HTML-кода.", level='error')
-
-        return HttpResponseRedirect(request.get_full_path())
-
-    def parse_table(self, html):
-        soup = BeautifulSoup(html, 'html.parser')
-        rows = soup.find_all('tr')
-        
-        features_data = {}
-        
-        for row in rows:
-            cols = row.find_all(['th', 'td'])  # Изменили на поиск как th, так и td
-            if len(cols) == 2:  # Проверяем, что есть две колонки
-                feature_name = cols[0].get_text(strip=True)
-                feature_value = cols[1].get_text(strip=True)
-                features_data[feature_name] = feature_value
-                
-        return features_data
-
-    parse_features.short_description = "Парсить характеристики из HTML"
-    
-
-
+      
 
 @admin.register(ProductCategory)
 class ProductCategoryAdmin(admin.ModelAdmin):
